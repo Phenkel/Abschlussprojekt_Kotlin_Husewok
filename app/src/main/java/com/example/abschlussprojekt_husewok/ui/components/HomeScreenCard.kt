@@ -18,10 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Check
-import androidx.compose.material.icons.outlined.Close
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Refresh
@@ -113,9 +110,9 @@ fun HomescreenCard(
                 .background(
                     brush = Brush.horizontalGradient(
                         listOf(
-                            Purple80.copy(alpha = 0.7f),
+                            Purple80.copy(alpha = 0.5f),
                             Color.White,
-                            Orange80.copy(alpha = 0.7f)
+                            Orange80.copy(alpha = 0.5f)
                         )
                     )
                 )
@@ -124,7 +121,7 @@ fun HomescreenCard(
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize(1F)
             ) {
-                // Create references for image, title, and button and button row
+                // Create references for image, title, button, buttonRow, logo and favorite
                 val (image, title, button, buttonRow, logo, favorite) = createRefs()
                 // Image composable (Housework Image) with custom size, position and border
                 Image(
@@ -159,13 +156,14 @@ fun HomescreenCard(
                     painter = painterResource(id = R.drawable.logo),
                     contentDescription = null,
                     modifier = Modifier
-                        .fillMaxSize(0.25f)
-                        .alpha(0.2f)
+                        .size(sizeComplete / 5)
+                        .alpha(0.1f)
                         .constrainAs(logo) {
                             centerHorizontallyTo(parent)
                             top.linkTo(parent.top)
                             bottom.linkTo(buttonRow.top)
-                        }
+                        },
+                    contentScale = ContentScale.Fit
                 )
                 // Row composable (Skip Task Button and Mark as Done Button) with custom size and position
                 Row(
@@ -176,7 +174,7 @@ fun HomescreenCard(
                         },
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    // Button composable (Skip Task) for the row with custom shape and colors TODO: aktualisieren
+                    // Button composable (Skip Task) for the row with custom shape colors and padding
                     Button(
                         enabled = skipButtonEnabled,
                         onClick = skipButtonOnClick,
@@ -189,20 +187,20 @@ fun HomescreenCard(
                             disabledContentColor = Purple40.copy(alpha = 0.5f)
                         )
                     ) {
-                        // TODO: Kommentar
+                        // Icon composable (Skip) for the button
                         Icon(
                             imageVector = Icons.Outlined.Refresh,
                             contentDescription = null
                         )
-                        //TODO: Kommentar
+                        // Spacer composable (Padding) for the button
                         Spacer(modifier = Modifier.width(sizeComplete / 50))
-                        // TODO: Kommentar
+                        // Text composable (Text) for the button
                         Text(
                             text = "Skip Task",
 
                         )
                     }
-                    // Button composable (Mark as Done) for the row with custom shape and colors TODO: akutaliseren
+                    // Button composable (Skip Task) for the row with custom shape colors and padding
                     Button(
                         onClick = doneButtonOnClick,
                         shape = ShapeDefaults.ExtraSmall,
@@ -212,14 +210,14 @@ fun HomescreenCard(
                             contentColor = Orange80
                         )
                     ) {
-                        // TODO: Kommentar
+                        // Icon composable (Done) for the button
                         Icon(
                             imageVector = Icons.Outlined.Check,
                             contentDescription = null
                         )
-                        //TODO: Kommentar
+                        // Spacer composable (Padding) for the button
                         Spacer(modifier = Modifier.width(sizeComplete / 50))
-                        // TODO: Kommentar
+                        // Text composable (Text) for the button
                         Text(
                             text = "Mark as Done"
                         )
@@ -240,7 +238,7 @@ fun HomescreenCard(
                             end.linkTo(parent.end)
                     }
                 )
-                // FloatingActionButton (Information Button) composable with custom size, position, shape and colors
+                // FloatingActionButton composable (Information Button) with custom size, position, shape and colors
                 FloatingActionButton(
                     containerColor = Orange80,
                     contentColor = Purple40,
@@ -253,7 +251,7 @@ fun HomescreenCard(
                         },
                     onClick = fabOnClick
                 ) {
-                    // Icon composable for the FloatingActionButton with custom size and padding
+                    // Icon composable (Info) for the FloatingActionButton with custom size and padding
                     Icon(
                         imageVector = Icons.Outlined.Info,
                         contentDescription = null,
@@ -262,7 +260,7 @@ fun HomescreenCard(
                             .padding(0.dp)
                     )
                 }
-                // TODO: Kommentar
+                // IconButton composable (Favorite) with custom size and position
                 IconButton(
                     onClick = iconButtonOnClick,
                     modifier = Modifier
@@ -272,7 +270,7 @@ fun HomescreenCard(
                             end.linkTo(parent.end, sizeComplete / 50)
                         }
                 ) {
-                    // TODO: Kommentar
+                    // Icon composable (Info) with custom size
                     Icon(
                         imageVector = if (housework.isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                         contentDescription = null,

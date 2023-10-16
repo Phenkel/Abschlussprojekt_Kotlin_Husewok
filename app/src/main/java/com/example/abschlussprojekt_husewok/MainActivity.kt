@@ -69,7 +69,7 @@ class MainActivity : ComponentActivity() {
                     }
                 )
                  */
-                HomescreenCard()
+                HomescreenCard(housework = activeHousework)
             }
         }
     }
