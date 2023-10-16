@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "430341855763",
+    "project_id": "husewok",
+    "storage_bucket": "husewok.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:430341855763:android:d41cc482dec0d5600efde6",
+        "android_client_info": {
+          "package_name": "com.example.abschlussprojekt_husewok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "430341855763-0ai8qq8nn1rltuu1an6nrdc670a6srsq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.abschlussprojekt_husewok",
+            "certificate_hash": "9ae44b9e34157d641fc5fee5299664e7ae50429c"
+          }
+        },
+        {
+          "client_id": "430341855763-gmcrv7qeqb2ioldk41jal0k5gkuqe9f4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChY9-MvTSawTRM9AYsQPICH2bfEAdp0HA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "430341855763-gmcrv7qeqb2ioldk41jal0k5gkuqe9f4.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
