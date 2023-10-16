@@ -154,16 +154,6 @@ fun HouseworkListCard(
                         modifier = Modifier
                             .fillMaxHeight(0.075f)
                     )
-                    /*
-                    // TODO: Kommentar
-                    Text(
-                        text = if (housework.isLiked) "Liked" else "Disliked",
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = calcSp(percentage = 0.035f)
-                        )
-                    )
-                     */
                     // Text composable with custom size and position
                     Text(
                         text = if (housework.isLocked()) "Done" else "Not Done",

@@ -264,7 +264,7 @@ fun HomescreenCard(
                 }
                 // TODO: Kommentar
                 IconButton(
-                    onClick = { /*TODO*/ },
+                    onClick = iconButtonOnClick,
                     modifier = Modifier
                         .size(sizeComplete / 10)
                         .constrainAs(favorite) {
