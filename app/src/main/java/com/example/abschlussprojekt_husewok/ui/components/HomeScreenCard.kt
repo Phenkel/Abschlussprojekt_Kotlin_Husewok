@@ -49,11 +49,12 @@ import com.example.abschlussprojekt_husewok.ui.calc.calcDp
 import com.example.abschlussprojekt_husewok.ui.calc.calcSp
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
+import com.example.abschlussprojekt_husewok.ui.theme.Orange40
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 
-/**
+/** TODO: Aktualisieren
  * A composable function that represents a card on the home screen.
  *
  * @param sizeHeight The height of the card. By default, it is calculated as a percentage of the screen height.
@@ -74,8 +75,8 @@ fun HomescreenCard(
     sizeHeight: Dp = calcDp(percentage = 0.6f, dimension = Dimension.Height),
     sizeWidth: Dp = calcDp(percentage = 0.8f, dimension = Dimension.Width),
     sizeComplete: Dp = (sizeHeight + sizeWidth) / 2,
-    skipButtonOnClick: () -> Unit = {},
     skipButtonEnabled: Boolean = true,
+    skipButtonOnClick: () -> Unit = {},
     doneButtonOnClick: () -> Unit = {},
     fabOnClick: () -> Unit = {},
     iconButtonOnClick: () -> Unit = {},
@@ -165,7 +166,7 @@ fun HomescreenCard(
                         },
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    // Button composable (Skip Task) for the row with custom shape colors and padding
+                    // Button composable (Skip Task) for the row with custom shape colors and padding TODO: Aktualisieren
                     Button(
                         enabled = skipButtonEnabled,
                         onClick = skipButtonOnClick,
@@ -174,9 +175,11 @@ fun HomescreenCard(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Orange80,
                             contentColor = Purple40,
-                            disabledContainerColor = Orange80.copy(alpha = 0.5f),
-                            disabledContentColor = Purple40.copy(alpha = 0.5f)
-                        )
+                            disabledContainerColor = Orange40.copy(alpha = 0.5f),
+                            disabledContentColor = Purple80
+                        ),
+                        modifier = Modifier
+                            .height(sizeHeight / 10)
                     ) {
                         // Icon composable (Skip) for the button
                         Icon(
@@ -190,7 +193,7 @@ fun HomescreenCard(
                             text = "Skip Task"
                         )
                     }
-                    // Button composable (Skip Task) for the row with custom shape colors and padding
+                    // Button composable (Skip Task) for the row with custom shape colors and padding TODO: Aktualisieren
                     Button(
                         onClick = doneButtonOnClick,
                         shape = ShapeDefaults.ExtraSmall,
@@ -198,7 +201,9 @@ fun HomescreenCard(
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Purple40,
                             contentColor = Orange80
-                        )
+                        ),
+                        modifier = Modifier
+                            .height(sizeHeight / 10)
                     ) {
                         // Icon composable (Done) for the button
                         Icon(

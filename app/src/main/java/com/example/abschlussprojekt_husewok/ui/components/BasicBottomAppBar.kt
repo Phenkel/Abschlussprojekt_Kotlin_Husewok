@@ -23,9 +23,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
 import com.example.abschlussprojekt_husewok.ui.calc.calcDp
-import com.example.abschlussprojekt_husewok.ui.theme.Orange80
+import com.example.abschlussprojekt_husewok.ui.theme.Orange40
+import com.example.abschlussprojekt_husewok.ui.theme.OrangeGrey80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
-import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 
 enum class BottomIcons {
     HOME,
@@ -35,13 +35,13 @@ enum class BottomIcons {
 
 @Preview
 @Composable
-fun BottomAppBar() {
+fun BasicBottomAppBar() {
     val selected = remember {
         mutableStateOf(BottomIcons.HOME)
     }
 
     androidx.compose.material3.BottomAppBar(
-        containerColor = Orange80.copy(alpha = 0.5f),
+        containerColor = OrangeGrey80,
         content = {
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -58,7 +58,7 @@ fun BottomAppBar() {
                     Icon(
                         imageVector = if (selected.value == BottomIcons.HOME) Icons.Filled.Home else Icons.Outlined.Home,
                         contentDescription = null,
-                        tint = if (selected.value == BottomIcons.HOME) Purple40 else Purple80,
+                        tint = if (selected.value == BottomIcons.HOME) Purple40 else Orange40,
                         modifier = Modifier.fillMaxSize(if (selected.value == BottomIcons.HOME) 0.5f else 0.3f)
                     )
                 }
@@ -71,7 +71,7 @@ fun BottomAppBar() {
                     Icon(
                         imageVector = if (selected.value == BottomIcons.LIST) Icons.Filled.List else Icons.Outlined.List,
                         contentDescription = null,
-                        tint = if (selected.value == BottomIcons.LIST) Purple40 else Purple80,
+                        tint = if (selected.value == BottomIcons.LIST) Purple40 else Orange40,
                         modifier = Modifier.fillMaxSize(if (selected.value == BottomIcons.LIST) 0.5f else 0.3f)
                     )
                 }
@@ -84,7 +84,7 @@ fun BottomAppBar() {
                     Icon(
                         imageVector = if (selected.value == BottomIcons.PROFILE) Icons.Filled.Person else Icons.Outlined.Person,
                         contentDescription = null,
-                        tint = if (selected.value == BottomIcons.PROFILE) Purple40 else Purple80,
+                        tint = if (selected.value == BottomIcons.PROFILE) Purple40 else Orange40,
                         modifier = Modifier.fillMaxSize(if (selected.value == BottomIcons.PROFILE) 0.5f else 0.3f)
                     )
                 }
