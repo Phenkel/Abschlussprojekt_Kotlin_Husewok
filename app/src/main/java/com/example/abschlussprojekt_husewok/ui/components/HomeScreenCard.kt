@@ -34,12 +34,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.drawWithContent
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -121,8 +117,8 @@ fun HomescreenCard(
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize(1F)
             ) {
-                // Create references for image, title, button, buttonRow, logo and favorite
-                val (image, title, button, buttonRow, logo, favorite) = createRefs()
+                // Create references for image, title, button, buttonRow, logo and favorite //TODO: kommentar
+                val (image, border, title, button, buttonRow, logo, favorite) = createRefs()
                 // Image composable (Housework Image) with custom size, position and border
                 Image(
                     painter = painterResource(id = housework.image),
@@ -130,21 +126,6 @@ fun HomescreenCard(
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .fillMaxHeight(0.7f)
-                        .drawWithContent {
-                            drawContent()
-                            drawRect(
-                                brush = Brush.horizontalGradient(
-                                    listOf(
-                                        Orange80,
-                                        Color.White,
-                                        Purple80
-                                    )
-                                ),
-                                topLeft = Offset.Zero,
-                                size = Size(size.width, 2.dp.toPx()),
-                                style = Stroke(width = 2.dp.toPx())
-                            )
-                        }
                         .constrainAs(image) {
                             centerHorizontallyTo(parent)
                             bottom.linkTo(parent.bottom)
@@ -164,6 +145,16 @@ fun HomescreenCard(
                             bottom.linkTo(buttonRow.top)
                         },
                     contentScale = ContentScale.Fit
+                )
+                // TODO: Kommentar
+                Spacer(
+                    modifier = Modifier
+                        .fillMaxWidth(1f)
+                        .height(sizeComplete / 100)
+                        .background(brush = Brush.horizontalGradient(listOf(Orange80, Color.White, Purple80)))
+                        .constrainAs(border) {
+                            bottom.linkTo(image.top)
+                        }
                 )
                 // Row composable (Skip Task Button and Mark as Done Button) with custom size and position
                 Row(
@@ -196,8 +187,7 @@ fun HomescreenCard(
                         Spacer(modifier = Modifier.width(sizeComplete / 50))
                         // Text composable (Text) for the button
                         Text(
-                            text = "Skip Task",
-
+                            text = "Skip Task"
                         )
                     }
                     // Button composable (Skip Task) for the row with custom shape colors and padding
@@ -236,7 +226,7 @@ fun HomescreenCard(
                             bottom.linkTo(buttonRow.top)
                             start.linkTo(parent.start)
                             end.linkTo(parent.end)
-                    }
+                        }
                 )
                 // FloatingActionButton composable (Information Button) with custom size, position, shape and colors
                 FloatingActionButton(
@@ -272,7 +262,11 @@ fun HomescreenCard(
                 ) {
                     // Icon composable (Info) with custom size
                     Icon(
-                        imageVector = if (housework.isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        imageVector = if (housework.isLiked) {
+                            Icons.Filled.Favorite
+                        } else {
+                            Icons.Outlined.FavoriteBorder
+                        },
                         contentDescription = null,
                         tint = Purple40,
                         modifier = Modifier.fillMaxSize(0.8f)
