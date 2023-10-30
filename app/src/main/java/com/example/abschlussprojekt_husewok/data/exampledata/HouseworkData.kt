@@ -7,69 +7,94 @@ object HouseworkData {
     // Create a list of Housework objects
     val houseworkList = listOf(
         Housework(
-            image = R.drawable.clean_floors,
+            image = R.drawable.img_clean_floors,
             title = "Clean Floors",
-            description = "Pick everything up from floors\nVacuum floors\nMop floors",
+            task1 = "Pick everything up from floors",
+            task2 = "Vacuum floors",
+            task3 = "Mop floors",
             lockDurationDays = 7
         ),
         Housework(
-            image = R.drawable.clean_bathroom,
+            image = R.drawable.img_clean_bathroom,
             title = "Clean Bathroom",
-            description = "Clean toilet, sink, and shower\nScrub bathtub and tiles\nWipe down countertops and mirrors",
+            task1 = "Clean toilet, sink, and shower",
+            task2 = "Scrub bathtub and tiles",
+            task3 = "Wipe down countertops and mirrors",
+            isLiked = false,
             lockDurationDays = 7
         ),
         Housework(
-            image = R.drawable.clean_livingroom,
-            title = "Clean Living Room",
-            description = "Dust furniture\nVacuum or sweep floors\nWipe down surfaces",
+            image = R.drawable.img_tidy_livingroom,
+            title = "Tidy Livingroom",
+            task1 = "Dust furniture",
+            task2 = "Vacuum or sweep floors",
+            task3 = "Wipe down surfaces",
             lockDurationDays = 1
         ),
         Housework(
-            image = R.drawable.clean_oven,
+            image = R.drawable.img_clean_oven,
             title = "Clean Oven",
-            description = "Remove racks and clean separately\nApply oven cleaner and let sit\nWipe down interior",
+            task1 = "Remove racks and clean separately",
+            task2 = "Apply oven cleaner and let sit",
+            task3 = "Wipe down interior",
+            isLiked = false,
             lockDurationDays = 14
         ),
         Housework(
-            image = R.drawable.clean_refrigerator,
+            image = R.drawable.img_clean_refrigerator,
             title = "Clean Refrigerator",
-            description = "Empty contents and remove shelves\nWipe down interior\nClean door seals",
+            task1 = "Empty contents and remove shelves",
+            task2 = "Wipe down interior",
+            task3 = "Clean door seals",
             lockDurationDays = 14
         ),
         Housework(
-            image = R.drawable.paperwork,
+            image = R.drawable.img_organize_paperwork,
             title = "Organize Paperwork",
-            description = "Sort and organize documents\nFile important papers\nShred or discard unnecessary documents",
+            task1 = "Sort and organize documents",
+            task2 = "File important papers",
+            task3 = "Shred or discard unnecessary documents",
             lockDurationDays = 1
         ),
         Housework(
-            image = R.drawable.empty_trash,
+            image = R.drawable.img_empty_trash,
             title = "Empty Trash",
-            description = "Gather trash from all rooms\nDispose of trash bags\nClean trash cans if necessary",
+            task1 = "Gather trash from all rooms",
+            task2 = "Dispose of trash bags",
+            task3 = "Clean trash cans if necessary",
             lockDurationDays = 2
         ),
         Housework(
-            image = R.drawable.tidy_bedroom,
+            image = R.drawable.img_tidy_bedroom,
             title = "Tidy Bedroom",
-            description = "Make the bed\nPut away clothes and belongings\nDust surfaces",
+            task1 = "Make the bed",
+            task2 = "Put away clothes and belongings",
+            task3 = "Dust surfaces",
             lockDurationDays = 1
         ),
         Housework(
-            image = R.drawable.tidy_kitchen,
+            image = R.drawable.img_tidy_kitchen,
             title = "Tidy Kitchen",
-            description = "Wipe down countertops\nPut away dishes\nOrganize pantry and cabinets",
+            task1 = "Wipe down countertops",
+            task2 = "Put away dishes",
+            task3 = "Organize pantry and cabinets",
             lockDurationDays = 1
         ),
         Housework(
-            image = R.drawable.wash_clothes,
+            image = R.drawable.img_wash_clothes,
             title = "Wash Clothes",
-            description = "Sort laundry by color\nLoad washing machine\nDry and fold clothes",
+            task1 = "Sort laundry by color",
+            task2 = "Load washing machine",
+            task3 = "Dry and fold clothes",
             lockDurationDays = 4
         ),
         Housework(
-            image = R.drawable.wash_dishes,
+            image = R.drawable.img_wash_dishes,
             title = "Wash Dishes",
-            description = "Scrape off food residue\nWash dishes with soap and water\nDry and put away",
+            task1 = "Scrape off food residue",
+            task2 = "Wash dishes with soap and water",
+            task3 = "Dry and put away",
+            isLiked = false,
             lockDurationDays = 1
         )
     )

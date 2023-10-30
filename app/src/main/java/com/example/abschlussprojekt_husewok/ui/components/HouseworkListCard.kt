@@ -3,6 +3,7 @@ package com.example.abschlussprojekt_husewok.ui.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -64,11 +65,12 @@ fun HouseworkListCard(
     fabOnClick: () -> Unit = {},
     // Default housework object
     housework: Housework = Housework(
-        image = R.drawable.clean_livingroom,
-        title = "Clean Living Room",
-        description = "Dust furniture\nVacuum or sweep floors\nWipe down surfaces",
-        isLiked = true,
-        lockDurationDays = 1
+        image = R.drawable.clean_floors,
+        title = "Clean Floors",
+        task1 = "Pick everything up from floors",
+        task2 = "Vacuum floors",
+        task3 = "Mop floors",
+        lockDurationDays = 7
     )
 ) {
     // Card composable (parent) with custom colors, borders and size
@@ -78,7 +80,8 @@ fun HouseworkListCard(
         ),
         modifier = Modifier
             .height(sizeHeight)
-            .width(sizeWidth),
+            .width(sizeWidth)
+            .clickable { /*TODO*/ },
         border = BorderStroke(
             sizeComplete / 100,
             Brush.verticalGradient(listOf(Orange80, Color.White, Purple80))
@@ -91,9 +94,9 @@ fun HouseworkListCard(
                 .background(
                     brush = Brush.verticalGradient(
                         listOf(
-                            Purple80.copy(alpha = 0.7f),
+                            Orange80.copy(alpha = 0.7f),
                             Color.White,
-                            Orange80.copy(alpha = 0.7f)
+                            Purple80.copy(alpha = 0.7f)
                         )
                     )
                 )
@@ -117,6 +120,7 @@ fun HouseworkListCard(
                         },
                     contentScale = ContentScale.Crop
                 )
+                /*
                 // Image composable with custom size and position
                 Image(
                     painter = painterResource(id = R.drawable.logo),
@@ -130,6 +134,7 @@ fun HouseworkListCard(
                             end.linkTo(parent.end)
                         }
                 )
+                 */
                 // Row composable (Housework Title Text and Status Text) with custom size and position
                 Column(
                     verticalArrangement = Arrangement.Center,

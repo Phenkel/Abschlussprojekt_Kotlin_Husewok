@@ -31,25 +31,11 @@ class MainActivity : ComponentActivity() {
             val activeHousework = Housework(
                 image = R.drawable.clean_floors,
                 title = "Clean Floors",
-                description = "Pick everything up from floors\nVacuum floors\nMop floors",
+                task1 = "Pick everything up from floors",
+                task2 = "Vacuum floors",
+                task3 = "Mop floors",
                 lockDurationDays = 7
             )
-            if (showDialog.value) {
-                AlertDialog(
-                    onDismissRequest = { showDialog.value = false },
-                    title = { Text(text = activeHousework.title) },
-                    text = { Text(text = activeHousework.description) },
-                    confirmButton = {
-                        Button(
-                            onClick = { showDialog.value = false },
-                            modifier = Modifier.padding(8.dp)
-                        ) {
-                            Text(text = "Got it")
-                        }
-                    },
-                    properties = DialogProperties(dismissOnClickOutside = true)
-                )
-            }
             Column(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,

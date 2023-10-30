@@ -94,5 +94,13 @@ dependencies {
     kapt("androidx.room:room-compiler:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2")
+    // For using Coil
+    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation ("com.google.accompanist:accompanist-coil:0.7.0")
+
+    implementation("com.github.esatgozcu:Compose-Rolling-Number:1.0.5")
+
+    implementation("com.exyte:animated-navigation-bar:1.0.0")
+
+    implementation("com.github.popovanton0:heart-switch:1.4.0")
 }

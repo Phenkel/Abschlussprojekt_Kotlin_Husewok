@@ -15,10 +15,16 @@ data class Housework(
     val image: Int,
 
     // Title of the housework
-    val title: String,
+    var title: String,
 
-    // Description of the housework
-    val description: String,
+    // Task of the housework
+    var task1: String,
+
+    // Task of the housework
+    var task2: String,
+
+    // Task of the housework
+    var task3: String,
 
     // Boolean if task is liked by user
     var isLiked: Boolean = true,

@@ -26,6 +26,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CardElevation
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,7 +34,6 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -72,7 +72,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 @Composable
 fun HomescreenCard(
     // Default values for size and onClick functions
-    sizeHeight: Dp = calcDp(percentage = 0.6f, dimension = Dimension.Height),
+    sizeHeight: Dp = calcDp(percentage = 0.65f, dimension = Dimension.Height),
     sizeWidth: Dp = calcDp(percentage = 0.8f, dimension = Dimension.Width),
     sizeComplete: Dp = (sizeHeight + sizeWidth) / 2,
     skipButtonEnabled: Boolean = true,
@@ -82,10 +82,12 @@ fun HomescreenCard(
     iconButtonOnClick: () -> Unit = {},
     // Default housework object
     housework: Housework = Housework(
-        image = R.drawable.clean_livingroom,
-        title = "Clean Living Room",
-        description = "Dust furniture\nVacuum or sweep floors\nWipe down surfaces",
-        lockDurationDays = 1
+        image = R.drawable.clean_floors,
+        title = "Clean Floors",
+        task1 = "Pick everything up from floors",
+        task2 = "Vacuum floors",
+        task3 = "Mop floors",
+        lockDurationDays = 7
     )
 ) {
     // Card composable (Parent) with custom colors, border, and size
@@ -107,9 +109,9 @@ fun HomescreenCard(
                 .background(
                     brush = Brush.horizontalGradient(
                         listOf(
-                            Purple80.copy(alpha = 0.5f),
+                            Orange80.copy(alpha = 0.5f),
                             Color.White,
-                            Orange80.copy(alpha = 0.5f)
+                            Purple80.copy(alpha = 0.5f)
                         )
                     )
                 )
@@ -118,7 +120,7 @@ fun HomescreenCard(
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize(1F)
             ) {
-                // Create references for image, title, button, buttonRow, logo and favorite //TODO: kommentar
+                // Create references for image, title, button, buttonRow and favorite //TODO: kommentar
                 val (image, border, title, button, buttonRow, logo, favorite) = createRefs()
                 // Image composable (Housework Image) with custom size, position and border
                 Image(
@@ -126,26 +128,12 @@ fun HomescreenCard(
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth(1f)
-                        .fillMaxHeight(0.7f)
+                        .fillMaxHeight(0.6f)
                         .constrainAs(image) {
                             centerHorizontallyTo(parent)
                             bottom.linkTo(parent.bottom)
                         },
                     contentScale = ContentScale.Crop
-                )
-                // Image composable (Husewok Logo) with custom size, position and alpha
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(sizeComplete / 5)
-                        .alpha(0.1f)
-                        .constrainAs(logo) {
-                            centerHorizontallyTo(parent)
-                            top.linkTo(parent.top)
-                            bottom.linkTo(buttonRow.top)
-                        },
-                    contentScale = ContentScale.Fit
                 )
                 // TODO: Kommentar
                 Spacer(
@@ -162,7 +150,7 @@ fun HomescreenCard(
                     modifier = Modifier
                         .fillMaxWidth(1f)
                         .constrainAs(buttonRow) {
-                            bottom.linkTo(image.top, sizeHeight / 50)
+                            bottom.linkTo(image.top, sizeHeight / 20)
                         },
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
@@ -179,7 +167,7 @@ fun HomescreenCard(
                             disabledContentColor = Purple80
                         ),
                         modifier = Modifier
-                            .height(sizeHeight / 10)
+                            .height(sizeHeight / 10 * 3 / 4)
                     ) {
                         // Icon composable (Skip) for the button
                         Icon(
@@ -203,7 +191,7 @@ fun HomescreenCard(
                             contentColor = Orange80
                         ),
                         modifier = Modifier
-                            .height(sizeHeight / 10)
+                            .height(sizeHeight / 10 * 3 / 4)
                     ) {
                         // Icon composable (Done) for the button
                         Icon(
@@ -223,7 +211,7 @@ fun HomescreenCard(
                     text = housework.title,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
-                        fontSize = calcSp(percentage = 0.05f)
+                        fontSize = calcSp(percentage = 0.06f)
                     ),
                     modifier = Modifier
                         .constrainAs(title) {
