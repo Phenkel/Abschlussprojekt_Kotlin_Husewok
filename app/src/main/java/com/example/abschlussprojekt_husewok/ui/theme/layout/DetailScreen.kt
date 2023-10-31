@@ -16,6 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -408,6 +409,28 @@ fun DetailScreen() {
                     )
                     Text(
                         text = "Update task"
+                    )
+                }
+
+                // Display a button to delete the task
+                Button(shape = ShapeDefaults.ExtraSmall, colors = ButtonDefaults.buttonColors(
+                    containerColor = Orange80, contentColor = Purple40
+                ), modifier = Modifier
+                    .width(
+                        calcDp(
+                            percentage = 0.8f, dimension = Dimension.Width
+                        )
+                    )
+                    .height(
+                        calcDp(
+                            percentage = 0.05f, dimension = Dimension.Height
+                        )
+                    ), onClick = { /*TODO*/ }) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete, contentDescription = null
+                    )
+                    Text(
+                        text = "Delete task"
                     )
                 }
 

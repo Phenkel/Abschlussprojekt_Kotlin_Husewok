@@ -2,7 +2,6 @@ package com.example.abschlussprojekt_husewok.ui.theme.layout
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -136,8 +135,6 @@ fun ListScreen() {
                         percentage = 0.02f, dimension = Dimension.Height
                     )
                 ),
-                state = lazyListState,
-                flingBehavior = rememberSnapFlingBehavior(lazyListState = lazyListState),
                 modifier = Modifier
                     .padding(innerPadding)
                     .fillMaxSize()

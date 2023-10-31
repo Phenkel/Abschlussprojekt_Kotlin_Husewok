@@ -38,6 +38,12 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 
+/**
+ * Composable function to display the profile screen.
+ *
+ * TODO: ViewModel
+ * TODO: Add change Reward Button onClick
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
@@ -64,131 +70,154 @@ fun Profilescreen() {
         mutableStateOf("Joke")
     }
 
+    // Define the layout of the screen
     Scaffold(
         containerColor = Color.Transparent,
-        topBar = { BasicTopAppBar() },
-        bottomBar = { AnimatedBottomAppBar() },
         modifier = Modifier
             .background(color = backgroundGrey)
             .paint(
                 painter = painterResource(id = R.drawable.background),
                 contentScale = ContentScale.Crop,
                 alpha = 0.333f
-            )
-    ) {
-        Column(
-            verticalArrangement = Arrangement.spacedBy(calcDp(percentage = 0.02f, dimension = Dimension.Height)),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxSize(1f)
-                .padding(it)
-        ) {
-            Image(
-                painter = painterResource(id = R.drawable.logo),
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
+            ),
+
+        // Display a topAppBar
+        topBar = { BasicTopAppBar() },
+
+        // Display a bottomAppBar
+        bottomBar = { AnimatedBottomAppBar() },
+
+        content = { innerPadding ->
+
+            // Use a column to show all profile information
+            Column(
+                verticalArrangement = Arrangement.spacedBy(calcDp(percentage = 0.02f, dimension = Dimension.Height)),
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .width(calcDp(percentage = 0.8f, dimension = Dimension.Width))
-                    .height(calcDp(percentage = 0.333f, dimension = Dimension.Height))
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
+                    .fillMaxSize(1f)
+                    .padding(innerPadding)
             ) {
-                Text(
-                    text = "UserID:",
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-                Text(
-                    text = user,
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-            ) {
-                Text(
-                    text = "Tasks Done/Skipped:",
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-                Text(
-                    text = tasksDone.toString() + " / " + tasksSkipped.toString(),
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-            ) {
-                Text(
-                    text = "Games Won/Lost:",
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-                Text(
-                    text = gamesWon.toString() + " / " + gamesLost.toString(),
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-            ) {
-                Text(
-                    text = "Skip Coins:",
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-                Text(
-                    text = skipCoins.toString(),
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-            }
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier
-                    .fillMaxWidth(0.8f)
-            ) {
-                Text(
-                    text = "Reward:",
-                    fontSize = calcSp(percentage = 0.03f),
-                    color = Color.White
-                )
-                Button(
-                    shape = ShapeDefaults.ExtraSmall,
-                    onClick = {
-                        if (reward == "Joke") {
-                            reward = "Bored"
-                        } else {
-                            reward = "Joke"
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (reward == "Joke") Purple40 else Orange80,
-                        contentColor = if (reward == "Joke") Orange80 else Purple40
-                    ),
+
+                // Display a image to show the logo
+                Image(
+                    painter = painterResource(id = R.drawable.logo),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .width(calcDp(percentage = 0.25f, dimension = Dimension.Width))
+                        .width(calcDp(percentage = 0.8f, dimension = Dimension.Width))
+                        .height(calcDp(percentage = 0.333f, dimension = Dimension.Height))
+                )
+
+                // Use a row to show the user id
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
                 ) {
-                    Text(text = reward)
+                    Text(
+                        text = "UserID:",
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                    Text(
+                        text = user,
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                }
+
+                // Use a row to show the tasks done and skipped amount
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                ) {
+                    Text(
+                        text = "Tasks Done/Skipped:",
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                    Text(
+                        text = tasksDone.toString() + " / " + tasksSkipped.toString(),
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                }
+
+                // Use a row to show the games won and lost amount
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                ) {
+                    Text(
+                        text = "Games Won/Lost:",
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                    Text(
+                        text = gamesWon.toString() + " / " + gamesLost.toString(),
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                }
+
+                // Use a row to show the skip coins amount
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                ) {
+                    Text(
+                        text = "Skip Coins:",
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                    Text(
+                        text = skipCoins.toString(),
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+                }
+
+                // Use a row to let user choose the reward
+                Row(
+                    verticalAlignment = Alignment.Top,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .fillMaxWidth(0.8f)
+                ) {
+                    Text(
+                        text = "Reward:",
+                        fontSize = calcSp(percentage = 0.03f),
+                        color = Color.White
+                    )
+
+                    // Display a button to let the user choose the reward
+                    Button(
+                        shape = ShapeDefaults.ExtraSmall,
+                        onClick = {
+                            if (reward == "Joke") {
+                                reward = "Bored"
+                            } else {
+                                reward = "Joke"
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = if (reward == "Joke") Purple40 else Orange80,
+                            contentColor = if (reward == "Joke") Orange80 else Purple40
+                        ),
+                        modifier = Modifier
+                            .width(calcDp(percentage = 0.25f, dimension = Dimension.Width))
+                    ) {
+                        Text(text = reward)
+                    }
                 }
             }
         }
-    }
+    )
 }
