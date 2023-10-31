@@ -18,6 +18,7 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -52,19 +53,19 @@ fun Profilescreen() {
         mutableStateOf("HlNsuks4O4bn8TzcbzY63Q6pC092")
     }
     val tasksDone by remember {
-        mutableStateOf(14)
+        mutableIntStateOf(14)
     }
     val tasksSkipped by remember {
-        mutableStateOf(3)
+        mutableIntStateOf(3)
     }
     val gamesWon by remember {
-        mutableStateOf(3)
+        mutableIntStateOf(3)
     }
     val gamesLost by remember {
-        mutableStateOf(14)
+        mutableIntStateOf(14)
     }
     val skipCoins by remember {
-        mutableStateOf(14)
+        mutableIntStateOf(14)
     }
     var reward by remember {
         mutableStateOf("Joke")
@@ -140,7 +141,7 @@ fun Profilescreen() {
                         color = Color.White
                     )
                     Text(
-                        text = tasksDone.toString() + " / " + tasksSkipped.toString(),
+                        text = "$tasksDone / $tasksSkipped",
                         fontSize = calcSp(percentage = 0.03f),
                         color = Color.White
                     )
@@ -159,7 +160,7 @@ fun Profilescreen() {
                         color = Color.White
                     )
                     Text(
-                        text = gamesWon.toString() + " / " + gamesLost.toString(),
+                        text = "$gamesWon / $gamesLost",
                         fontSize = calcSp(percentage = 0.03f),
                         color = Color.White
                     )
@@ -201,10 +202,10 @@ fun Profilescreen() {
                     Button(
                         shape = ShapeDefaults.ExtraSmall,
                         onClick = {
-                            if (reward == "Joke") {
-                                reward = "Bored"
+                            reward = if (reward == "Joke") {
+                                "Bored"
                             } else {
-                                reward = "Joke"
+                                "Joke"
                             }
                         },
                         colors = ButtonDefaults.buttonColors(

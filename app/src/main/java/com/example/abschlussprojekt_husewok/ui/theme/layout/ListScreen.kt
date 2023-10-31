@@ -1,6 +1,5 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.Button
@@ -36,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -68,7 +67,7 @@ import kotlinx.coroutines.launch
  * TODO: Add HouseworkListCard onClick
  * TODO: Composable for sorting column
  */
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun ListScreen() {
@@ -76,13 +75,10 @@ fun ListScreen() {
     var houseworkList by remember { mutableStateOf(HouseworkData.houseworkList) }
 
     // Create a state variable for the sorting method
-    var sortedBy by remember { mutableStateOf(0) }
+    var sortedBy by remember { mutableIntStateOf(0) }
 
     // Create a nested scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
-    // Create a lazy list state
-    val lazyListState = rememberLazyListState()
 
     // Create a snackbar host state
     val snackbarHostState = remember { SnackbarHostState() }
