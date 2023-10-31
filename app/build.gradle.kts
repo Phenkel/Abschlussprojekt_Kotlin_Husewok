@@ -8,12 +8,12 @@ plugins {
 
 android {
     namespace = "com.example.abschlussprojekt_husewok"
-    compileSdk = 33
+    compileSdk = 34
 
     defaultConfig {
         applicationId = "com.example.abschlussprojekt_husewok"
         minSdk = 26
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
@@ -98,9 +98,12 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     implementation ("com.google.accompanist:accompanist-coil:0.7.0")
 
+    //
     implementation("com.github.esatgozcu:Compose-Rolling-Number:1.0.5")
 
     implementation("com.exyte:animated-navigation-bar:1.0.0")
 
     implementation("com.github.popovanton0:heart-switch:1.4.0")
+
+    implementation("com.github.SimformSolutionsPvtLtd:SSJetpackComposeSwipeableView:1.0.1")
 }

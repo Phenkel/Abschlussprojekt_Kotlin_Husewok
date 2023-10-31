@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.exampledata.HouseworkData
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
@@ -54,7 +55,10 @@ import com.example.abschlussprojekt_husewok.ui.components.BasicTopAppBar
 import com.example.abschlussprojekt_husewok.ui.components.HouseworkListCard
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
+import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
+import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
+import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 import kotlinx.coroutines.launch
 
 /**
@@ -88,8 +92,7 @@ fun ListScreen() {
     val scope = rememberCoroutineScope()
 
     // Define the layout for the screen
-    Scaffold(
-        containerColor = Color.Transparent,
+    Scaffold(containerColor = Color.Transparent,
         modifier = Modifier
             .background(color = backgroundGrey)
             .nestedScroll(scrollBehavior.nestedScrollConnection)
@@ -253,9 +256,35 @@ fun ListScreen() {
 
                 // Display a card for each housework item in the list
                 items(houseworkList) { houseworkItem ->
-                    HouseworkListCard(
-                        housework = houseworkItem
-                    )
+                    SwipeAbleItemView(
+                        leftViewIcons = arrayListOf(
+                            Triple(
+                                painterResource(id = R.drawable.ic_edit),
+                                Purple80,
+                                "Edit Button"
+                            )
+                        ),
+                        rightViewIcons = arrayListOf(
+                            Triple(
+                                painterResource(id = R.drawable.ic_edit),
+                                Purple80,
+                                "Edit Button"
+                            )
+                        ),
+                        onClick = {},
+                        swipeDirection = SwipeDirection.RIGHT,
+                        leftViewBackgroundColor = Purple40,
+                        rightViewBackgroundColor = Purple40,
+                        position = houseworkList.indexOf(houseworkItem),
+                        leftViewWidth = calcDp(percentage = 0.3f, dimension = Dimension.Width),
+                        rightViewWidth = calcDp(percentage = 0.3f, dimension = Dimension.Width),
+                        height = calcDp(percentage = 0.15f, dimension = Dimension.Height),
+                        cornerRadius = 10.dp,
+                        leftSpace = calcDp(percentage = 0.05f, dimension = Dimension.Width),
+                        rightSpace = calcDp(percentage = 0.05f, dimension = Dimension.Width)
+                    ) {
+                        HouseworkListCard(housework = houseworkItem)
+                    }
                 }
 
                 // Display an add button at the end of the list

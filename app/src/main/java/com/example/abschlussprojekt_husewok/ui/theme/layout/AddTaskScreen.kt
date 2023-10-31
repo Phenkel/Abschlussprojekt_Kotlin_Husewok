@@ -11,16 +11,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.AddCircle
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -32,14 +28,13 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Snackbar
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Switch
-import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -57,7 +52,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.esatgozcu.rollingnumber.RollingNumberVM
 import com.esatgozcu.rollingnumber.RollingNumberView
 import com.example.abschlussprojekt_husewok.R
-import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
 import com.example.abschlussprojekt_husewok.ui.calc.calcDp
 import com.example.abschlussprojekt_husewok.ui.calc.calcSp
@@ -69,6 +63,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 import com.popovanton0.heartswitch.HeartSwitch
+import com.popovanton0.heartswitch.HeartSwitchColors
 
 /**
  * Composable function to display the detail screen.
@@ -103,7 +98,7 @@ fun AddTaskScreen() {
 
     // Create a state variable for the housework lock duration days
     var lockDurationDays by remember {
-        mutableStateOf(7)
+        mutableLongStateOf(7)
     }
 
     // Create a state variable for the housework liked status
@@ -286,6 +281,7 @@ fun AddTaskScreen() {
                             fontSize = calcSp(percentage = 0.05f)
                         )
 
+                        // Display a heart switch to edit the liked status
                         HeartSwitch(
                             checked = liked,
                             onCheckedChange = { value ->
@@ -295,38 +291,16 @@ fun AddTaskScreen() {
                                 } else {
                                     "Disliked"
                                 }
-                            }
+                            },
+                            colors = HeartSwitchColors(
+                                checkedTrackColor = Purple40,
+                                uncheckedTrackColor = Orange40,
+                                checkedTrackBorderColor = Purple80,
+                                uncheckedTrackBorderColor = Orange80,
+                                checkedThumbColor = Purple80,
+                                uncheckedThumbColor = Orange80
+                            )
                         )
-                        /*
-                        // Display a switch to edit the liked status
-                        Switch(checked = liked, onCheckedChange = { value ->
-                            liked = value
-                            isLikedText = if (liked) {
-                                "Liked"
-                            } else {
-                                "Disliked"
-                            }
-                        }, thumbContent = {
-                            if (liked) {
-                                Icon(
-                                    imageVector = Icons.Filled.Favorite,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(SwitchDefaults.IconSize)
-                                )
-                            } else {
-                                Icon(
-                                    imageVector = Icons.Filled.Clear,
-                                    contentDescription = null,
-                                    modifier = Modifier.size(SwitchDefaults.IconSize)
-                                )
-                            }
-                        }, colors = SwitchDefaults.colors(
-                            checkedThumbColor = Purple80,
-                            uncheckedThumbColor = Orange80,
-                            checkedTrackColor = Purple40,
-                            uncheckedTrackColor = Orange40
-                        )
-                        )*/
                     }
 
                     // Display a row to edit the locked duration days
