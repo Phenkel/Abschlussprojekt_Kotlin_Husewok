@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
 import com.example.abschlussprojekt_husewok.ui.calc.calcDp
@@ -39,6 +42,12 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 
+@Preview
+@Composable
+fun previewProfileScreen() {
+    ProfileScreen(navController = rememberNavController())
+}
+
 /**
  * Composable function to display the profile screen.
  *
@@ -46,9 +55,8 @@ import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
  * TODO: Add change Reward Button onClick
  */
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun Profilescreen() {
+fun ProfileScreen(navController: NavController) {
     val user by remember {
         mutableStateOf("HlNsuks4O4bn8TzcbzY63Q6pC092")
     }
@@ -72,8 +80,7 @@ fun Profilescreen() {
     }
 
     // Define the layout of the screen
-    Scaffold(
-        containerColor = Color.Transparent,
+    Scaffold(containerColor = Color.Transparent,
         modifier = Modifier
             .background(color = backgroundGrey)
             .paint(
@@ -86,13 +93,17 @@ fun Profilescreen() {
         topBar = { BasicTopAppBar() },
 
         // Display a bottomAppBar
-        bottomBar = { AnimatedBottomAppBar() },
+        bottomBar = { AnimatedBottomAppBar(navController, 2, false, false, true) },
 
         content = { innerPadding ->
 
             // Use a column to show all profile information
             Column(
-                verticalArrangement = Arrangement.spacedBy(calcDp(percentage = 0.02f, dimension = Dimension.Height)),
+                verticalArrangement = Arrangement.spacedBy(
+                    calcDp(
+                        percentage = 0.02f, dimension = Dimension.Height
+                    )
+                ),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxSize(1f)
@@ -105,7 +116,11 @@ fun Profilescreen() {
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .width(calcDp(percentage = 0.8f, dimension = Dimension.Width))
+                        .width(
+                            calcDp(
+                                percentage = 0.8f, dimension = Dimension.Width
+                            )
+                        )
                         .height(calcDp(percentage = 0.333f, dimension = Dimension.Height))
                 )
 
@@ -113,18 +128,22 @@ fun Profilescreen() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
                     Text(
                         text = "UserID:",
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
+                    Spacer(
+                        modifier = Modifier.width(
+                            calcDp(
+                                percentage = 0.2f, dimension = Dimension.Width
+                            )
+                        )
+                    )
                     Text(
-                        text = user,
-                        fontSize = calcSp(percentage = 0.03f),
-                        color = Color.White
+                        text = user, fontSize = calcSp(percentage = 0.033f), color = Color.White
                     )
                 }
 
@@ -132,17 +151,16 @@ fun Profilescreen() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
                     Text(
                         text = "Tasks Done/Skipped:",
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
                     Text(
                         text = "$tasksDone / $tasksSkipped",
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
                 }
@@ -151,17 +169,16 @@ fun Profilescreen() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
                     Text(
                         text = "Games Won/Lost:",
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
                     Text(
                         text = "$gamesWon / $gamesLost",
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
                 }
@@ -170,17 +187,16 @@ fun Profilescreen() {
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
                     Text(
                         text = "Skip Coins:",
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
                     Text(
                         text = skipCoins.toString(),
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
                 }
@@ -189,12 +205,11 @@ fun Profilescreen() {
                 Row(
                     verticalAlignment = Alignment.Top,
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                        .fillMaxWidth(0.8f)
+                    modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
                     Text(
                         text = "Reward:",
-                        fontSize = calcSp(percentage = 0.03f),
+                        fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
 
@@ -212,13 +227,16 @@ fun Profilescreen() {
                             containerColor = if (reward == "Joke") Purple40 else Orange80,
                             contentColor = if (reward == "Joke") Orange80 else Purple40
                         ),
-                        modifier = Modifier
-                            .width(calcDp(percentage = 0.25f, dimension = Dimension.Width))
+                        modifier = Modifier.width(
+                            calcDp(
+                                percentage = 0.25f,
+                                dimension = Dimension.Width
+                            )
+                        )
                     ) {
                         Text(text = reward)
                     }
                 }
             }
-        }
-    )
+        })
 }

@@ -106,4 +106,6 @@ dependencies {
     implementation("com.github.popovanton0:heart-switch:1.4.0")
 
     implementation("com.github.SimformSolutionsPvtLtd:SSJetpackComposeSwipeableView:1.0.1")
+
+    implementation("androidx.navigation:navigation-compose:2.7.4")
 }

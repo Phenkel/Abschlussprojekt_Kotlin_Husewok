@@ -19,12 +19,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.ui.components.AnimatedBottomAppBar
 import com.example.abschlussprojekt_husewok.ui.components.HomeScreenTopAppBar
 import com.example.abschlussprojekt_husewok.ui.components.HomescreenCard
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
+
+@Preview
+@Composable
+fun previewHomeScreen() {
+    HomeScreen(navController = rememberNavController())
+}
 
 /**
  * Composable function to display the home screen.
@@ -33,19 +41,20 @@ import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
  * TODO: Buttons onClick
  */
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     // Create a state variable for the active housework
     val activeHousework by remember {
-        mutableStateOf(Housework(
-            image = R.drawable.img_organize_paperwork,
-            title = "Organize Paperwork",
-            task1 = "Sort and organize documents",
-            task2 = "File important papers",
-            task3 = "Shred or discard unnecessary documents",
-            lockDurationDays = 1
-        ))
+        mutableStateOf(
+            Housework(
+                image = R.drawable.img_organize_paperwork,
+                title = "Organize Paperwork",
+                task1 = "Sort and organize documents",
+                task2 = "File important papers",
+                task3 = "Shred or discard unnecessary documents",
+                lockDurationDays = 1
+            )
+        )
     }
 
     // Create a state variable for the available skip coins
@@ -54,8 +63,7 @@ fun HomeScreen() {
     }
 
     // Define the layout for the screen
-    Scaffold(
-        containerColor = Color.Transparent,
+    Scaffold(containerColor = Color.Transparent,
         modifier = Modifier
             .background(color = backgroundGrey)
             .paint(
@@ -68,7 +76,7 @@ fun HomeScreen() {
         topBar = { HomeScreenTopAppBar() },
 
         // Display a bottomAppBar
-        bottomBar = { AnimatedBottomAppBar() },
+        bottomBar = { AnimatedBottomAppBar(navController, 0, true, false, false) },
 
         // Display the content of the layout
         content = { innerPadding ->
@@ -83,23 +91,16 @@ fun HomeScreen() {
             ) {
 
                 // Display a card to show the active housework
-                HomescreenCard(
-                    skipButtonEnabled = skipCoins > 0,
-                    skipButtonOnClick = {
-                        // TODO
-                    },
-                    doneButtonOnClick = {
-                        // TODO
-                    },
-                    fabOnClick = {
-                        // TODO
-                    },
-                    iconButtonOnClick = {
-                        // TODO
-                    },
-                    housework = activeHousework
+                HomescreenCard(skipButtonEnabled = skipCoins > 0, skipButtonOnClick = {
+                    // TODO
+                }, doneButtonOnClick = {
+                    // TODO
+                }, fabOnClick = {
+                    // TODO
+                }, iconButtonOnClick = {
+                    // TODO
+                }, housework = activeHousework
                 )
             }
-        }
-    )
+        })
 }

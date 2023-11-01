@@ -50,6 +50,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.esatgozcu.rollingnumber.RollingNumberVM
 import com.esatgozcu.rollingnumber.RollingNumberView
 import com.example.abschlussprojekt_husewok.R
@@ -67,6 +69,12 @@ import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 import com.popovanton0.heartswitch.HeartSwitch
 import com.popovanton0.heartswitch.HeartSwitchColors
 
+@Preview
+@Composable
+fun previewDetailScreen() {
+    DetailScreen(navController = rememberNavController())
+}
+
 /**
  * Composable function to display the detail screen.
  *
@@ -75,9 +83,8 @@ import com.popovanton0.heartswitch.HeartSwitchColors
  * TODO: Composable for editable information
  */
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun DetailScreen() {
+fun DetailScreen(navController: NavController) {
     // Create a state variable for the chosen housework
     val housework by remember {
         mutableStateOf(
@@ -151,7 +158,7 @@ fun DetailScreen() {
         topBar = { BasicTopAppBar(scrollBehavior) },
 
         // Display a bottomAppBar
-        bottomBar = { AnimatedBottomAppBar() },
+        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false) },
 
         // Display a snackbar
         snackbarHost = {

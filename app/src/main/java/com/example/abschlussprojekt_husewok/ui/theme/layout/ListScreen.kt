@@ -43,6 +43,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.exampledata.HouseworkData
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
@@ -51,6 +53,7 @@ import com.example.abschlussprojekt_husewok.ui.calc.calcSp
 import com.example.abschlussprojekt_husewok.ui.components.AnimatedBottomAppBar
 import com.example.abschlussprojekt_husewok.ui.components.BasicTopAppBar
 import com.example.abschlussprojekt_husewok.ui.components.HouseworkListCard
+import com.example.abschlussprojekt_husewok.ui.theme.Orange40
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
@@ -58,6 +61,12 @@ import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 import kotlinx.coroutines.launch
+
+@Preview
+@Composable
+fun previewListScreen() {
+    ListScreen(navController = rememberNavController())
+}
 
 /**
  * Composable function to display the list screen.
@@ -68,9 +77,8 @@ import kotlinx.coroutines.launch
  * TODO: Composable for sorting column
  */
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
-fun ListScreen() {
+fun ListScreen(navController: NavController) {
     // Create a state variable for the list of housework items
     var houseworkList by remember { mutableStateOf(HouseworkData.houseworkList) }
 
@@ -101,7 +109,7 @@ fun ListScreen() {
         topBar = { BasicTopAppBar(scrollBehavior) },
 
         // Display a bottomAppBar
-        bottomBar = { AnimatedBottomAppBar() },
+        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false) },
 
         // Display a snackbar
         snackbarHost = {
@@ -252,22 +260,26 @@ fun ListScreen() {
                     SwipeAbleItemView(
                         leftViewIcons = arrayListOf(
                             Triple(
-                                painterResource(id = R.drawable.ic_edit),
-                                Purple80,
-                                "Edit Button"
+                                painterResource(id = R.drawable.ic_delete), Orange80, "Delete"
                             )
                         ),
                         rightViewIcons = arrayListOf(
                             Triple(
-                                painterResource(id = R.drawable.ic_edit),
-                                Purple80,
-                                "Edit Button"
+                                painterResource(id = R.drawable.ic_edit), Purple80, "Edit"
                             )
                         ),
-                        onClick = {},
-                        swipeDirection = SwipeDirection.RIGHT,
-                        leftViewBackgroundColor = Purple40,
-                        rightViewBackgroundColor = Purple40,
+                        onClick = {
+                            if (it.second == "Edit") {
+                                navController.navigate("detail")
+                            } else if (it.second == "Delete") {
+
+                            } else {
+
+                            }
+                        },
+                        swipeDirection = SwipeDirection.BOTH,
+                        leftViewBackgroundColor = Orange40.copy(alpha = 0.5f),
+                        rightViewBackgroundColor = Purple40.copy(alpha = 0.5f),
                         position = houseworkList.indexOf(houseworkItem),
                         leftViewWidth = calcDp(percentage = 0.3f, dimension = Dimension.Width),
                         rightViewWidth = calcDp(percentage = 0.3f, dimension = Dimension.Width),
@@ -294,7 +306,9 @@ fun ListScreen() {
                             calcDp(
                                 percentage = 0.05f, dimension = Dimension.Height
                             )
-                        ), onClick = { /*TODO*/ }) {
+                        ), onClick = {
+                            navController.navigate("addTask")
+                    }) {
                         Icon(
                             imageVector = Icons.Outlined.Add, contentDescription = null
                         )
