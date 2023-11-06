@@ -81,11 +81,7 @@ fun HouseworkListCard(
         modifier = Modifier
             .height(sizeHeight)
             .width(sizeWidth)
-            .clickable { /*TODO*/ },
-        border = BorderStroke(
-            sizeComplete / 100,
-            Brush.verticalGradient(listOf(Orange80, Color.White, Purple80))
-        )
+            .clickable { /*TODO*/ }
     ) {
         // Box composable with custom background
         Box(
@@ -106,7 +102,7 @@ fun HouseworkListCard(
                 modifier = Modifier.fillMaxSize(1f)
             ) {
                 // Create references for image, verticalCenter, title and status TODO: Aktualisieren
-                val (image, imageBorder, logo, textrow, favorite) = createRefs()
+                val (image, textrow) = createRefs()
                 // Image composable with custom size and position
                 Image(
                     painter = painterResource(id = housework.image),
@@ -120,22 +116,6 @@ fun HouseworkListCard(
                         },
                     contentScale = ContentScale.Crop
                 )
-                /*
-                // Image composable with custom size and position
-                Image(
-                    painter = painterResource(id = R.drawable.logo),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxSize(1f)
-                        .alpha(0.2f)
-                        .constrainAs(logo) {
-                            centerVerticallyTo(parent)
-                            start.linkTo(imageBorder.end)
-                            end.linkTo(parent.end)
-                        }
-                )
-                 */
-                // Row composable (Housework Title Text and Status Text) with custom size and position
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -168,28 +148,6 @@ fun HouseworkListCard(
                         )
                     )
                 }
-                // TODO: Kommentar
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxHeight(1f)
-                        .width(sizeComplete / 100)
-                        .background(Brush.verticalGradient(listOf(Orange80, Color.White, Purple80)))
-                        .constrainAs(imageBorder) {
-                            start.linkTo(image.end)
-                        }
-                )
-                // TODO: Kommentar
-                Icon(
-                    imageVector = if (housework.isLiked) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    contentDescription = null,
-                    tint = Purple40,
-                    modifier = Modifier
-                        .size(sizeComplete / 10)
-                        .constrainAs(favorite) {
-                        top.linkTo(parent.top, sizeComplete / 25)
-                        end.linkTo(parent.end, sizeComplete / 25)
-                    }
-                )
             }
         }
     }

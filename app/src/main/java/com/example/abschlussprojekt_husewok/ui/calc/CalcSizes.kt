@@ -19,7 +19,12 @@ enum class Dimension {
     /**
      * Represents the Height dimension.
      */
-    Height
+    Height,
+
+    /**
+     * Represents the Full screen.
+     */
+    Full
 }
 
 /**
@@ -27,7 +32,6 @@ enum class Dimension {
  *
  * @param percentage The percentage value to calculate the size from.
  * @return The calculated size in sp (scaled pixels).
- *
  * @author Philipp Henkel
  */
 @Composable
@@ -42,22 +46,30 @@ fun calcSp(percentage: Float): TextUnit {
  * Calculates the desired size in density-independent pixels (dp) based on a given percentage and dimension.
  *
  * @param percentage The percentage value to calculate the size from.
- * @param dimension The dimension (Width or Height) to calculate the size for.
+ * @param dimension The dimension (Width, Height or Full) to calculate the size for.
  * @return The calculated size in density-independent pixels (dp).
- *
  * @author Philipp Henkel
  */
 @Composable
 fun calcDp(percentage: Float, dimension: Dimension): Dp {
     val screenWidth = LocalConfiguration.current.screenWidthDp
     val screenHeight = LocalConfiguration.current.screenHeightDp
-    return if (dimension == Dimension.Width) {
-        with(LocalDensity.current) {
-            (percentage * density * screenWidth).toDp()
+    val screenFull = (screenWidth + screenHeight) / 2
+    return when (dimension) {
+        Dimension.Width -> {
+            with(LocalDensity.current) {
+                (percentage * density * screenWidth).toDp()
+            }
         }
-    } else {
-        with(LocalDensity.current) {
-            (percentage * density * screenHeight).toDp()
+        Dimension.Height -> {
+            with(LocalDensity.current) {
+                (percentage * density * screenHeight).toDp()
+            }
+        }
+        Dimension.Full -> {
+            with(LocalDensity.current) {
+                (percentage * density * screenFull).toDp()
+            }
         }
     }
 }

@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.ui.components.AnimatedBottomAppBar
+import com.example.abschlussprojekt_husewok.ui.components.CardWithAnimatedBorder
 import com.example.abschlussprojekt_husewok.ui.components.HomeScreenTopAppBar
 import com.example.abschlussprojekt_husewok.ui.components.HomescreenCard
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
@@ -91,15 +92,19 @@ fun HomeScreen(navController: NavController) {
             ) {
 
                 // Display a card to show the active housework
-                HomescreenCard(skipButtonEnabled = skipCoins > 0, skipButtonOnClick = {
-                    // TODO
-                }, doneButtonOnClick = {
-                    // TODO
-                }, fabOnClick = {
-                    // TODO
-                }, iconButtonOnClick = {
-                    // TODO
-                }, housework = activeHousework
+                CardWithAnimatedBorder(
+                    content = {
+                        HomescreenCard(skipButtonEnabled = skipCoins > 0, skipButtonOnClick = {
+                            // TODO
+                        }, doneButtonOnClick = {
+                            // TODO
+                        }, fabOnClick = {
+                            // TODO
+                        }, iconButtonOnClick = {
+                            // TODO
+                        }, housework = activeHousework
+                        )
+                    }, liked = activeHousework.isLiked
                 )
             }
         })

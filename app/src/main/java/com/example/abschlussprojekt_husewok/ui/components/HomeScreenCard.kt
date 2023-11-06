@@ -97,10 +97,7 @@ fun HomescreenCard(
         ),
         modifier = Modifier
             .height(sizeHeight)
-            .width(sizeWidth),
-        border = BorderStroke(
-            sizeComplete / 100, Brush.horizontalGradient(listOf(Orange80, Color.White, Purple80))
-        )
+            .width(sizeWidth)
     ) {
         // Box composable (Brush background) with custom background
         Box(
@@ -121,7 +118,7 @@ fun HomescreenCard(
                 modifier = Modifier.fillMaxSize(1F)
             ) {
                 // Create references for image, title, button, buttonRow and favorite //TODO: kommentar
-                val (image, border, title, button, buttonRow, logo, favorite) = createRefs()
+                val (image, title, button, buttonRow, favorite) = createRefs()
                 // Image composable (Housework Image) with custom size, position and border
                 Image(
                     painter = painterResource(id = housework.image),
@@ -134,16 +131,6 @@ fun HomescreenCard(
                             bottom.linkTo(parent.bottom)
                         },
                     contentScale = ContentScale.Crop
-                )
-                // TODO: Kommentar
-                Spacer(
-                    modifier = Modifier
-                        .fillMaxWidth(1f)
-                        .height(sizeComplete / 100)
-                        .background(brush = Brush.horizontalGradient(listOf(Orange80, Color.White, Purple80)))
-                        .constrainAs(border) {
-                            bottom.linkTo(image.top)
-                        }
                 )
                 // Row composable (Skip Task Button and Mark as Done Button) with custom size and position
                 Row(

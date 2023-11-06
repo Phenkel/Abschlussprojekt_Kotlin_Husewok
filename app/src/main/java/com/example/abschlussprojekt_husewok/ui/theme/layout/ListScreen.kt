@@ -52,6 +52,7 @@ import com.example.abschlussprojekt_husewok.ui.calc.calcDp
 import com.example.abschlussprojekt_husewok.ui.calc.calcSp
 import com.example.abschlussprojekt_husewok.ui.components.AnimatedBottomAppBar
 import com.example.abschlussprojekt_husewok.ui.components.BasicTopAppBar
+import com.example.abschlussprojekt_husewok.ui.components.CardWithAnimatedBorder
 import com.example.abschlussprojekt_husewok.ui.components.HouseworkListCard
 import com.example.abschlussprojekt_husewok.ui.theme.Orange40
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
@@ -269,26 +270,23 @@ fun ListScreen(navController: NavController) {
                             )
                         ),
                         onClick = {
-                            if (it.second == "Edit") {
-                                navController.navigate("detail")
-                            } else if (it.second == "Delete") {
-
-                            } else {
-
-                            }
+                            navController.navigate("detail")
                         },
-                        swipeDirection = SwipeDirection.BOTH,
+                        swipeDirection = SwipeDirection.LEFT,
                         leftViewBackgroundColor = Orange40.copy(alpha = 0.5f),
                         rightViewBackgroundColor = Purple40.copy(alpha = 0.5f),
                         position = houseworkList.indexOf(houseworkItem),
                         leftViewWidth = calcDp(percentage = 0.3f, dimension = Dimension.Width),
                         rightViewWidth = calcDp(percentage = 0.3f, dimension = Dimension.Width),
                         height = calcDp(percentage = 0.15f, dimension = Dimension.Height),
-                        cornerRadius = 10.dp,
+                        cornerRadius = 20.dp,
                         leftSpace = calcDp(percentage = 0.05f, dimension = Dimension.Width),
                         rightSpace = calcDp(percentage = 0.05f, dimension = Dimension.Width)
                     ) {
-                        HouseworkListCard(housework = houseworkItem)
+                        CardWithAnimatedBorder(
+                            content = { HouseworkListCard(housework = houseworkItem) },
+                            liked = houseworkItem.isLiked
+                        )
                     }
                 }
 
@@ -307,7 +305,7 @@ fun ListScreen(navController: NavController) {
                                 percentage = 0.05f, dimension = Dimension.Height
                             )
                         ), onClick = {
-                            navController.navigate("addTask")
+                        navController.navigate("addTask")
                     }) {
                         Icon(
                             imageVector = Icons.Outlined.Add, contentDescription = null

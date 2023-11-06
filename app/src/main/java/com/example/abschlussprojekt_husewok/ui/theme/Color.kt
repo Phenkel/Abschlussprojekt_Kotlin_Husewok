@@ -19,3 +19,15 @@ val OrangeGrey40 = Color(0xFF908B73)
 val Peach40 = Color(0xFFF4A661)
 
 val backgroundGrey = Color(0xFF333333)
+
+val likedColors = listOf(
+    Purple80,
+    PurpleGrey80,
+    Pink80
+)
+
+val dislikedColors = listOf(
+    Orange80,
+    OrangeGrey80,
+    Peach80
+)

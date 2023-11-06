@@ -13,7 +13,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.layout.ProfileScreen
 
 @Composable
 fun NavigationAppHost(navController: NavHostController) {
-    NavHost(navController = navController, startDestination = "Home") {
+    NavHost(navController = navController, startDestination = "login") {
         composable("login") { LoginScreen(navController) }
         composable("home") { HomeScreen(navController) }
         composable("list") { ListScreen(navController) }

@@ -12,8 +12,10 @@ import com.example.abschlussprojekt_husewok.data.model.Joke
 import com.example.abschlussprojekt_husewok.data.model.User
 import com.example.abschlussprojekt_husewok.data.remote.BoredApi
 import com.example.abschlussprojekt_husewok.data.remote.JokeApi
+import com.example.abschlussprojekt_husewok.utils.Constants.Companion.auth
 
 class Repository(boredApi: BoredApi, jokeApi: JokeApi, houseworkDb: HouseworkDatabase, userDb: UserDatabase) {
 
+    val currentUser by  mutableStateOf<User?>(null)
 
 }
