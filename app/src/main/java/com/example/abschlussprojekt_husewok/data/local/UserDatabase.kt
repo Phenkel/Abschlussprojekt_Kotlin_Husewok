@@ -7,25 +7,29 @@ import androidx.room.RoomDatabase
 import com.example.abschlussprojekt_husewok.data.model.User
 
 @Database(entities = [User::class], version = 1)
-abstract class UserDatabase : RoomDatabase() {
-    // Data Access Object for accessing database operations
-    abstract val dao: UserDao
+abstract class UserDatabase: RoomDatabase() {
+
+    abstract fun userDao(): UserDao
 
     companion object {
-        // Instance of the UserDatabase
-        private lateinit var dbInstance: UserDatabase
 
-        // Get an instance of the UserDatabase
-        fun getDatabase(context: Context): UserDatabase {
+        private var INSTANCE: UserDatabase? = null
+
+        fun getInstance(context: Context): UserDatabase {
             synchronized(this) {
-                if (!this::dbInstance.isInitialized) {
-                    dbInstance = Room.databaseBuilder(
+                var instance = INSTANCE
+
+                if (instance == null) {
+                    instance = Room.databaseBuilder(
                         context.applicationContext,
                         UserDatabase::class.java,
-                        "housework_database"
-                    ).build()
+                        "product_database"
+                    ).fallbackToDestructiveMigration()
+                        .build()
+
+                    INSTANCE = instance
                 }
-                return dbInstance
+                return instance
             }
         }
     }

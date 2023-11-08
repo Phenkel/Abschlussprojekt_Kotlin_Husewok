@@ -50,6 +50,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.esatgozcu.rollingnumber.RollingNumberVM
@@ -66,72 +67,60 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
+import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.popovanton0.heartswitch.HeartSwitch
 import com.popovanton0.heartswitch.HeartSwitchColors
-
-@Preview
-@Composable
-fun previewDetailScreen() {
-    DetailScreen(navController = rememberNavController())
-}
 
 /**
  * Composable function to display the detail screen.
  *
- * TODO: ViewModel
+ * TODO: Firebase
  * TODO: Add updateTask Button onClick
  * TODO: Composable for editable information
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(navController: NavController) {
+fun DetailScreen(navController: NavController, viewModel: MainViewModel) {
     // Create a state variable for the chosen housework
-    val housework by remember {
-        mutableStateOf(
-            Housework(
-                image = R.drawable.img_organize_paperwork,
-                title = "Organize Paperwork",
-                task1 = "Sort and organize documents",
-                task2 = "File important papers",
-                task3 = "Shred or discard unnecessary documents",
-                lockDurationDays = 1
-            )
-        )
-    }
+    val housework by viewModel.detailedHousework.collectAsStateWithLifecycle()
+
     // Create a state variable for the housework title
     var title by remember {
-        mutableStateOf(housework.title)
+        mutableStateOf(housework?.title)
     }
 
     // Create a state variable for the 1. housework task
     var task1 by remember {
-        mutableStateOf(housework.task1)
+        mutableStateOf(housework?.task1)
     }
 
     // Create a state variable for the 2. housework task
     var task2 by remember {
-        mutableStateOf(housework.task2)
+        mutableStateOf(housework?.task2)
     }
 
     // Create a state variable for the 3. housework task
     var task3 by remember {
-        mutableStateOf(housework.task3)
+        mutableStateOf(housework?.task3)
     }
 
     // Create a state variable for the housework lock duration days
     var lockDurationDays by remember {
-        mutableLongStateOf(housework.lockDurationDays)
+        mutableLongStateOf(1)
+    }
+    housework?.let {
+        lockDurationDays = it.lockDurationDays
     }
 
     // Create a state variable for the housework liked status
     var liked by remember {
-        mutableStateOf(housework.isLiked)
+        mutableStateOf(housework?.isLiked)
     }
 
     // Create a state variable for the liked information
     var isLikedText by remember {
         mutableStateOf(
-            if (liked) "Liked" else "Disliked"
+            if (liked == true) "Liked" else "Disliked"
         )
     }
 
@@ -198,27 +187,29 @@ fun DetailScreen(navController: NavController) {
                 )
 
                 // Display a image of the chosen housework
-                Image(
-                    painter = painterResource(id = housework.image),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(
-                            calcDp(
-                                percentage = 0.8f, dimension = Dimension.Width
-                            )
-                        )
-                        .height(calcDp(percentage = 0.333f, dimension = Dimension.Height))
-                        .border(
-                            width = calcDp(percentage = 0.8f, dimension = Dimension.Width) / 100,
-                            brush = Brush.horizontalGradient(
-                                listOf(
-                                    Orange80, Color.White, Purple80
+                housework?.let { painterResource(id = it.image) }?.let {
+                    Image(
+                        painter = it,
+                        contentDescription = null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .width(
+                                calcDp(
+                                    percentage = 0.8f, dimension = Dimension.Width
                                 )
-                            ),
-                            shape = ShapeDefaults.ExtraSmall
-                        )
-                )
+                            )
+                            .height(calcDp(percentage = 0.333f, dimension = Dimension.Height))
+                            .border(
+                                width = calcDp(percentage = 0.8f, dimension = Dimension.Width) / 100,
+                                brush = Brush.horizontalGradient(
+                                    listOf(
+                                        Orange80, Color.White, Purple80
+                                    )
+                                ),
+                                shape = ShapeDefaults.ExtraSmall
+                            )
+                    )
+                }
 
                 // Use a column to display all editable settings of the chosen housework
                 Column(
@@ -232,64 +223,73 @@ fun DetailScreen(navController: NavController) {
                 ) {
 
                     // Display a text field to edit the title
-                    OutlinedTextField(value = title,
-                        onValueChange = { value ->
-                            title = value
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Purple40,
-                            unfocusedBorderColor = Orange40,
-                            focusedLabelColor = Purple80,
-                            unfocusedLabelColor = Orange40,
-                            textColor = Color.White
-                        ),
-                        label = { Text(text = "Title") })
+                    title?.let {
+                        OutlinedTextField(value = it,
+                            onValueChange = { value ->
+                                title = value
+                            },
+                            modifier = Modifier.fillMaxWidth(0.8f),
+                            readOnly = true,
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Purple40,
+                                unfocusedBorderColor = Orange40,
+                                focusedLabelColor = Purple80,
+                                unfocusedLabelColor = Orange40,
+                                textColor = Color.White
+                            ),
+                            label = { Text(text = "Title") })
+                    }
 
                     // Display a text field to edit the 1. task
-                    OutlinedTextField(value = task1,
-                        onValueChange = { value ->
-                            task1 = value
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Purple40,
-                            unfocusedBorderColor = Orange40,
-                            focusedLabelColor = Purple80,
-                            unfocusedLabelColor = Orange40,
-                            textColor = Color.White
-                        ),
-                        label = { Text(text = "1. Task") })
+                    task1?.let {
+                        OutlinedTextField(value = it,
+                            onValueChange = { value ->
+                                task1 = value
+                            },
+                            modifier = Modifier.fillMaxWidth(0.8f),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Purple40,
+                                unfocusedBorderColor = Orange40,
+                                focusedLabelColor = Purple80,
+                                unfocusedLabelColor = Orange40,
+                                textColor = Color.White
+                            ),
+                            label = { Text(text = "1. Task") })
+                    }
 
                     // Display a text field to edit the 2. task
-                    OutlinedTextField(value = task2,
-                        onValueChange = { value ->
-                            task2 = value
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Purple40,
-                            unfocusedBorderColor = Orange40,
-                            focusedLabelColor = Purple80,
-                            unfocusedLabelColor = Orange40,
-                            textColor = Color.White
-                        ),
-                        label = { Text(text = "2. Task") })
+                    task2?.let {
+                        OutlinedTextField(value = it,
+                            onValueChange = { value ->
+                                task2 = value
+                            },
+                            modifier = Modifier.fillMaxWidth(0.8f),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Purple40,
+                                unfocusedBorderColor = Orange40,
+                                focusedLabelColor = Purple80,
+                                unfocusedLabelColor = Orange40,
+                                textColor = Color.White
+                            ),
+                            label = { Text(text = "2. Task") })
+                    }
 
                     // Display a text field to edit the 3. task
-                    OutlinedTextField(value = task3,
-                        onValueChange = { value ->
-                            task3 = value
-                        },
-                        modifier = Modifier.fillMaxWidth(0.8f),
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = Purple40,
-                            unfocusedBorderColor = Orange40,
-                            focusedLabelColor = Purple80,
-                            unfocusedLabelColor = Orange40,
-                            textColor = Color.White
-                        ),
-                        label = { Text(text = "3. Task") })
+                    task3?.let {
+                        OutlinedTextField(value = it,
+                            onValueChange = { value ->
+                                task3 = value
+                            },
+                            modifier = Modifier.fillMaxWidth(0.8f),
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = Purple40,
+                                unfocusedBorderColor = Orange40,
+                                focusedLabelColor = Purple80,
+                                unfocusedLabelColor = Orange40,
+                                textColor = Color.White
+                            ),
+                            label = { Text(text = "3. Task") })
+                    }
 
                     // Display a row to edit the liked stats
                     Row(
@@ -304,25 +304,27 @@ fun DetailScreen(navController: NavController) {
                         )
 
                         // Display a heart switch to edit the liked status
-                        HeartSwitch(
-                            checked = liked,
-                            onCheckedChange = { value ->
-                                liked = value
-                                isLikedText = if (liked) {
-                                    "Liked"
-                                } else {
-                                    "Disliked"
-                                }
-                            },
-                            colors = HeartSwitchColors(
-                                checkedTrackColor = Purple40,
-                                uncheckedTrackColor = Orange40,
-                                checkedTrackBorderColor = Purple80,
-                                uncheckedTrackBorderColor = Orange80,
-                                checkedThumbColor = Purple80,
-                                uncheckedThumbColor = Orange80
+                        liked?.let {
+                            HeartSwitch(
+                                checked = it,
+                                onCheckedChange = { value ->
+                                    liked = value
+                                    isLikedText = if (liked as Boolean) {
+                                        "Liked"
+                                    } else {
+                                        "Disliked"
+                                    }
+                                },
+                                colors = HeartSwitchColors(
+                                    checkedTrackColor = Purple40,
+                                    uncheckedTrackColor = Orange40,
+                                    checkedTrackBorderColor = Purple80,
+                                    uncheckedTrackBorderColor = Orange80,
+                                    checkedThumbColor = Purple80,
+                                    uncheckedThumbColor = Orange80
+                                )
                             )
-                        )
+                        }
                     }
 
                     // Display a row to edit the locked duration days
@@ -384,11 +386,11 @@ fun DetailScreen(navController: NavController) {
                     modifier = Modifier.fillMaxWidth(0.8f)
                 ) {
                     Text(
-                        text = if (housework.isLocked()) "Locked:" else "Unlocked:",
+                        text = if (housework?.isLocked() == true) "Locked:" else "Unlocked:",
                         color = Color.White,
                         fontSize = calcSp(percentage = 0.05f)
                     )
-                    (if (housework.lockExpirationDate != null) housework.lockExpirationDate else "")?.let { expirationDate ->
+                    (if (housework?.lockExpirationDate != null) housework?.lockExpirationDate else "")?.let { expirationDate ->
                         Text(
                             text = expirationDate,
                             color = Color.White,
@@ -419,26 +421,28 @@ fun DetailScreen(navController: NavController) {
                     )
                 }
 
-                // Display a button to delete the task
-                Button(shape = ShapeDefaults.ExtraSmall, colors = ButtonDefaults.buttonColors(
-                    containerColor = Orange80, contentColor = Purple40
-                ), modifier = Modifier
-                    .width(
-                        calcDp(
-                            percentage = 0.8f, dimension = Dimension.Width
+                if (housework?.default == false) {
+                    // Display a button to delete the task
+                    Button(shape = ShapeDefaults.ExtraSmall, colors = ButtonDefaults.buttonColors(
+                        containerColor = Orange80, contentColor = Purple40
+                    ), modifier = Modifier
+                        .width(
+                            calcDp(
+                                percentage = 0.8f, dimension = Dimension.Width
+                            )
                         )
-                    )
-                    .height(
-                        calcDp(
-                            percentage = 0.05f, dimension = Dimension.Height
+                        .height(
+                            calcDp(
+                                percentage = 0.05f, dimension = Dimension.Height
+                            )
+                        ), onClick = { /*TODO*/ }) {
+                        Icon(
+                            imageVector = Icons.Outlined.Delete, contentDescription = null
                         )
-                    ), onClick = { /*TODO*/ }) {
-                    Icon(
-                        imageVector = Icons.Outlined.Delete, contentDescription = null
-                    )
-                    Text(
-                        text = "Delete task"
-                    )
+                        Text(
+                            text = "Delete task"
+                        )
+                    }
                 }
 
                 Spacer(

@@ -64,14 +64,9 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
+import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.popovanton0.heartswitch.HeartSwitch
 import com.popovanton0.heartswitch.HeartSwitchColors
-
-@Preview
-@Composable
-fun previewAddTaskScreen() {
-    AddTaskScreen(navController = rememberNavController())
-}
 
 /**
  * Composable function to display the add task screen.
@@ -82,7 +77,7 @@ fun previewAddTaskScreen() {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddTaskScreen(navController: NavController) {
+fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
     // Create a state variable for the housework title
     var title by remember {
         mutableStateOf("")

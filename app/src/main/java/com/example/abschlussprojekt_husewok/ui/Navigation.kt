@@ -10,15 +10,16 @@ import com.example.abschlussprojekt_husewok.ui.theme.layout.HomeScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.ListScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.LoginScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.ProfileScreen
+import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 
 @Composable
-fun NavigationAppHost(navController: NavHostController) {
+fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "login") {
-        composable("login") { LoginScreen(navController) }
-        composable("home") { HomeScreen(navController) }
-        composable("list") { ListScreen(navController) }
-        composable("detail") { DetailScreen(navController) }
-        composable("addTask") { AddTaskScreen(navController) }
-        composable("profile") { ProfileScreen(navController) }
+        composable("login") { LoginScreen(navController, viewModel) }
+        composable("home") { HomeScreen(navController, viewModel) }
+        composable("list") { ListScreen(navController, viewModel) }
+        composable("detail") { DetailScreen(navController, viewModel) }
+        composable("addTask") { AddTaskScreen(navController, viewModel) }
+        composable("profile") { ProfileScreen(navController, viewModel) }
     }
 }

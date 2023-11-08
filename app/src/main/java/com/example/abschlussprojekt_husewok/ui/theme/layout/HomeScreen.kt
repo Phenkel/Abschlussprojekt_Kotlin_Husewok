@@ -28,12 +28,7 @@ import com.example.abschlussprojekt_husewok.ui.components.CardWithAnimatedBorder
 import com.example.abschlussprojekt_husewok.ui.components.HomeScreenTopAppBar
 import com.example.abschlussprojekt_husewok.ui.components.HomescreenCard
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
-
-@Preview
-@Composable
-fun previewHomeScreen() {
-    HomeScreen(navController = rememberNavController())
-}
+import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 
 /**
  * Composable function to display the home screen.
@@ -43,7 +38,7 @@ fun previewHomeScreen() {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     // Create a state variable for the active housework
     val activeHousework by remember {
         mutableStateOf(

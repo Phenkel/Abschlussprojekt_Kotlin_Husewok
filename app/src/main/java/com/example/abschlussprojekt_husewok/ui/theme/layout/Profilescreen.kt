@@ -19,19 +19,14 @@ import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
 import com.example.abschlussprojekt_husewok.ui.calc.calcDp
@@ -41,12 +36,7 @@ import com.example.abschlussprojekt_husewok.ui.components.BasicTopAppBar
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
-
-@Preview
-@Composable
-fun previewProfileScreen() {
-    ProfileScreen(navController = rememberNavController())
-}
+import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 
 /**
  * Composable function to display the profile screen.
@@ -56,28 +46,8 @@ fun previewProfileScreen() {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
-    val user by remember {
-        mutableStateOf("HlNsuks4O4bn8TzcbzY63Q6pC092")
-    }
-    val tasksDone by remember {
-        mutableIntStateOf(14)
-    }
-    val tasksSkipped by remember {
-        mutableIntStateOf(3)
-    }
-    val gamesWon by remember {
-        mutableIntStateOf(3)
-    }
-    val gamesLost by remember {
-        mutableIntStateOf(14)
-    }
-    val skipCoins by remember {
-        mutableIntStateOf(14)
-    }
-    var reward by remember {
-        mutableStateOf("Joke")
-    }
+fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
+    val user by viewModel.currentUser.collectAsStateWithLifecycle()
 
     // Define the layout of the screen
     Scaffold(containerColor = Color.Transparent,
@@ -142,9 +112,11 @@ fun ProfileScreen(navController: NavController) {
                             )
                         )
                     )
-                    Text(
-                        text = user, fontSize = calcSp(percentage = 0.033f), color = Color.White
-                    )
+                    user?.let {
+                        Text(
+                            text = it.userId, fontSize = calcSp(percentage = 0.033f), color = Color.White
+                        )
+                    }
                 }
 
                 // Use a row to show the tasks done and skipped amount
@@ -159,7 +131,7 @@ fun ProfileScreen(navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        text = "$tasksDone / $tasksSkipped",
+                        text = "${user?.tasksDone} / ${user?.tasksSkipped}",
                         fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
@@ -177,7 +149,7 @@ fun ProfileScreen(navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        text = "$gamesWon / $gamesLost",
+                        text = "${user?.gamesWon} / ${user?.gamesLost}",
                         fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
@@ -195,7 +167,7 @@ fun ProfileScreen(navController: NavController) {
                         color = Color.White
                     )
                     Text(
-                        text = skipCoins.toString(),
+                        text = user?.skipCoins.toString(),
                         fontSize = calcSp(percentage = 0.033f),
                         color = Color.White
                     )
@@ -217,15 +189,12 @@ fun ProfileScreen(navController: NavController) {
                     Button(
                         shape = ShapeDefaults.ExtraSmall,
                         onClick = {
-                            reward = if (reward == "Joke") {
-                                "Bored"
-                            } else {
-                                "Joke"
-                            }
+                            viewModel.changeRewardCurrentUser()
+                            viewModel.updateCurrentUserFirestore()
                         },
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = if (reward == "Joke") Purple40 else Orange80,
-                            contentColor = if (reward == "Joke") Orange80 else Purple40
+                            containerColor = if (user?.reward == "Joke") Purple40 else Orange80,
+                            contentColor = if (user?.reward == "Joke") Orange80 else Purple40
                         ),
                         modifier = Modifier.width(
                             calcDp(
@@ -234,7 +203,7 @@ fun ProfileScreen(navController: NavController) {
                             )
                         )
                     ) {
-                        Text(text = reward)
+                        user?.let { Text(text = it.reward) }
                     }
                 }
             }

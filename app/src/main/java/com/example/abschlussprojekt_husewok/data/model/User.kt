@@ -7,20 +7,24 @@ import androidx.room.PrimaryKey
 data class User(
     // Primary key with auto-generate
     @PrimaryKey(autoGenerate = false)
-    val id: Long = 1,
+    val id: Long = 0,
+
+    val userId: String,
 
     // Number of skip coins
-    val skipCoins: Long = 0,
+    val skipCoins: Long,
 
     // Number of tasks done
-    val tasksDone: Long = 0,
+    val tasksDone: Long,
 
     // Number of tasks skipped
-    val tasksSkipped: Long = 0,
+    val tasksSkipped: Long,
 
     // Number of games won
-    val gamesWons: Long = 0,
+    val gamesWon: Long,
 
     // Number of games lost
-    val gamesLost: Long = 0
+    val gamesLost: Long,
+
+    val reward: String
 )

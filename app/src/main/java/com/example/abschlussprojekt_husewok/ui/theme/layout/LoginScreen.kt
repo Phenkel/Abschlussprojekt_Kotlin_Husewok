@@ -1,6 +1,5 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout
 
-import android.content.IntentSender
 import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconToggleButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.ShapeDefaults
@@ -35,15 +35,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.core.app.ActivityCompat.startIntentSenderForResult
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.abschlussprojekt_husewok.MainActivity
 import com.example.abschlussprojekt_husewok.R
+import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.ui.calc.Dimension
 import com.example.abschlussprojekt_husewok.ui.calc.calcDp
 import com.example.abschlussprojekt_husewok.ui.calc.calcSp
@@ -53,22 +53,13 @@ import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 import com.example.abschlussprojekt_husewok.utils.Constants.Companion.auth
-import com.google.android.gms.auth.api.identity.BeginSignInRequest
-import com.google.android.gms.auth.api.identity.Identity
-import com.google.android.gms.auth.api.identity.SignInClient
 import com.google.firebase.appcheck.internal.util.Logger.TAG
-
-@Preview
-@Composable
-fun previewLoginScreen() {
-    LoginScreen(navController = rememberNavController())
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController) {
+fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
     var email by remember {
-        mutableStateOf("")
+        mutableStateOf("philipphnkl@proton.me")
     }
 
     val emailRegex = """^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$""".toRegex()
@@ -77,12 +68,16 @@ fun LoginScreen(navController: NavController) {
     }
 
     var password by remember {
-        mutableStateOf("")
+        mutableStateOf("Ezio130697")
     }
 
     val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$".toRegex()
     fun isValidPassword(password: String): Boolean {
         return passwordRegex.matches(password)
+    }
+
+    var showPassword by remember {
+        mutableStateOf(false)
     }
 
     // Create a snackbar host state
@@ -131,7 +126,13 @@ fun LoginScreen(navController: NavController) {
                         textColor = Color.White
                     ),
                     label = { Text(text = "eMail") })
-                Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = Dimension.Height)))
+                Spacer(
+                    modifier = Modifier.height(
+                        calcDp(
+                            percentage = 0.02f, dimension = Dimension.Height
+                        )
+                    )
+                )
 
                 OutlinedTextField(value = password,
                     onValueChange = { value ->
@@ -145,8 +146,31 @@ fun LoginScreen(navController: NavController) {
                         unfocusedLabelColor = Orange40,
                         textColor = Color.White
                     ),
-                    label = { Text(text = "Password") })
-                Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = Dimension.Height)))
+                    visualTransformation = if (!showPassword) PasswordVisualTransformation() else VisualTransformation.None,
+                    trailingIcon = {
+                        IconToggleButton(checked = showPassword,
+                            onCheckedChange = { showPassword = it }) {
+                            if (showPassword) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_eye_filled),
+                                    contentDescription = null,
+                                    tint = Color.White
+                                )
+                            } else Icon(
+                                painter = painterResource(id = R.drawable.ic_eye_outline),
+                                contentDescription = null,
+                                tint = Color.White
+                            )
+                        }
+                    },
+                    label = { Text(text = "Password: a-z 0-9") })
+                Spacer(
+                    modifier = Modifier.height(
+                        calcDp(
+                            percentage = 0.02f, dimension = Dimension.Height
+                        )
+                    )
+                )
 
                 // TODO: REGISTER
                 Button(shape = ShapeDefaults.ExtraSmall, colors = ButtonDefaults.buttonColors(
@@ -162,30 +186,36 @@ fun LoginScreen(navController: NavController) {
                             percentage = 0.05f, dimension = Dimension.Height
                         )
                     ), onClick = {
-                        if (isValidEmail(email) && isValidPassword(password)) {
-                            auth.createUserWithEmailAndPassword(email, password)
-                                .addOnCompleteListener { task ->
-                                    if (task.isSuccessful) {
-                                        Log.d(TAG, "createUserWithEmail:success")
-                                        val user = auth.currentUser
-                                        // TODO: Register
-                                        navController.navigate("home")
-                                    } else {
-                                        Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                                        // TODO: SNACKBAR
-                                    }
+                    if (isValidEmail(email) && isValidPassword(password)) {
+                        auth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener { task ->
+                                if (task.isSuccessful) {
+                                    Log.d(TAG, "createUserWithEmail:success")
+                                    val user = auth.currentUser
+                                    navController.navigate("home")
+                                } else {
+                                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                                    // TODO: SNACKBAR
                                 }
-                        } else {
-                            Log.w(TAG, "emailOrPasswordInvalid")
-                            // TODO: SNACKBAR
-                        }
+                            }
+                    } else {
+                        Log.w(TAG, "emailOrPasswordInvalid")
+                        // TODO: SNACKBAR
+                    }
                 }) {
                     Text(
                         text = "Register"
                     )
                 }
-                Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = Dimension.Height)))
+                Spacer(
+                    modifier = Modifier.height(
+                        calcDp(
+                            percentage = 0.02f, dimension = Dimension.Height
+                        )
+                    )
+                )
 
+                // TODO: Login
                 Button(shape = ShapeDefaults.ExtraSmall, colors = ButtonDefaults.buttonColors(
                     containerColor = Purple40, contentColor = Orange80
                 ), modifier = Modifier
@@ -205,7 +235,7 @@ fun LoginScreen(navController: NavController) {
                                 if (task.isSuccessful) {
                                     Log.d(TAG, "signInWithEmail:success")
                                     val user = auth.currentUser
-                                    // TODO: Login
+                                    viewModel.updateCurrentUser(user?.uid.toString())
                                     navController.navigate("home")
                                 } else {
                                     Log.w(TAG, "signInWithEmail:failure", task.exception)

@@ -43,6 +43,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.abschlussprojekt_husewok.R
@@ -59,15 +60,10 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
+import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 import kotlinx.coroutines.launch
-
-@Preview
-@Composable
-fun previewListScreen() {
-    ListScreen(navController = rememberNavController())
-}
 
 /**
  * Composable function to display the list screen.
@@ -79,9 +75,11 @@ fun previewListScreen() {
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ListScreen(navController: NavController) {
+fun ListScreen(navController: NavController, viewModel: MainViewModel) {
+    viewModel.updateHouseworkList()
+
     // Create a state variable for the list of housework items
-    var houseworkList by remember { mutableStateOf(HouseworkData.houseworkList) }
+    val houseworkList by viewModel.houseworkList.collectAsStateWithLifecycle()
 
     // Create a state variable for the sorting method
     var sortedBy by remember { mutableIntStateOf(0) }
@@ -145,6 +143,7 @@ fun ListScreen(navController: NavController) {
                     .fillMaxSize()
             ) {
 
+                /*
                 // Display a header row with sorting options
                 item {
                     Column(
@@ -255,6 +254,7 @@ fun ListScreen(navController: NavController) {
                         }
                     }
                 }
+                 */
 
                 // Display a card for each housework item in the list
                 items(houseworkList) { houseworkItem ->
@@ -270,6 +270,7 @@ fun ListScreen(navController: NavController) {
                             )
                         ),
                         onClick = {
+                            viewModel.updateDetailedHousework(houseworkItem)
                             navController.navigate("detail")
                         },
                         swipeDirection = SwipeDirection.LEFT,
