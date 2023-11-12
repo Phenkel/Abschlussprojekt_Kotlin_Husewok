@@ -1,58 +1,51 @@
 package com.example.abschlussprojekt_husewok.data.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+/**
+ * Data class representing a housework task.
+ *
+ * @param image The resource ID of the image associated with the task.
+ * @param title The title or name of the task.
+ * @param task1 The first task description.
+ * @param task2 The second task description.
+ * @param task3 The third task description.
+ * @param isLiked Indicates whether the task is liked or not.
+ * @param lockDurationDays The duration of the lock in days.
+ * @param lockExpirationDate The expiration date of the lock in ISO_LOCAL_DATE format.
+ * @param default Indicates whether the task is a default task or not.
+ * @param id The ID of the task.
+ */
 data class Housework(
-    // Image resource ID for the housework
     val image: Int,
-
-    // Title of the housework
-    var title: String,
-
-    // Task of the housework
-    var task1: String,
-
-    // Task of the housework
-    var task2: String,
-
-    // Task of the housework
-    var task3: String,
-
-    // Boolean if task is liked by user
-    var isLiked: Boolean = true,
-
-    // Locked days of the housework
-    var lockDurationDays: Long,
-
-    // Lock expiration date of the housework
-    var lockExpirationDate: String? = null,
-
-    val default: Boolean = true
+    val title: String,
+    val task1: String,
+    val task2: String,
+    val task3: String,
+    val isLiked: Boolean,
+    val lockDurationDays: Long,
+    var lockExpirationDate: String,
+    val default: Boolean,
+    val id: String
 ) {
     /**
-     * Checks if the lock is currently active.
+     * Checks if the housework task is locked based on the lock expiration date.
      *
-     * @return true if the lock is active, false otherwise.
+     * @return True if the task is locked, false otherwise.
      */
     fun isLocked(): Boolean {
-        lockExpirationDate?.let {
-            try {
-                val lockExpirationDateAsDate = LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
-                return LocalDate.now().isBefore(lockExpirationDateAsDate)
-            } catch (e: DateTimeParseException) {
-                // Fehler beim Parsen des Datums
-                return false
-            }
+        try {
+            val lockExpirationDateAsDate = LocalDate.parse(lockExpirationDate, DateTimeFormatter.ISO_LOCAL_DATE)
+            return LocalDate.now().isBefore(lockExpirationDateAsDate)
+        } catch (e: DateTimeParseException) {
+            return false
         }
-        return false
     }
 
     /**
-     * Updates the lock expiration date based on the current date and the lock duration.
+     * Updates the lock expiration date by adding the lock duration days to the current date.
      */
     fun updateLockExpirationDate() {
         val lockExpirationDateAsDate = LocalDate.now().plusDays(lockDurationDays)

@@ -4,14 +4,20 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.abschlussprojekt_husewok.ui.theme.layout.AddTaskScreen
-import com.example.abschlussprojekt_husewok.ui.theme.layout.DetailScreen
-import com.example.abschlussprojekt_husewok.ui.theme.layout.HomeScreen
-import com.example.abschlussprojekt_husewok.ui.theme.layout.ListScreen
-import com.example.abschlussprojekt_husewok.ui.theme.layout.LoginScreen
-import com.example.abschlussprojekt_husewok.ui.theme.layout.ProfileScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.addTaskScreen.AddTaskScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.detailScreen.DetailScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen.HomeScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen.ListScreen
+import com.example.abschlussprojekt_husewok.ui.theme.loginScreen.LoginScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.profileScreen.ProfileScreen
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 
+/**
+ * Composable function to set up the navigation host for the app.
+ *
+ * @param navController The NavHostController used for navigation.
+ * @param viewModel The MainViewModel used for data access.
+ */
 @Composable
 fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "login") {

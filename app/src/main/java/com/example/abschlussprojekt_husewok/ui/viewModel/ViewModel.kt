@@ -1,39 +1,26 @@
 package com.example.abschlussprojekt_husewok.ui.viewModel
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.abschlussprojekt_husewok.data.repository.Repository
-import com.example.abschlussprojekt_husewok.data.local.UserDatabase
 import com.example.abschlussprojekt_husewok.data.model.Housework
-import com.example.abschlussprojekt_husewok.data.model.User
-import com.example.abschlussprojekt_husewok.data.remote.BoredApi
-import com.example.abschlussprojekt_husewok.data.remote.JokeApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.launch
 
-class MainViewModel(application: Application) : ViewModel() {
-    private val repository = Repository(BoredApi, JokeApi, UserDatabase.getInstance(application))
-
+/**
+ * ViewModel class for the app.
+ *
+ * @param repository The repository.
+ */
+class MainViewModel(
+    //application: Application
+    private val repository: Repository
+) : ViewModel() {
+    // State Flows for accessing data from the repository
     val currentUser = repository.currentUser
-
     val detailedHousework = repository.detailedHousework
-
     val activeHousework = repository.activeHousework
-
     val houseworkList = repository.houseworkList
 
     fun updateCurrentUser(uid: String) {
-        repository.updateCurrentUser(uid)
-    }
-
-    fun updateCurrentUserFirestore() {
-        repository.updateCurrentUserFirestore()
-    }
-
-    fun changeRewardCurrentUser() {
-        repository.changeRewardCurrentUser()
+        repository.firebase.updateCurrentUser(uid)
     }
 
     fun updateDetailedHousework(housework: Housework) {
@@ -41,6 +28,47 @@ class MainViewModel(application: Application) : ViewModel() {
     }
 
     fun updateHouseworkList() {
-        repository.updateHouseworkList()
+        repository.firebase.updateHouseworkList()
     }
+
+    fun upsertHouseworkFirebase(housework: Housework) {
+        repository.firebase.upsertHouseworkFirebase(housework)
+    }
+
+    fun createNewUserFirebase(uid: String) {
+        repository.firebase.createNewUserFirebase(uid)
+    }
+
+    fun updateUserReward() {
+        repository.firebase.updateUserReward()
+    }
+
+    fun updateUserTasks(positive: Boolean) {
+        repository.firebase.updateUserTasks(positive)
+    }
+
+    fun updateUserGames(positive: Boolean) {
+        repository.firebase.updateUserGames(positive)
+    }
+
+    fun updateUserSkipCoins(positive: Boolean) {
+        repository.firebase.updateUserSkipCoins(positive)
+    }
+
+    fun sortHouseworkList(sortBy: String) {
+        repository.firebase.sortHouseworkList(sortBy)
+    }
+
+    fun updateActiveHousework(won: Boolean) {
+        repository.firebase.updateActiveHousework(won)
+    }
+
+    fun getActiveHousework() {
+        repository.firebase.getActiveHousework()
+    }
+
+    fun deleteHousework(id: String) {
+        repository.firebase.deleteHousework(id)
+    }
+
 }

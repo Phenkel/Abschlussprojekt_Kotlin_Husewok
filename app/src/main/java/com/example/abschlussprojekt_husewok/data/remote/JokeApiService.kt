@@ -9,34 +9,56 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
-// Define the base URL for the joke API
+/**
+ * The base URL for the Joke API.
+ */
 const val JOKE_BASE_URL = "https://official-joke-api.appspot.com/"
 
-// Create an OkHttpClient with an interceptor
-private val client = OkHttpClient.Builder().addInterceptor { chain ->
-    val newRequest: Request = chain.request().newBuilder().build()
-    chain.proceed(newRequest)
-}.build()
+/**
+ * OkHttpClient instance with an interceptor.
+ */
+private val client = OkHttpClient.Builder()
+    .addInterceptor { chain ->
+        val newRequest: Request = chain.request().newBuilder().build()
+        chain.proceed(newRequest)
+    }
+    .build()
 
-// Create a Moshi instance with KotlinJsonAdapterFactory
+/**
+ * Moshi instance with KotlinJsonAdapterFactory.
+ */
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-// Create a Retrofit instance with the OkHttpClient, MoshiConverterFactory, and the base URL
+/**
+ * Retrofit instance with OkHttpClient and MoshiConverterFactory.
+ */
 private val retrofit = Retrofit.Builder()
     .client(client)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(JOKE_BASE_URL)
     .build()
 
-// Define an interface for the joke API service
+/**
+ * Retrofit service interface for the Joke API.
+ */
 interface JokeApiService {
+    /**
+     * Suspended function to get a random joke from the Joke API.
+     *
+     * @return A Joke object representing the random joke.
+     */
     @GET("random_joke")
     suspend fun getRandomJoke(): Joke
 }
 
-// Create a singleton object for the JokeApi
+/**
+ * Singleton object for accessing the Joke API service.
+ */
 object JokeApi {
+    /**
+     * Lazy-initialized instance of the JokeApiService.
+     */
     val retrofitService: JokeApiService by lazy { retrofit.create(JokeApiService::class.java) }
 }

@@ -3,8 +3,13 @@ package com.example.abschlussprojekt_husewok.data.exampledata
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.model.Housework
 
+/**
+ * Object to store the default housework data.
+ */
 object HouseworkData {
-    // Create a list of Housework objects
+    /**
+     * List of default housework tasks.
+     */
     val houseworkList = listOf(
         Housework(
             image = R.drawable.img_clean_floors,
@@ -12,7 +17,11 @@ object HouseworkData {
             task1 = "Pick everything up from floors",
             task2 = "Vacuum floors",
             task3 = "Mop floors",
-            lockDurationDays = 7
+            isLiked = true,
+            lockDurationDays = 5,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_clean_floors"
         ),
         Housework(
             image = R.drawable.img_clean_bathroom,
@@ -21,7 +30,10 @@ object HouseworkData {
             task2 = "Scrub bathtub and tiles",
             task3 = "Wipe down countertops and mirrors",
             isLiked = false,
-            lockDurationDays = 7
+            lockDurationDays = 7,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_clean_bathroom"
         ),
         Housework(
             image = R.drawable.img_tidy_livingroom,
@@ -29,7 +41,11 @@ object HouseworkData {
             task1 = "Dust furniture",
             task2 = "Vacuum or sweep floors",
             task3 = "Wipe down surfaces",
-            lockDurationDays = 1
+            isLiked = true,
+            lockDurationDays = 1,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_tidy_livingroom"
         ),
         Housework(
             image = R.drawable.img_clean_oven,
@@ -38,7 +54,10 @@ object HouseworkData {
             task2 = "Apply oven cleaner and let sit",
             task3 = "Wipe down interior",
             isLiked = false,
-            lockDurationDays = 14
+            lockDurationDays = 14,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_clean_oven"
         ),
         Housework(
             image = R.drawable.img_clean_refrigerator,
@@ -46,7 +65,11 @@ object HouseworkData {
             task1 = "Empty contents and remove shelves",
             task2 = "Wipe down interior",
             task3 = "Clean door seals",
-            lockDurationDays = 14
+            isLiked = true,
+            lockDurationDays = 7,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_clean_refrigerator"
         ),
         Housework(
             image = R.drawable.img_organize_paperwork,
@@ -54,7 +77,11 @@ object HouseworkData {
             task1 = "Sort and organize documents",
             task2 = "File important papers",
             task3 = "Shred or discard unnecessary documents",
-            lockDurationDays = 1
+            isLiked = true,
+            lockDurationDays = 1,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_organize_paperwork"
         ),
         Housework(
             image = R.drawable.img_empty_trash,
@@ -62,7 +89,11 @@ object HouseworkData {
             task1 = "Gather trash from all rooms",
             task2 = "Dispose of trash bags",
             task3 = "Clean trash cans if necessary",
-            lockDurationDays = 2
+            isLiked = true,
+            lockDurationDays = 2,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_empty_trash"
         ),
         Housework(
             image = R.drawable.img_tidy_bedroom,
@@ -70,7 +101,11 @@ object HouseworkData {
             task1 = "Make the bed",
             task2 = "Put away clothes and belongings",
             task3 = "Dust surfaces",
-            lockDurationDays = 1
+            isLiked = true,
+            lockDurationDays = 1,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_tidy_bedroom"
         ),
         Housework(
             image = R.drawable.img_tidy_kitchen,
@@ -78,7 +113,11 @@ object HouseworkData {
             task1 = "Wipe down countertops",
             task2 = "Put away dishes",
             task3 = "Organize pantry and cabinets",
-            lockDurationDays = 1
+            isLiked = true,
+            lockDurationDays = 1,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_tidy_kitchen"
         ),
         Housework(
             image = R.drawable.img_wash_clothes,
@@ -86,7 +125,11 @@ object HouseworkData {
             task1 = "Sort laundry by color",
             task2 = "Load washing machine",
             task3 = "Dry and fold clothes",
-            lockDurationDays = 4
+            isLiked = false,
+            lockDurationDays = 4,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_wash_clothes"
         ),
         Housework(
             image = R.drawable.img_wash_dishes,
@@ -95,7 +138,10 @@ object HouseworkData {
             task2 = "Wash dishes with soap and water",
             task3 = "Dry and put away",
             isLiked = false,
-            lockDurationDays = 1
+            lockDurationDays = 1,
+            lockExpirationDate = "",
+            default = true,
+            id = "default_wash_dishes"
         )
     )
 }

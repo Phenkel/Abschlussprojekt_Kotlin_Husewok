@@ -9,10 +9,14 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
-// Define the base URL for the API
+/**
+ * The base URL for the Bored API.
+ */
 const val BORED_BASE_URL = "https://www.boredapi.com/api/"
 
-// Create an instance of OkHttpClient with an interceptor
+/**
+ * OkHttpClient instance with an interceptor.
+ */
 private val client = OkHttpClient.Builder()
     .addInterceptor { chain ->
         val newRequest: Request = chain.request().newBuilder().build()
@@ -20,25 +24,41 @@ private val client = OkHttpClient.Builder()
     }
     .build()
 
-// Create an instance of Moshi with the KotlinJsonAdapterFactory
+/**
+ * Moshi instance with KotlinJsonAdapterFactory.
+ */
 private val moshi = Moshi.Builder()
     .add(KotlinJsonAdapterFactory())
     .build()
 
-// Create an instance of Retrofit with the OkHttpClient and MoshiConverterFactory
+/**
+ * Retrofit instance with OkHttpClient and MoshiConverterFactory.
+ */
 private val retrofit = Retrofit.Builder()
     .client(client)
     .addConverterFactory(MoshiConverterFactory.create(moshi))
     .baseUrl(BORED_BASE_URL)
     .build()
 
-// Define the interface for the Bored API service
+/**
+ * Retrofit service interface for the Bored API.
+ */
 interface BoredApiService {
+    /**
+     * Suspended function to get a random joke from the Bored API.
+     *
+     * @return A Bored object representing the random joke.
+     */
     @GET("activity")
     suspend fun getRandomJoke(): Bored
 }
 
-// Create a singleton object for the Bored API
+/**
+ * Singleton object for accessing the Bored API service.
+ */
 object BoredApi {
+    /**
+     * Lazy-initialized instance of the BoredApiService.
+     */
     val retrofitService: BoredApiService by lazy { retrofit.create(BoredApiService::class.java) }
 }

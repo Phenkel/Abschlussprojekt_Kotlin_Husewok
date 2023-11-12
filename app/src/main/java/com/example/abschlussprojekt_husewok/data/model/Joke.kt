@@ -1,12 +1,14 @@
 package com.example.abschlussprojekt_husewok.data.model
 
+/**
+ * Data class representing a Joke.
+ *
+ * @param punchline The punchline of the joke.
+ * @param setup The setup or introduction of the joke.
+ * @param type The type or category of the joke.
+ */
 data class Joke(
-    // Holds the punchline of the joke
     val punchline: String,
-
-    // Holds the setup of the joke
     val setup: String,
-
-    // Holds the type of the joke (e.g., "general", "programming", etc.)
     val type: String
 )
