@@ -179,7 +179,12 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
                                         }
                                     },
                                     fabOnClick = {
-                                        // TODO: Implement fabOnClick functionality
+                                        MotionToasts.info(
+                                            title = "${it.task1}\n${it.task2}\n${it.task3}",
+                                            message = it.title,
+                                            activity = context as Activity,
+                                            context = context
+                                        )
                                     },
                                     iconButtonOnClick = {
                                         if (it.title != "All done") {
