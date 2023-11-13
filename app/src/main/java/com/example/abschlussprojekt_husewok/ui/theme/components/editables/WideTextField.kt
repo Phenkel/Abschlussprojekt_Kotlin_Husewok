@@ -29,7 +29,8 @@ fun WideTextField(value: String, label: String, onValueChange: (string: String) 
             unfocusedBorderColor = Orange80,
             focusedLabelColor = Purple80,
             unfocusedLabelColor = Orange80,
-            textColor = Color.White
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White
         ),
         label = { Text(text = label) }
     )

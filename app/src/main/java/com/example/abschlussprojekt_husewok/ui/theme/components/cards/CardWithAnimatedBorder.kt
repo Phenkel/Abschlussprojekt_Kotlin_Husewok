@@ -21,11 +21,11 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.dp
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 import com.example.abschlussprojekt_husewok.ui.theme.dislikedColors
 import com.example.abschlussprojekt_husewok.ui.theme.likedColors
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 
 /**
  * Composable function to display a card with an animated border.
@@ -61,7 +61,7 @@ fun CardWithAnimatedBorder(
         Surface(
             modifier = Modifier
                 .clipToBounds()
-                .padding(calcDp(percentage = 0.01f, dimension = Dimension.Full))
+                .padding(calcDp(percentage = 0.01f, dimension = CalcSizes.Dimension.Full))
                 .drawWithContent {
                     // Rotate the content with the animated angle
                     rotate(angle) {

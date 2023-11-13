@@ -32,8 +32,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.model.Housework
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
 import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.BasicTopAppBar
 import com.example.abschlussprojekt_husewok.ui.theme.components.statics.HouseworkImage
@@ -43,6 +41,12 @@ import com.example.abschlussprojekt_husewok.ui.theme.components.editables.LikedD
 import com.example.abschlussprojekt_husewok.ui.theme.components.editables.LockedDurationDaysEdit
 import com.example.abschlussprojekt_husewok.ui.theme.components.buttons.WideButton
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Composable function to display the detail screen for a specific housework item.
@@ -67,6 +71,9 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel) {
     // Define scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    // Create a CoroutineScope for Firebase operations
+    val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     Scaffold(
         containerColor = Color.Transparent,
         modifier = Modifier
@@ -82,7 +89,7 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                 ),
                 modifier = Modifier
                     .fillMaxSize(1f)
@@ -92,7 +99,7 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel) {
             ) {
                 Spacer(
                     modifier = Modifier.height(
-                        calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                        calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                     )
                 )
 
@@ -138,34 +145,38 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel) {
 
                 // Display the update task button
                 WideButton(text = "Update Task", icon = Icons.Outlined.Refresh, primary = true) {
-                    viewModel.upsertHouseworkFirebase(
-                        Housework(
-                            image = housework?.image ?: R.drawable.img_placeholder,
-                            title = title ?: "",
-                            task1 = task1 ?: "",
-                            task2 = task2 ?: "",
-                            task3 = task3 ?: "",
-                            isLiked = liked ?: true,
-                            lockDurationDays = lockDurationDays ?: 1,
-                            lockExpirationDate = housework?.lockExpirationDate ?: "",
-                            default = housework?.default ?: true,
-                            id = housework?.id ?: "default"
+                    firebaseScope.launch {
+                        viewModel.upsertHouseworkFirebase(
+                            Housework(
+                                image = housework?.image ?: R.drawable.img_placeholder,
+                                title = title ?: "",
+                                task1 = task1 ?: "",
+                                task2 = task2 ?: "",
+                                task3 = task3 ?: "",
+                                isLiked = liked ?: true,
+                                lockDurationDays = lockDurationDays ?: 1,
+                                lockExpirationDate = housework?.lockExpirationDate ?: "",
+                                default = housework?.default ?: true,
+                                id = housework?.id ?: "default"
+                            )
                         )
-                    )
+                    }
                     navController.navigate("list")
                 }
 
                 // Display the delete task button if it is not a default task
                 if (housework?.default == false) {
                     WideButton(text = "Delete Task", icon = Icons.Outlined.Delete, primary = false) {
-                        viewModel.deleteHousework(housework?.id ?: "")
+                        firebaseScope.launch {
+                            viewModel.deleteHousework(housework?.id ?: "")
+                        }
                         navController.navigate("list")
                     }
                 }
 
                 Spacer(
                     modifier = Modifier.height(
-                        calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                        calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                     )
                 )
             }

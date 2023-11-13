@@ -22,13 +22,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
 import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.BasicTopAppBar
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 import com.example.abschlussprojekt_husewok.ui.theme.components.statics.HouseworkImage
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Composable function to display the profile screen.
@@ -45,6 +49,9 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
     // Define scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    // Create a CoroutineScope for Firebase operations
+    val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     Scaffold(
         containerColor = Color.Transparent,
         modifier = Modifier
@@ -59,7 +66,7 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
         content = { innerPadding ->
             Column(
                 verticalArrangement = Arrangement.spacedBy(
-                    calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
@@ -68,7 +75,7 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
             ) {
                 Spacer(
                     modifier = Modifier.height(
-                        calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                        calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                     )
                 )
 
@@ -83,7 +90,9 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
 
                 // Display the reward row with a button to update the reward
                 RewardRow(user?.reward) {
-                    viewModel.updateUserReward()
+                    firebaseScope.launch {
+                        viewModel.updateUserReward()
+                    }
                 }
             }
         }

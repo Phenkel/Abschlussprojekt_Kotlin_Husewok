@@ -13,20 +13,28 @@ import com.example.abschlussprojekt_husewok.ui.NavigationAppHost
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModelFactory
 
+/**
+ * The main activity of the application.
+ */
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            // Retrieve the ViewModelStoreOwner from the LocalViewModelStoreOwner
             val owner = LocalViewModelStoreOwner.current
-
             owner?.let {
+                // Create an instance of MainViewModel using the ViewModelProvider
                 val viewModel: MainViewModel = viewModel(
                     it, "MainViewModel", MainViewModelFactory(
-                        //LocalContext.current.applicationContext as Application
+                        /*LocalContext.current.applicationContext as Application*/
                         Repository(BoredApi, JokeApi)
                     )
                 )
+
+                // Create the NavController for navigation
                 val navController = rememberNavController()
+
+                // Set up the navigation host with the NavController and MainViewModel
                 NavigationAppHost(navController, viewModel)
             }
         }

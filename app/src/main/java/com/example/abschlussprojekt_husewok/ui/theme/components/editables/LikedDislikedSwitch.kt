@@ -8,11 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.abschlussprojekt_husewok.utils.calcSp
 import com.example.abschlussprojekt_husewok.ui.theme.Orange40
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 import com.popovanton0.heartswitch.HeartSwitch
 import com.popovanton0.heartswitch.HeartSwitchColors
 

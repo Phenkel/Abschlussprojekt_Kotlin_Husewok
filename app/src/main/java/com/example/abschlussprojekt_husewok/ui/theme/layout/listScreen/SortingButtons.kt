@@ -12,9 +12,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.example.abschlussprojekt_husewok.ui.theme.components.buttons.SmallButton
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
-import com.example.abschlussprojekt_husewok.utils.calcSp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display sorting buttons.
@@ -32,7 +32,7 @@ fun SortingButtons(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(
-            calcDp(percentage = 0.01f, dimension = Dimension.Height)
+            calcDp(percentage = 0.01f, dimension = CalcSizes.Dimension.Height)
         ),
         modifier = Modifier.fillMaxWidth(1f)
     ) {
@@ -49,7 +49,7 @@ fun SortingButtons(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.width(
-                calcDp(percentage = 0.8f, dimension = Dimension.Width)
+                calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width)
             )
         ) {
             SmallButton(text = "Liked", primary = true, onClick = byLikedOnClick)

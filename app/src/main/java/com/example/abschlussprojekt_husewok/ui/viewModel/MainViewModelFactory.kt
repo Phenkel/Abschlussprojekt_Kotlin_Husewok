@@ -10,7 +10,7 @@ import com.example.abschlussprojekt_husewok.data.repository.Repository
  * @param repository The repository.
  */
 class MainViewModelFactory(
-    //private val application: Application
+    /*private val application: Application*/
     private val repository: Repository
 ) : ViewModelProvider.Factory {
     /**

@@ -8,7 +8,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.layout.addTaskScreen.AddTas
 import com.example.abschlussprojekt_husewok.ui.theme.layout.detailScreen.DetailScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen.HomeScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen.ListScreen
-import com.example.abschlussprojekt_husewok.ui.theme.loginScreen.LoginScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.loginScreen.LoginScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.profileScreen.ProfileScreen
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 

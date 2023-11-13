@@ -13,8 +13,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 
 /**
  * Composable function to display the housework image.
@@ -28,10 +28,10 @@ fun HouseworkImage(image: Int) {
         contentDescription = null,
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .width(calcDp(percentage = 0.8f, dimension = Dimension.Width))
-            .height(calcDp(percentage = 0.333f, dimension = Dimension.Height))
+            .width(calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width))
+            .height(calcDp(percentage = 0.333f, dimension = CalcSizes.Dimension.Height))
             .border(
-                width = calcDp(percentage = 0.8f, dimension = Dimension.Width) / 100,
+                width = calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width) / 100,
                 brush = Brush.horizontalGradient(
                     listOf(Orange80, Color.White, Purple80)
                 ),

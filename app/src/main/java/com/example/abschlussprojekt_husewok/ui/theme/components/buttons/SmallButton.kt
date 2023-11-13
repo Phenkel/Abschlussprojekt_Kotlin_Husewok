@@ -10,9 +10,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
-import com.example.abschlussprojekt_husewok.utils.calcSp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display a small button.
@@ -31,8 +31,8 @@ fun SmallButton(text: String, primary: Boolean, onClick: () -> Unit) {
         ),
         onClick = onClick,
         modifier = Modifier
-            .width(calcDp(percentage = 0.25f, dimension = Dimension.Width))
-            .height(calcDp(percentage = 0.05f, dimension = Dimension.Height))
+            .width(calcDp(percentage = 0.25f, dimension = CalcSizes.Dimension.Width))
+            .height(calcDp(percentage = 0.05f, dimension = CalcSizes.Dimension.Height))
     ) {
         // Display the button text with specified style
         Text(

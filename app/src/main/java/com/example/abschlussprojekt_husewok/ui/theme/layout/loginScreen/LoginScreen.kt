@@ -1,4 +1,4 @@
-package com.example.abschlussprojekt_husewok.ui.theme.loginScreen
+package com.example.abschlussprojekt_husewok.ui.theme.layout.loginScreen
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -26,13 +25,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
 import com.example.abschlussprojekt_husewok.ui.theme.components.buttons.WideButton
 import com.example.abschlussprojekt_husewok.ui.theme.components.editables.WideTextField
-import com.example.abschlussprojekt_husewok.utils.Constants.Companion.auth
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.Constants.auth
 import com.google.firebase.appcheck.internal.util.Logger.TAG
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Composable function to display the login screen.
@@ -40,7 +43,6 @@ import com.google.firebase.appcheck.internal.util.Logger.TAG
  * @param navController The NavController used for navigation.
  * @param viewModel The MainViewModel used for data access.
  */
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
     // Define mutable state variables for email and password
@@ -63,6 +65,9 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
 
     // Define mutable state variable for showing/hiding password
     var showPassword by remember { mutableStateOf(false) }
+
+    // Create a CoroutineScope for Firebase operations
+    val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     Scaffold(
         containerColor = Color.Transparent,
@@ -89,7 +94,7 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 Spacer(
                     modifier = Modifier.height(
                         calcDp(
-                            percentage = 0.02f, dimension = Dimension.Height
+                            percentage = 0.02f, dimension = CalcSizes.Dimension.Height
                         )
                     )
                 )
@@ -110,7 +115,7 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 Spacer(
                     modifier = Modifier.height(
                         calcDp(
-                            percentage = 0.02f, dimension = Dimension.Height
+                            percentage = 0.02f, dimension = CalcSizes.Dimension.Height
                         )
                     )
                 )
@@ -127,8 +132,10 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                                         .addOnCompleteListener { task ->
                                             if (task.isSuccessful) {
                                                 Log.d(TAG, "signInWithEmail:success")
-                                                val user = auth.currentUser
-                                                user?.uid?.let { viewModel.createNewUserFirebase(it) }
+                                                firebaseScope.launch {
+                                                    val user = auth.currentUser
+                                                    user?.uid?.let { viewModel.createNewUserFirebase(it) }
+                                                }
                                                 navController.navigate("home")
                                             } else {
                                                 Log.w(TAG, "signInWithEmail:failure", task.exception)
@@ -146,7 +153,7 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 Spacer(
                     modifier = Modifier.height(
                         calcDp(
-                            percentage = 0.02f, dimension = Dimension.Height
+                            percentage = 0.02f, dimension = CalcSizes.Dimension.Height
                         )
                     )
                 )
@@ -159,8 +166,10 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                             .addOnCompleteListener { task ->
                                 if (task.isSuccessful) {
                                     Log.d(TAG, "signInWithEmail:success")
-                                    val user = auth.currentUser
-                                    viewModel.updateCurrentUser(user?.uid.toString())
+                                    firebaseScope.launch {
+                                        val user = auth.currentUser
+                                        viewModel.updateCurrentUser(user?.uid.toString())
+                                    }
                                     navController.navigate("home")
                                 } else {
                                     Log.w(TAG, "signInWithEmail:failure", task.exception)

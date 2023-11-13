@@ -1,5 +1,6 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen
 
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
@@ -10,8 +11,8 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.components.cards.CardWithAnimatedBorder
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 
@@ -22,6 +23,7 @@ import com.example.ssjetpackcomposeswipeableview.SwipeDirection
  * @param houseworkList The list of housework items.
  * @param onClick The callback function for when the card is clicked.
  */
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun SwipeableHouseworkListCard(
     housework: Housework,
@@ -48,12 +50,12 @@ fun SwipeableHouseworkListCard(
         leftViewBackgroundColor = Orange40,
         rightViewBackgroundColor = if (housework.isLiked) Purple40 else Orange40,
         position = houseworkList.indexOf(housework),
-        leftViewWidth = calcDp(percentage = 0.2f, dimension = Dimension.Width),
-        rightViewWidth = calcDp(percentage = 0.2f, dimension = Dimension.Width),
-        height = calcDp(percentage = 0.15f, dimension = Dimension.Height),
+        leftViewWidth = calcDp(percentage = 0.2f, dimension = CalcSizes.Dimension.Width),
+        rightViewWidth = calcDp(percentage = 0.2f, dimension = CalcSizes.Dimension.Width),
+        height = calcDp(percentage = 0.15f, dimension = CalcSizes.Dimension.Height),
         cornerRadius = 20.dp,
-        leftSpace = (-calcDp(percentage = 0.075f, dimension = Dimension.Width)),
-        rightSpace = (-calcDp(percentage = 0.075f, dimension = Dimension.Width))
+        leftSpace = (-calcDp(percentage = 0.075f, dimension = CalcSizes.Dimension.Width)),
+        rightSpace = (-calcDp(percentage = 0.075f, dimension = CalcSizes.Dimension.Width))
     ) {
         CardWithAnimatedBorder(
             content = { HouseworkListCard(housework = housework) },

@@ -12,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
-import com.example.abschlussprojekt_husewok.utils.calcSp
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display a row for the reward.
@@ -49,7 +49,7 @@ fun RewardRow(reward: String?, onClick: () -> Unit) {
                 containerColor = if (reward == "Joke") Purple40 else Orange80,
                 contentColor = if (reward == "Joke") Orange80 else Purple40
             ),
-            modifier = Modifier.width(calcDp(percentage = 0.25f, dimension = Dimension.Width))
+            modifier = Modifier.width(calcDp(percentage = 0.25f, dimension = CalcSizes.Dimension.Width))
         ) {
 
             // Display the reward value, or an empty string if reward is null

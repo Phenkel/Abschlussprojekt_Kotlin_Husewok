@@ -5,7 +5,7 @@ import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.exampledata.HouseworkData
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.data.model.User
-import com.example.abschlussprojekt_husewok.utils.Constants
+import com.example.abschlussprojekt_husewok.utils.Constants.firestore
 import com.google.firebase.appcheck.internal.util.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -63,7 +63,7 @@ class FirebaseRepository {
         )
 
         // Update the user data in Firestore
-        Constants.firestore.collection("user").document(_currentUser.value?.userId.toString())
+        firestore.collection("user").document(_currentUser.value?.userId.toString())
             .set(updatedUser)
             .addOnSuccessListener {
                 // Log success message
@@ -80,9 +80,9 @@ class FirebaseRepository {
      *
      * @param uid The unique ID of the user.
      */
-    fun updateCurrentUser(uid: String) {
+    suspend fun updateCurrentUser(uid: String) {
         // Retrieve document from the "user" collection in Firestore
-        Constants.firestore.collection("user").document(uid).get()
+        firestore.collection("user").document(uid).get()
             .addOnSuccessListener { result ->
                 // Update the value of the current user with the retrieved data
                 _currentUser.value = User(
@@ -107,10 +107,10 @@ class FirebaseRepository {
     /**
      * Updates the list of housework tasks for the current user.
      */
-    fun updateHouseworkList() {
+    suspend fun updateHouseworkList() {
         _currentUser.value?.let { currentUser ->
             // Retrieve housework tasks from Firestore collection
-            Constants.firestore.collection("user").document(currentUser.userId).collection("housework").get()
+            firestore.collection("user").document(currentUser.userId).collection("housework").get()
                 .addOnSuccessListener { result ->
                     val houseworkList = mutableListOf<Housework>()
 
@@ -170,7 +170,7 @@ class FirebaseRepository {
         // Check if the current user is not null
         _currentUser.value?.let { currentUser ->
             // Get the Firebase Firestore collection for the user's housework
-            val houseworkCollection = Constants.firestore.collection("user").document(currentUser.userId).collection("housework")
+            val houseworkCollection = firestore.collection("user").document(currentUser.userId).collection("housework")
 
             // Get the ID of the updated housework
             val updatedHouseworkId = updatedHousework["id"].toString()
@@ -192,7 +192,7 @@ class FirebaseRepository {
      *
      * @param uid The user ID of the new user.
      */
-    fun createNewUserFirebase(uid: String) {
+    suspend fun createNewUserFirebase(uid: String) {
         // Create a map of initial user data
         val newUser = hashMapOf(
             "gamesLost" to 0,
@@ -205,7 +205,7 @@ class FirebaseRepository {
         )
 
         // Set the new user data to Firebase Firestore
-        Constants.firestore.collection("user").document(uid).set(newUser)
+        firestore.collection("user").document(uid).set(newUser)
             .addOnSuccessListener {
                 Log.d(Logger.TAG, "createUserDocumentFirebase:success")
             }
@@ -356,7 +356,7 @@ class FirebaseRepository {
      *
      * @param won Boolean indicating whether the game was won or not.
      */
-    fun updateActiveHousework(won: Boolean) {
+    suspend fun updateActiveHousework(won: Boolean) {
         val likedHousework = mutableListOf<Housework>()
         val dislikedHousework = mutableListOf<Housework>()
 
@@ -399,10 +399,10 @@ class FirebaseRepository {
      * Retrieves the active housework from Firebase Firestore based on the current user's data.
      * Sets the value of _activeHousework StateFlow.
      */
-    fun getActiveHousework() {
+    suspend fun getActiveHousework() {
         _currentUser.value?.let { currentUser ->
             // Get the active housework ID from the user document in Firestore
-            Constants.firestore.collection("user").document(currentUser.userId)
+            firestore.collection("user").document(currentUser.userId)
                 .get()
                 .addOnSuccessListener { result ->
                     val activeHouseworkId = result.data?.get("activeHousework").toString()
@@ -455,7 +455,7 @@ class FirebaseRepository {
      */
     fun deleteHousework(id: String) {
         _currentUser.value?.let { currentUser ->
-            val userHouseworkRef = Constants.firestore
+            val userHouseworkRef = firestore
                 .collection("user")
                 .document(currentUser.userId)
                 .collection("housework")

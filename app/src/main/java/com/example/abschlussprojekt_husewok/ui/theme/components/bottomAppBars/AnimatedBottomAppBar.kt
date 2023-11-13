@@ -13,12 +13,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.Orange40
 import com.example.abschlussprojekt_husewok.ui.theme.OrangeGrey80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.items.wigglebutton.WiggleButton
 
@@ -52,7 +52,7 @@ fun AnimatedBottomAppBar(
     ) {
         // Home button
         Box(
-            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = Dimension.Height)),
+            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
             contentAlignment = Alignment.BottomCenter
         ) {
             WiggleButton(
@@ -75,7 +75,7 @@ fun AnimatedBottomAppBar(
 
         // List button
         Box(
-            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = Dimension.Height)),
+            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
             contentAlignment = Alignment.BottomCenter
         ) {
             WiggleButton(
@@ -98,7 +98,7 @@ fun AnimatedBottomAppBar(
 
         // Profile button
         Box(
-            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = Dimension.Height)),
+            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
             contentAlignment = Alignment.BottomCenter
         ) {
             WiggleButton(

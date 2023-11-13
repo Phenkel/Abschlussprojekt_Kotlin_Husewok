@@ -10,7 +10,7 @@ import com.example.abschlussprojekt_husewok.data.model.Housework
  * @param repository The repository.
  */
 class MainViewModel(
-    //application: Application
+    /*application: Application*/
     private val repository: Repository
 ) : ViewModel() {
     // State Flows for accessing data from the repository
@@ -19,7 +19,7 @@ class MainViewModel(
     val activeHousework = repository.activeHousework
     val houseworkList = repository.houseworkList
 
-    fun updateCurrentUser(uid: String) {
+    suspend fun updateCurrentUser(uid: String) {
         repository.firebase.updateCurrentUser(uid)
     }
 
@@ -27,7 +27,7 @@ class MainViewModel(
         repository.updateDetailedHousework(housework)
     }
 
-    fun updateHouseworkList() {
+    suspend fun updateHouseworkList() {
         repository.firebase.updateHouseworkList()
     }
 
@@ -35,7 +35,7 @@ class MainViewModel(
         repository.firebase.upsertHouseworkFirebase(housework)
     }
 
-    fun createNewUserFirebase(uid: String) {
+    suspend fun createNewUserFirebase(uid: String) {
         repository.firebase.createNewUserFirebase(uid)
     }
 
@@ -59,11 +59,11 @@ class MainViewModel(
         repository.firebase.sortHouseworkList(sortBy)
     }
 
-    fun updateActiveHousework(won: Boolean) {
+    suspend fun updateActiveHousework(won: Boolean) {
         repository.firebase.updateActiveHousework(won)
     }
 
-    fun getActiveHousework() {
+    suspend fun getActiveHousework() {
         repository.firebase.getActiveHousework()
     }
 

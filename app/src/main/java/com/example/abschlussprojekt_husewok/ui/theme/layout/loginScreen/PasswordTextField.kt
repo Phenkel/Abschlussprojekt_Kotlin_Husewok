@@ -1,4 +1,4 @@
-package com.example.abschlussprojekt_husewok.ui.theme.loginScreen
+package com.example.abschlussprojekt_husewok.ui.theme.layout.loginScreen
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -44,7 +44,8 @@ fun PasswordTextField(
             unfocusedBorderColor = Orange80,
             focusedLabelColor = Purple80,
             unfocusedLabelColor = Orange80,
-            textColor = Color.White
+            focusedTextColor = Color.White,
+            unfocusedTextColor = Color.White
         ),
         visualTransformation = if (!showPassword) PasswordVisualTransformation() else VisualTransformation.None,
         trailingIcon = {

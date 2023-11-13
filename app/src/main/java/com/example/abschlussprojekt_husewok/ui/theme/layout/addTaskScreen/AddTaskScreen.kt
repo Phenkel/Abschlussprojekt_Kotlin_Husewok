@@ -31,8 +31,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.model.Housework
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
 import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.BasicTopAppBar
 import com.example.abschlussprojekt_husewok.ui.theme.components.editables.WideTextField
@@ -42,6 +40,12 @@ import com.example.abschlussprojekt_husewok.ui.theme.components.buttons.WideButt
 import com.example.abschlussprojekt_husewok.ui.theme.components.editables.LikedDislikedSwitch
 import com.example.abschlussprojekt_husewok.ui.theme.components.editables.LockedDurationDaysEdit
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Composable function to display the add task screen.
@@ -64,6 +68,9 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
     // Define scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    // Create a CoroutineScope for Firebase operations
+    val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     Scaffold(
         containerColor = Color.Transparent,
         modifier = Modifier
@@ -79,7 +86,7 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(
-                    calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                 ),
                 modifier = Modifier
                     .fillMaxSize(1f)
@@ -89,7 +96,7 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
             ) {
                 Spacer(
                     modifier = Modifier.height(
-                        calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                        calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                     )
                 )
 
@@ -116,26 +123,28 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
 
                 // Display a button to upload the housework to Firebase
                 WideButton(text = "Create Task", icon = Icons.Outlined.AddCircle, primary = true) {
-                    viewModel.upsertHouseworkFirebase(
-                        Housework(
-                            image = R.drawable.img_placeholder,
-                            title = title,
-                            task1 = task1,
-                            task2 = task2,
-                            task3 = task3,
-                            isLiked = liked,
-                            lockDurationDays = lockDurationDays,
-                            lockExpirationDate = "",
-                            default = false,
-                            id = "default"
+                    firebaseScope.launch {
+                        viewModel.upsertHouseworkFirebase(
+                            Housework(
+                                image = R.drawable.img_placeholder,
+                                title = title,
+                                task1 = task1,
+                                task2 = task2,
+                                task3 = task3,
+                                isLiked = liked,
+                                lockDurationDays = lockDurationDays,
+                                lockExpirationDate = "",
+                                default = false,
+                                id = "default"
+                            )
                         )
-                    )
+                    }
                     navController.navigate("list")
                 }
 
                 Spacer(
                     modifier = Modifier.height(
-                        calcDp(percentage = 0.02f, dimension = Dimension.Height)
+                        calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                     )
                 )
             }

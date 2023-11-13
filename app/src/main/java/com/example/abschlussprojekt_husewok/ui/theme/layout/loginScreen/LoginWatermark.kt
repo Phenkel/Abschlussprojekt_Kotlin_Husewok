@@ -1,4 +1,4 @@
-package com.example.abschlussprojekt_husewok.ui.theme.loginScreen
+package com.example.abschlussprojekt_husewok.ui.theme.layout.loginScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,9 +14,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.abschlussprojekt_husewok.R
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
-import com.example.abschlussprojekt_husewok.utils.calcSp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display the login watermark.
@@ -37,8 +37,8 @@ fun LoginWatermark(padding: PaddingValues) {
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
             modifier = Modifier
-                .width(calcDp(percentage = 0.8f, dimension = Dimension.Width))
-                .height(calcDp(percentage = 0.333f, dimension = Dimension.Height))
+                .width(calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width))
+                .height(calcDp(percentage = 0.333f, dimension = CalcSizes.Dimension.Height))
                 .constrainAs(image) {
                     top.linkTo(parent.top, 16.dp)
                     centerHorizontallyTo(parent)

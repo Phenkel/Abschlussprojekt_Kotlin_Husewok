@@ -17,9 +17,9 @@ import androidx.compose.ui.text.TextStyle
 import com.esatgozcu.rollingnumber.RollingNumberVM
 import com.esatgozcu.rollingnumber.RollingNumberView
 import com.example.abschlussprojekt_husewok.R
-import com.example.abschlussprojekt_husewok.utils.calcSp
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display a row for editing the locked duration in days.

@@ -10,11 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
-import com.example.abschlussprojekt_husewok.utils.calcSp
 import com.example.abschlussprojekt_husewok.ui.theme.OrangeGrey80
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display the top app bar without navigation.
@@ -42,11 +42,11 @@ fun NoNavigationTopAppBar() {
 
         // Display the dividers
         Divider(
-            thickness = calcDp(percentage = 0.005f, dimension = Dimension.Height),
+            thickness = calcDp(percentage = 0.005f, dimension = CalcSizes.Dimension.Height),
             color = OrangeGrey80
         )
         Divider(
-            thickness = calcDp(percentage = 0.005f, dimension = Dimension.Height),
+            thickness = calcDp(percentage = 0.005f, dimension = CalcSizes.Dimension.Height),
             color = Color.White
         )
     }

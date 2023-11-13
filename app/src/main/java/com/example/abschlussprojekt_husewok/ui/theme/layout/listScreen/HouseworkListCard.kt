@@ -2,7 +2,6 @@ package com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,11 +26,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.abschlussprojekt_husewok.data.model.Housework
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
-import com.example.abschlussprojekt_husewok.utils.calcSp
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display a housework list card.
@@ -42,8 +41,8 @@ import com.example.abschlussprojekt_husewok.ui.theme.Purple80
  */
 @Composable
 fun HouseworkListCard(
-    sizeHeight: Dp = calcDp(percentage = 0.15f, dimension = Dimension.Height),
-    sizeWidth: Dp = calcDp(percentage = 0.8f, dimension = Dimension.Width),
+    sizeHeight: Dp = calcDp(percentage = 0.15f, dimension = CalcSizes.Dimension.Height),
+    sizeWidth: Dp = calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width),
     housework: Housework
 ) {
     Card(

@@ -1,4 +1,4 @@
-package com.example.abschlussprojekt_husewok.ui.theme.components
+package com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -41,14 +41,14 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.abschlussprojekt_husewok.utils.calcDp
-import com.example.abschlussprojekt_husewok.utils.calcSp
 import com.example.abschlussprojekt_husewok.data.model.Housework
-import com.example.abschlussprojekt_husewok.utils.Dimension
 import com.example.abschlussprojekt_husewok.ui.theme.Orange40
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /** TODO: Aktualisieren
  * TODO: Buttons Größe
@@ -68,8 +68,8 @@ import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 @Composable
 fun HomescreenCard(
     // Default values for size and onClick functions
-    sizeHeight: Dp = calcDp(percentage = 0.65f, dimension = Dimension.Height),
-    sizeWidth: Dp = calcDp(percentage = 0.8f, dimension = Dimension.Width),
+    sizeHeight: Dp = calcDp(percentage = 0.65f, dimension = CalcSizes.Dimension.Height),
+    sizeWidth: Dp = calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width),
     sizeComplete: Dp = (sizeHeight + sizeWidth) / 2,
     skipButtonEnabled: Boolean,
     skipButtonOnClick: () -> Unit,

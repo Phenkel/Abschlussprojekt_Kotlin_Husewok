@@ -13,11 +13,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.abschlussprojekt_husewok.utils.Dimension
-import com.example.abschlussprojekt_husewok.utils.calcDp
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
-import com.example.abschlussprojekt_husewok.utils.calcSp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
  * Composable function to display a wide button with an icon and text.
@@ -36,8 +36,8 @@ fun WideButton(text: String, icon: ImageVector, primary: Boolean, onClick: () ->
             contentColor = if (primary) Orange80 else Purple40
         ),
         modifier = Modifier
-            .width(calcDp(percentage = 0.8f, dimension = Dimension.Width))
-            .height(calcDp(percentage = 0.05f, dimension = Dimension.Height)),
+            .width(calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width))
+            .height(calcDp(percentage = 0.05f, dimension = CalcSizes.Dimension.Height)),
         onClick = onClick
     ) {
         ConstraintLayout(
