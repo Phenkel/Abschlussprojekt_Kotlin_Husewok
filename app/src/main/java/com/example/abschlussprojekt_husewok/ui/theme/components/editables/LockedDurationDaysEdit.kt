@@ -22,11 +22,11 @@ import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display a row for editing the locked duration in days.
+ * A composable function that represents the locked duration in days editor.
  *
- * @param lockDurationDays The current value of the locked duration in days.
- * @param addOnClick The callback function to handle the add button click event.
- * @param removeOnClick The callback function to handle the remove button click event.
+ * @param lockDurationDays The current locked duration in days.
+ * @param addOnClick The callback function to invoke when the add button is clicked.
+ * @param removeOnClick The callback function to invoke when the remove button is clicked.
  */
 @Composable
 fun LockedDurationDaysEdit(
@@ -39,8 +39,7 @@ fun LockedDurationDaysEdit(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth(0.8f)
     ) {
-
-        // Display the label for the locked duration
+        // Display the "Locked Days" text
         Text(
             text = "Locked Days",
             color = Color.White,
@@ -48,7 +47,6 @@ fun LockedDurationDaysEdit(
         )
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-
             // Display the remove button
             IconButton(
                 onClick = removeOnClick,
@@ -61,7 +59,7 @@ fun LockedDurationDaysEdit(
                 )
             }
 
-            // Display the locked duration value using the RollingNumberView
+            // Display the rolling number view
             RollingNumberView(
                 vm = RollingNumberVM(
                     number = String.format("%02d", lockDurationDays),

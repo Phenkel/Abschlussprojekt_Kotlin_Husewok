@@ -17,11 +17,11 @@ import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 
 /**
- * Composable function to display a swipeable housework list card.
+ * A composable function that represents a swipeable housework list card.
  *
- * @param housework The housework item to display.
+ * @param housework The housework object to display in the card.
  * @param houseworkList The list of housework items.
- * @param onClick The callback function for when the card is clicked.
+ * @param onClick The callback function to invoke when the card is clicked.
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable

@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.OrangeGrey80
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
@@ -22,13 +23,17 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display the basic top app bar.
+ * A composable function that represents the basic top app bar.
  *
  * @param scrollBehavior The scroll behavior for the top app bar.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BasicTopAppBar(scrollBehavior: TopAppBarScrollBehavior) {
+fun BasicTopAppBar(
+    scrollBehavior: TopAppBarScrollBehavior,
+    navController: NavController,
+    route: String
+) {
     Column {
         // Display the center-aligned top app bar
         CenterAlignedTopAppBar(
@@ -46,7 +51,7 @@ fun BasicTopAppBar(scrollBehavior: TopAppBarScrollBehavior) {
                 )
             },
             navigationIcon = {
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = { navController.popBackStack(route, false) }) {
                     Icon(
                         imageVector = Icons.Filled.ArrowBack,
                         contentDescription = null
@@ -56,11 +61,13 @@ fun BasicTopAppBar(scrollBehavior: TopAppBarScrollBehavior) {
             scrollBehavior = scrollBehavior
         )
 
-        // Display the dividers
+        // Display the divider with OrangeGrey80 color
         Divider(
             thickness = calcDp(percentage = 0.005f, dimension = CalcSizes.Dimension.Height),
             color = OrangeGrey80
         )
+
+        // Display the divider with Color.White color
         Divider(
             thickness = calcDp(percentage = 0.005f, dimension = CalcSizes.Dimension.Height),
             color = Color.White

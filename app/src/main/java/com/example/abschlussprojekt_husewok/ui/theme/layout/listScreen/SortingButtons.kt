@@ -17,11 +17,11 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display sorting buttons.
+ * A composable function that represents the sorting buttons for the housework list.
  *
- * @param byLikedOnClick The callback function for when the "Liked" button is clicked.
- * @param byLockedOnClick The callback function for when the "Locked" button is clicked.
- * @param byRandomOnClick The callback function for when the "Random" button is clicked.
+ * @param byLikedOnClick The callback function to invoke when the "Liked" button is clicked.
+ * @param byLockedOnClick The callback function to invoke when the "Locked" button is clicked.
+ * @param byRandomOnClick The callback function to invoke when the "Random" button is clicked.
  */
 @Composable
 fun SortingButtons(
@@ -36,7 +36,7 @@ fun SortingButtons(
         ),
         modifier = Modifier.fillMaxWidth(1f)
     ) {
-        // Display the title for sorting
+        // Display the "Sort by" text
         Text(
             text = "Sort by",
             color = Color.White,
@@ -44,7 +44,6 @@ fun SortingButtons(
             fontWeight = FontWeight.Bold
         )
 
-        // Display the sorting buttons
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
@@ -52,8 +51,13 @@ fun SortingButtons(
                 calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width)
             )
         ) {
+            // Display the "Liked" button
             SmallButton(text = "Liked", primary = true, onClick = byLikedOnClick)
+
+            // Display the "Locked" button
             SmallButton(text = "Locked", primary = true, onClick = byLockedOnClick)
+
+            // Display the "Random" button
             SmallButton(text = "Random", primary = true, onClick = byRandomOnClick)
         }
     }

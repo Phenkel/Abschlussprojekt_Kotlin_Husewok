@@ -26,7 +26,7 @@ data class Housework(
     val task3: String,
     val isLiked: Boolean,
     val lockDurationDays: Long,
-    var lockExpirationDate: String,
+    val lockExpirationDate: String,
     val default: Boolean,
     val id: String
 ) {
@@ -47,8 +47,8 @@ data class Housework(
     /**
      * Updates the lock expiration date by adding the lock duration days to the current date.
      */
-    fun updateLockExpirationDate() {
+    fun updateLockExpirationDate(): String {
         val lockExpirationDateAsDate = LocalDate.now().plusDays(lockDurationDays)
-        lockExpirationDate = lockExpirationDateAsDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
+        return lockExpirationDateAsDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
     }
 }

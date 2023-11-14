@@ -17,7 +17,7 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display the top app bar without navigation.
+ * A composable function that represents the top app bar without navigation icon.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -40,11 +40,13 @@ fun NoNavigationTopAppBar() {
             }
         )
 
-        // Display the dividers
+        // Display the divider with OrangeGrey80 color
         Divider(
             thickness = calcDp(percentage = 0.005f, dimension = CalcSizes.Dimension.Height),
             color = OrangeGrey80
         )
+
+        // Display the divider with Color.White color
         Divider(
             thickness = calcDp(percentage = 0.005f, dimension = CalcSizes.Dimension.Height),
             color = Color.White

@@ -17,10 +17,10 @@ import com.popovanton0.heartswitch.HeartSwitch
 import com.popovanton0.heartswitch.HeartSwitchColors
 
 /**
- * Composable function to display a switch for liked and disliked options.
+ * A composable function that represents a switch to toggle between liked and disliked states.
  *
- * @param liked The current value indicating whether it is liked.
- * @param onCheckedChange The callback function to handle the switch state change.
+ * @param liked The current state, whether it is liked or disliked.
+ * @param onCheckedChange The callback function to invoke when the state changes.
  */
 @Composable
 fun LikedDislikedSwitch(liked: Boolean, onCheckedChange: (Boolean) -> Unit) {
@@ -29,15 +29,14 @@ fun LikedDislikedSwitch(liked: Boolean, onCheckedChange: (Boolean) -> Unit) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier.fillMaxWidth(0.8f)
     ) {
-
-        // Display the text indicating liked or disliked
+        // Display the text indicating the current state
         Text(
             text = if (liked) "Liked" else "Disliked",
             color = Color.White,
             fontSize = calcSp(percentage = 0.05f)
         )
 
-        // Display the HeartSwitch with specified colors and state
+        // Display the switch to toggle the state
         HeartSwitch(
             checked = liked,
             onCheckedChange = onCheckedChange,

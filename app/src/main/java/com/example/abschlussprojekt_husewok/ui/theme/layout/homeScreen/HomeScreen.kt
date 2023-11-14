@@ -1,22 +1,17 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen
 
 import android.app.Activity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,24 +22,16 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.paint
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.model.Housework
+import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.cards.CardWithAnimatedBorder
+import com.example.abschlussprojekt_husewok.ui.theme.components.progressIndicator.FullScreenProgressIndicator
 import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.NoNavigationTopAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.Orange80
-import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
+import com.example.abschlussprojekt_husewok.ui.theme.components.scaffolds.BasicScaffold
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
-import com.example.abschlussprojekt_husewok.utils.CalcSizes
-import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.MotionToasts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -53,10 +40,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
- * Composable function to display the home screen.
+ * A composable function that represents the home screen of the app.
  *
- * @param navController The NavController used for navigation.
- * @param viewModel The MainViewModel used for data access.
+ * @param navController The NavController used for navigating between screens.
+ * @param viewModel The MainViewModel used for accessing and updating data.
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -67,27 +54,48 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     // Collect the active housework state from the view model
     val activeHousework by viewModel.activeHousework.collectAsStateWithLifecycle()
 
-    // Define mutable state variables for loading and progress
+    // Collect the housework list state from the view model
+    val houseworkList by viewModel.houseworkList.collectAsStateWithLifecycle()
+
+    // State variables for loading and progress
     var loading by remember { mutableStateOf(false) }
     var progress by remember { mutableFloatStateOf(0f) }
 
-    // Check if active housework is null
+    // Get the current context
+    val context = LocalContext.current
+
+    // Check if there is no active housework
     if (activeHousework == null) {
         LaunchedEffect(Unit) {
             loading = true
 
-            // Simulate loading progress
             for (i in 1..100) {
                 if (i == 33) viewModel.updateHouseworkList()
                 if (i == 66) viewModel.getActiveHousework()
 
-                // Check if active housework is not null
-                if (activeHousework != null) loading = false
-
-                // Update progress value
                 progress = i.toFloat() / 100
+                delay(10)
+            }
 
-                delay(30)
+            if (activeHousework?.isLocked() == true) {
+                var unlockedHousework = false
+
+                houseworkList.forEach { housework ->
+                    if (!housework.isLocked()) {
+                        unlockedHousework = true
+                    }
+                }
+
+                if (unlockedHousework) {
+                    // TODO: Navigate to Game screen
+                } else {
+                    MotionToasts.info(
+                        title = "All Done",
+                        message = "There is no housework left",
+                        activity = context as Activity,
+                        context = context
+                    )
+                }
             }
 
             loading = false
@@ -96,145 +104,163 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
         loading = false
     }
 
-    // Create a CoroutineScope for Firebase operations
+    // Create a coroutine scope for Firebase operations
     val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    // Get the current context
-    val context = LocalContext.current
-
-    // Create a scroll state for the vertical scrollable content
+    // Create a scroll state for the scrollable content
     val scrollState = rememberScrollState()
 
-    // Create a refresh scope for the pull-to-refresh functionality
+    // Create a coroutine scope for refreshing
     val refreshScope = rememberCoroutineScope()
 
-    // Define a mutable state variable for refreshing
+    // State variable for refreshing
     var refreshing by remember { mutableStateOf(false) }
 
-    // Function to handle refresh action
+    /**
+     * Refresh the data
+     */
     fun refresh() = refreshScope.launch {
         refreshing = true
 
-        // Update housework list and active housework
+        // Update the housework list
         viewModel.updateHouseworkList()
         delay(250)
+
+        // Update the active housework
         viewModel.getActiveHousework()
         delay(250)
 
-        // Show refresh success toast
-        MotionToasts.info(
-            title = "Refreshed",
-            message = "Active housework is refreshed",
-            activity = context as Activity,
-            context = context
-        )
+        if (activeHousework?.isLocked() == true) {
+            var unlockedHousework = false
+
+            houseworkList.forEach { housework ->
+                if (!housework.isLocked()) {
+                    unlockedHousework = true
+                }
+            }
+
+            if (unlockedHousework) {
+                // TODO: Navigate to Game screen
+            } else {
+                MotionToasts.info(
+                    title = "All Done",
+                    message = "There is no housework left",
+                    activity = context as Activity,
+                    context = context
+                )
+            }
+        } else if (activeHousework != null) {
+            MotionToasts.success(
+                title = "Success",
+                message = "Active housework found",
+                activity = context as Activity,
+                context = context
+            )
+        } else {
+            MotionToasts.error(
+                title = "Error",
+                message = "No active housework found.\nPlease reload again",
+                activity = context as Activity,
+                context = context
+            )
+        }
 
         refreshing = false
     }
 
-    // Create a state for the pull-to-refresh indicator
-    val state = rememberPullRefreshState(refreshing = refreshing, onRefresh = ::refresh)
+    // Create a pull refresh state
+    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = ::refresh)
 
-    Scaffold(
-        containerColor = Color.Transparent,
-        modifier = Modifier
-            .background(color = backgroundGrey)
-            .paint(
-                painter = painterResource(id = R.drawable.background),
-                contentScale = ContentScale.Crop,
-                alpha = 0.333f
-            ),
+    // Compose the home screen UI using BasicScaffold
+    BasicScaffold(
         topBar = { NoNavigationTopAppBar() },
-        bottomBar = { AnimatedBottomAppBar(navController, 0, true, false, false) },
-        content = { innerPadding ->
-            Box(
-                modifier = Modifier
-                    .fillMaxSize(1f)
-                    .padding(innerPadding)
-                    .pullRefresh(state)
-                    .verticalScroll(scrollState),
-                contentAlignment = Alignment.Center
+        bottomBar = { AnimatedBottomAppBar(navController, 0, true, false, false) }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize(1f)
+                .padding(innerPadding)
+                .pullRefresh(pullRefreshState)
+                .verticalScroll(scrollState),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxSize(1f)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = Modifier.fillMaxSize(1f)
-                ) {
-                    // Display the active housework card if it exists
-                    activeHousework?.let {
-                        CardWithAnimatedBorder(
-                            content = {
-                                HomescreenCard(
-                                    skipButtonEnabled = (user?.skipCoins ?: 0) > 0,
-                                    skipButtonOnClick = {
-                                        firebaseScope.launch {
-                                            viewModel.updateActiveHousework(true)
-                                            viewModel.updateUserSkipCoins(false)
-                                        }
-                                    },
-                                    doneButtonOnClick = {
-                                        firebaseScope.launch {
-                                            viewModel.updateActiveHousework(true)
-                                            viewModel.updateUserSkipCoins(true)
-                                        }
-                                    },
-                                    fabOnClick = {
-                                        MotionToasts.info(
-                                            title = "${it.task1}\n${it.task2}\n${it.task3}",
-                                            message = it.title,
-                                            activity = context as Activity,
-                                            context = context
-                                        )
-                                    },
-                                    iconButtonOnClick = {
-                                        if (it.title != "All done") {
-                                            firebaseScope.launch {
-                                                viewModel.upsertHouseworkFirebase(Housework(
-                                                    image = it.image,
-                                                    title = it.title,
-                                                    task1 = it.task1,
-                                                    task2 = it.task2,
-                                                    task3 = it.task3,
-                                                    isLiked = !it.isLiked,
-                                                    lockDurationDays = it.lockDurationDays,
-                                                    lockExpirationDate = it.lockExpirationDate,
-                                                    default = it.default,
-                                                    id = it.id
-                                                ))
-                                            }
-                                        }
-                                    },
-                                    housework = it
+                activeHousework?.let {
+                    HomeScreenCard(
+                        skipButtonEnabled = (user?.skipCoins ?: 0) > 0,
+                        skipButtonOnClick = {
+                            firebaseScope.launch {
+                                viewModel.updateActiveHousework(true)
+                                viewModel.updateUserTasksAndSkipCoins(false)
+                            }
+                        },
+                        doneButtonOnClick = {
+                            var lockedHousework: Housework = activeHousework as Housework
+                            activeHousework?.let { housework ->
+                                lockedHousework = Housework(
+                                    image = housework.image,
+                                    title = housework.title,
+                                    task1 = housework.task1,
+                                    task2 = housework.task2,
+                                    task3 = housework.task3,
+                                    isLiked = housework.isLiked,
+                                    lockDurationDays = housework.lockDurationDays,
+                                    lockExpirationDate = housework.updateLockExpirationDate(),
+                                    default = housework.default,
+                                    id = housework.id
                                 )
-                            },
-                            liked = it.isLiked
-                        )
-                    }
-                }
-                // Display the loading indicator if loading is true
-                if (loading) {
-                    ConstraintLayout(
-                        modifier = Modifier
-                            .height(calcDp(percentage = 1f, dimension = CalcSizes.Dimension.Height))
-                            .width(calcDp(percentage = 1f, dimension = CalcSizes.Dimension.Width))
-                    ) {
-                        val (indicator) = createRefs()
-                        CircularProgressIndicator(
-                            progress = progress,
-                            color = Orange80,
-                            modifier = Modifier
-                                .width(calcDp(percentage = 0.25f, dimension = CalcSizes.Dimension.Full))
-                                .height(calcDp(percentage = 0.25f, dimension = CalcSizes.Dimension.Height))
-                                .constrainAs(indicator) {
-                                    centerTo(parent)
+                            }
+                            firebaseScope.launch {
+                                viewModel.updateUserTasksAndSkipCoins(true)
+                                viewModel.upsertHouseworkFirebase(lockedHousework)
+                                viewModel.updateHouseworkList()
+                                viewModel.updateActiveHousework(true)
+                            }
+                        },
+                        fabOnClick = {
+                            MotionToasts.info(
+                                title = "${it.task1}\n${it.task2}\n${it.task3}",
+                                message = it.title,
+                                activity = context as Activity,
+                                context = context
+                            )
+                        },
+                        iconButtonOnClick = {
+                            if (it.title != "All done") {
+                                firebaseScope.launch {
+                                    viewModel.upsertHouseworkFirebase(Housework(
+                                        image = it.image,
+                                        title = it.title,
+                                        task1 = it.task1,
+                                        task2 = it.task2,
+                                        task3 = it.task3,
+                                        isLiked = !it.isLiked,
+                                        lockDurationDays = it.lockDurationDays,
+                                        lockExpirationDate = it.lockExpirationDate,
+                                        default = it.default,
+                                        id = it.id
+                                    ))
+                                    viewModel.updateHouseworkList()
+                                    viewModel.getActiveHousework()
                                 }
-                        )
-                    }
+                            }
+                        },
+                        housework = it
+                    )
                 }
-
-                // Display the pull-to-refresh indicator
-                PullRefreshIndicator(refreshing, state, Modifier.align(Alignment.TopCenter))
             }
+
+            // Display the loading indicator if loading is true
+            if (loading) {
+                FullScreenProgressIndicator(progress, Purple80)
+            }
+
+            // Display the pull refresh indicator
+            PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
         }
-    )
+    }
 }

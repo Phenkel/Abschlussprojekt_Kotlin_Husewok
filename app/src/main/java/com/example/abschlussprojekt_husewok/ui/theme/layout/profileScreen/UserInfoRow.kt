@@ -11,10 +11,10 @@ import androidx.compose.ui.graphics.Color
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display a row of user information.
+ * A composable function that represents a row displaying user information.
  *
- * @param label The label for the user information.
- * @param value The value of the user information.
+ * @param label The label text for the user information.
+ * @param value The value text for the user information.
  */
 @Composable
 fun UserInfoRow(label: String, value: String?) {
@@ -23,15 +23,14 @@ fun UserInfoRow(label: String, value: String?) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier.fillMaxWidth(0.8f)
     ) {
-
-        // Display the label with specified style
+        // Display the label text
         Text(
             text = label,
             fontSize = calcSp(percentage = 0.033f),
             color = Color.White
         )
 
-        // Display the value with specified style, or empty string if value is null
+        // Display the value text, or an empty string if value is null
         Text(
             text = value ?: "",
             fontSize = calcSp(percentage = 0.033f),

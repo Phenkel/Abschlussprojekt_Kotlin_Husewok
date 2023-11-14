@@ -19,9 +19,9 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display the login watermark.
+ * A composable function that displays the login watermark.
  *
- * @param padding The padding to apply to the watermark.
+ * @param padding The padding values for the watermark.
  */
 @Composable
 fun LoginWatermark(padding: PaddingValues) {
@@ -30,9 +30,10 @@ fun LoginWatermark(padding: PaddingValues) {
             .fillMaxSize()
             .padding(padding)
     ) {
+        // Create references for the image and text
         val (image, text) = createRefs()
 
-        // Display the logo image
+        // Display the image
         Image(
             painter = painterResource(id = R.drawable.logo),
             contentDescription = null,
@@ -45,7 +46,7 @@ fun LoginWatermark(padding: PaddingValues) {
                 }
         )
 
-        // Display the watermark text
+        // Display the text
         Text(
             text = "Made by Phenkel",
             color = Color.White,

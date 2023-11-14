@@ -17,9 +17,9 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 
 /**
- * Composable function to display the housework image.
+ * A composable function that displays a housework image.
  *
- * @param image The resource ID of the housework image.
+ * @param image The resource ID of the image to display.
  */
 @Composable
 fun HouseworkImage(image: Int) {
@@ -33,7 +33,7 @@ fun HouseworkImage(image: Int) {
             .border(
                 width = calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width) / 100,
                 brush = Brush.horizontalGradient(
-                    listOf(Orange80, Color.White, Purple80)
+                    colors = listOf(Orange80, Color.White, Purple80)
                 ),
                 shape = ShapeDefaults.ExtraSmall
             )

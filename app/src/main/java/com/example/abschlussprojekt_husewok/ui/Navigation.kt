@@ -10,6 +10,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen.HomeScree
 import com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen.ListScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.loginScreen.LoginScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.profileScreen.ProfileScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.splashScreen.SplashScreen
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 
 /**
@@ -20,7 +21,8 @@ import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
  */
 @Composable
 fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel) {
-    NavHost(navController = navController, startDestination = "login") {
+    NavHost(navController = navController, startDestination = "splash") {
+        composable("splash") { SplashScreen(navController, viewModel) }
         composable("login") { LoginScreen(navController, viewModel) }
         composable("home") { HomeScreen(navController, viewModel) }
         composable("list") { ListScreen(navController, viewModel) }

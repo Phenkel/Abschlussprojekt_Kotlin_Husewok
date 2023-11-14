@@ -33,11 +33,11 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display a housework list card.
+ * A composable function that represents a card displaying housework information.
  *
  * @param sizeHeight The height of the card.
  * @param sizeWidth The width of the card.
- * @param housework The housework data to display.
+ * @param housework The housework object containing the information to display.
  */
 @Composable
 fun HouseworkListCard(
@@ -69,7 +69,6 @@ fun HouseworkListCard(
             ConstraintLayout(
                 modifier = Modifier.fillMaxSize()
             ) {
-                // Create references for the image and text row
                 val (image, textRow) = createRefs()
 
                 // Display the housework image
@@ -86,6 +85,7 @@ fun HouseworkListCard(
                     contentScale = ContentScale.Crop
                 )
 
+                // Display the housework title and status
                 Column(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -96,7 +96,6 @@ fun HouseworkListCard(
                             end.linkTo(parent.end)
                         }
                 ) {
-                    // Display the housework title
                     Text(
                         text = housework.title,
                         style = TextStyle(
@@ -104,10 +103,7 @@ fun HouseworkListCard(
                             fontSize = calcSp(percentage = 0.035f)
                         )
                     )
-
                     Spacer(modifier = Modifier.height(sizeHeight * 0.075f))
-
-                    // Display the housework status (done or not done)
                     Text(
                         text = if (housework.isLocked()) "Done" else "Not Done",
                         style = TextStyle(

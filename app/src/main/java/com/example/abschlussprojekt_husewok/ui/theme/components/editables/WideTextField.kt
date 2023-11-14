@@ -12,10 +12,11 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 
 /**
- * Composable function to display an outlined text field for adding a task.
+ * A composable function that represents a wide text field.
  *
  * @param value The current value of the text field.
- * @param onValueChange The callback function to handle the value change.
+ * @param label The label text for the text field.
+ * @param onValueChange The callback function to invoke when the value of the text field changes.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

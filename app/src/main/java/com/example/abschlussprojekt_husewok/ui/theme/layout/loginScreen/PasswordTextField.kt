@@ -18,13 +18,13 @@ import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 
 /**
- * Composable function to display a password text field with show/hide password functionality.
+ * A composable function that represents a password text field.
  *
- * @param value The current value of the password field.
- * @param label The label for the password field.
- * @param showPassword The flag indicating whether the password should be shown or hidden.
- * @param onValueChange The callback function to handle the value change of the password field.
- * @param onShowChange The callback function to handle the show/hide password toggle.
+ * @param value The current value of the text field.
+ * @param label The label text for the text field.
+ * @param showPassword Whether the password should be shown or hidden.
+ * @param onValueChange The callback function to invoke when the value of the text field changes.
+ * @param onShowChange The callback function to invoke when the show password toggle changes.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

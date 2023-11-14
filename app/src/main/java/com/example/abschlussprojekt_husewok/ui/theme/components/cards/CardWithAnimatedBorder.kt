@@ -28,10 +28,10 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 
 /**
- * Composable function to display a card with an animated border.
+ * A composable function that represents a card with an animated border.
  *
  * @param modifier The modifier for the card.
- * @param content The content of the card.
+ * @param content The content to display within the card.
  * @param liked Whether the card is liked or not.
  */
 @Composable
@@ -40,10 +40,8 @@ fun CardWithAnimatedBorder(
     content: @Composable () -> Unit,
     liked: Boolean
 ) {
-    // Create an infinite transition for the animation
+    // Create an infinite transition for the rotation animation
     val infiniteTransition = rememberInfiniteTransition(label = "")
-
-    // Animate the rotation angle from 0 to 360 degrees
     val angle by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
@@ -54,7 +52,7 @@ fun CardWithAnimatedBorder(
         label = ""
     )
 
-    // Set the brush based on whether the card is liked or not
+    // Create a brush for the border gradient based on the liked status
     val brush = if (liked) Brush.sweepGradient(likedColors) else Brush.sweepGradient(dislikedColors)
 
     Surface(modifier = modifier, shape = RoundedCornerShape(20.dp)) {

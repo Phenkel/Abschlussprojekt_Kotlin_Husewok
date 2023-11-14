@@ -20,12 +20,12 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
 
 /**
- * Composable function to display a wide button with an icon and text.
+ * A composable function that represents a wide button with an icon and text.
  *
  * @param text The text to display on the button.
  * @param icon The icon to display on the button.
- * @param primary Whether the button has a primary color scheme.
- * @param onClick The callback function to handle the button click event.
+ * @param primary Whether the button is in the primary color scheme.
+ * @param onClick The callback function to invoke when the button is clicked.
  */
 @Composable
 fun WideButton(text: String, icon: ImageVector, primary: Boolean, onClick: () -> Unit) {
@@ -59,7 +59,7 @@ fun WideButton(text: String, icon: ImageVector, primary: Boolean, onClick: () ->
             // Display the text
             Text(
                 text = text,
-                fontSize = calcSp(percentage = 0.0225f),
+                fontSize = calcSp(percentage = 0.03f),
                 modifier = Modifier.constrainAs(textRef) {
                     centerTo(parent)
                 }

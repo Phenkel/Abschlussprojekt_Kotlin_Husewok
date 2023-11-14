@@ -23,10 +23,10 @@ import com.exyte.animatednavbar.AnimatedNavigationBar
 import com.exyte.animatednavbar.items.wigglebutton.WiggleButton
 
 /**
- * Composable function to display the animated bottom app bar.
+ * A composable function that represents the animated bottom app bar.
  *
- * @param navController The NavController used for navigation.
- * @param page The current page index.
+ * @param navController The NavController used for navigating between screens.
+ * @param page The current selected page index.
  * @param homeSelected Whether the home page is selected.
  * @param listSelected Whether the list page is selected.
  * @param profileSelected Whether the profile page is selected.
@@ -39,18 +39,19 @@ fun AnimatedBottomAppBar(
     listSelected: Boolean,
     profileSelected: Boolean
 ) {
-    // Define mutable state variables for the selected state of each button
+    // Initialize the selected states
     var selected by remember { mutableIntStateOf(page) }
     var home by remember { mutableStateOf(homeSelected) }
     var list by remember { mutableStateOf(listSelected) }
     var profile by remember { mutableStateOf(profileSelected) }
 
+    // Compose the animated navigation bar
     AnimatedNavigationBar(
         selectedIndex = selected,
         barColor = OrangeGrey80,
         ballColor = Purple80,
     ) {
-        // Home button
+        // Compose the home button
         Box(
             modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
             contentAlignment = Alignment.BottomCenter
@@ -62,7 +63,7 @@ fun AnimatedBottomAppBar(
                     home = true
                     list = false
                     profile = false
-                    navController.navigate("home")
+                    navController.popBackStack("home", false)
                 },
                 icon = R.drawable.ic_house,
                 backgroundIcon = R.drawable.ic_circle,
@@ -73,7 +74,7 @@ fun AnimatedBottomAppBar(
             )
         }
 
-        // List button
+        // Compose the list button
         Box(
             modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
             contentAlignment = Alignment.BottomCenter
@@ -96,7 +97,7 @@ fun AnimatedBottomAppBar(
             )
         }
 
-        // Profile button
+        // Compose the profile button
         Box(
             modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
             contentAlignment = Alignment.BottomCenter
