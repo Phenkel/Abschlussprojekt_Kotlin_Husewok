@@ -50,7 +50,7 @@ interface BoredApiService {
      * @return A Bored object representing the random joke.
      */
     @GET("activity")
-    suspend fun getRandomJoke(): Bored
+    suspend fun getRandomBored(): Bored
 }
 
 /**

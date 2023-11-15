@@ -9,6 +9,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.layout.detailScreen.DetailS
 import com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen.HomeScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen.ListScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.loginScreen.LoginScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.onboardingScreen.OnboardingScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.profileScreen.ProfileScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.splashScreen.SplashScreen
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
@@ -29,5 +30,6 @@ fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel
         composable("detail") { DetailScreen(navController, viewModel) }
         composable("addTask") { AddTaskScreen(navController, viewModel) }
         composable("profile") { ProfileScreen(navController, viewModel) }
+        composable("onboarding") { OnboardingScreen(navController, viewModel) }
     }
 }

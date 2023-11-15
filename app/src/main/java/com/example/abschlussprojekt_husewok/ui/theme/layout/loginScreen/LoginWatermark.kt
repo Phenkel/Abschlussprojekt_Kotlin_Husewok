@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.example.abschlussprojekt_husewok.R
@@ -51,6 +52,7 @@ fun LoginWatermark(padding: PaddingValues) {
             text = "Made by Phenkel",
             color = Color.White,
             fontSize = calcSp(percentage = 0.05f),
+            fontWeight = FontWeight.Bold,
             modifier = Modifier.constrainAs(text) {
                 bottom.linkTo(parent.bottom, 16.dp)
                 centerHorizontallyTo(parent)

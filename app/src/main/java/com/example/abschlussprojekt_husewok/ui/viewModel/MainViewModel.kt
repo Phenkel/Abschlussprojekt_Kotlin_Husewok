@@ -18,6 +18,8 @@ class MainViewModel(
     val detailedHousework = repository.detailedHousework
     val activeHousework = repository.activeHousework
     val houseworkList = repository.houseworkList
+    val joke = repository.newJoke
+    val bored = repository.newBored
 
     /**
      * Updates the current user's data from Firestore.
@@ -123,4 +125,11 @@ class MainViewModel(
         repository.firebase.deleteHousework(id)
     }
 
+    /**
+     * Retrieves a reward based on the user's current reward type.
+     * If the reward type is "Joke", a joke is retrieved. Otherwise, a random activity is retrieved.
+     */
+    suspend fun getReward() {
+        repository.getReward()
+    }
 }

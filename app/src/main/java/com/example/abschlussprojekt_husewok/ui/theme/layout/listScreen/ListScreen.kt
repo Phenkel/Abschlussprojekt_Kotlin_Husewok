@@ -157,17 +157,17 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
                         }
                     )
                 }
+                item {
+                    // Display the "Add new task" button
+                    WideButton(text = "Add new task", icon = Icons.Outlined.Add, primary = true) {
+                        navController.navigate("addTask")
+                    }
+                }
                 items(houseworkList) { houseworkItem ->
                     // Display the swipeable housework list card
                     SwipeableHouseworkListCard(housework = houseworkItem, houseworkList = houseworkList) {
                         viewModel.updateDetailedHousework(houseworkItem)
                         navController.navigate("detail")
-                    }
-                }
-                item {
-                    // Display the "Add new task" button
-                    WideButton(text = "Add new task", icon = Icons.Outlined.Add, primary = true) {
-                        navController.navigate("addTask")
                     }
                 }
             }

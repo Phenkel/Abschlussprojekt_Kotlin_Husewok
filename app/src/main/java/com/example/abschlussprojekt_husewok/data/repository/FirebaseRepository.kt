@@ -397,12 +397,28 @@ class FirebaseRepository {
         }
 
         // Select the active housework based on the game result and availability
-        _activeHousework.value = when {
-            won && likedHousework.isNotEmpty() -> likedHousework.random()
-            won && likedHousework.isEmpty() -> dislikedHousework.random()
-            !won && dislikedHousework.isNotEmpty() -> dislikedHousework.random()
-            !won && dislikedHousework.isEmpty() -> likedHousework.random()
-            else -> Housework(
+        try {
+            _activeHousework.value = when {
+                won && likedHousework.isNotEmpty() -> likedHousework.random()
+                won && likedHousework.isEmpty() -> dislikedHousework.random()
+                !won && dislikedHousework.isNotEmpty() -> dislikedHousework.random()
+                !won && dislikedHousework.isEmpty() -> likedHousework.random()
+                else -> Housework(
+                    image = R.drawable.img_placeholder,
+                    title = "All done",
+                    task1 = "You completed every task",
+                    task2 = "Just wait for new tasks",
+                    task3 = "Enjoy your free time",
+                    isLiked = true,
+                    lockDurationDays = 0,
+                    lockExpirationDate = "",
+                    default = true,
+                    id = "All done"
+                )
+            }
+            Log.d("REPOSITORY", "updateActiveHousework:Success")
+        } catch (e: Exception) {
+            _activeHousework.value = Housework(
                 image = R.drawable.img_placeholder,
                 title = "All done",
                 task1 = "You completed every task",
@@ -414,7 +430,9 @@ class FirebaseRepository {
                 default = true,
                 id = "All done"
             )
+            Log.w("REPOSITORY", "updateActiveHousework:Failure", e)
         }
+
 
         // Update the active housework for the current user
         _currentUser.value?.let { currentUser ->
@@ -460,7 +478,18 @@ class FirebaseRepository {
                 }
 
                 // Update the active housework value
-                _activeHousework.value = activeHousework
+                _activeHousework.value = if (activeHousework != null) activeHousework else Housework(
+                    image = R.drawable.img_placeholder,
+                    title = "All done",
+                    task1 = "You completed every task",
+                    task2 = "Just wait for new tasks",
+                    task3 = "Enjoy your free time",
+                    isLiked = true,
+                    lockDurationDays = 0,
+                    lockExpirationDate = "",
+                    default = true,
+                    id = "All done"
+                )
 
                 Log.d(Logger.TAG, "getActiveHousework:success")
             } catch (exception: Exception) {

@@ -18,14 +18,14 @@ object MotionToasts {
      * @param activity The activity in which the toast should be displayed.
      * @param context The context used for retrieving resources.
      */
-    fun success(title: String, message: String, activity: Activity, context: Context) {
+    fun success(title: String, message: String, activity: Activity, context: Context, long: Boolean = false) {
         MotionToast.createColorToast(
             activity,
             title,
             message,
             MotionToastStyle.SUCCESS,
             MotionToast.GRAVITY_BOTTOM,
-            MotionToast.SHORT_DURATION,
+            if (!long) MotionToast.SHORT_DURATION else MotionToast.LONG_DURATION,
             ResourcesCompat.getFont(context, www.sanju.motiontoast.R.font.helvetica_regular)
         )
     }
@@ -38,14 +38,14 @@ object MotionToasts {
      * @param activity The activity in which the toast should be displayed.
      * @param context The context used for retrieving resources.
      */
-    fun error(title: String, message: String, activity: Activity, context: Context) {
+    fun error(title: String, message: String, activity: Activity, context: Context, long: Boolean = false) {
         MotionToast.createColorToast(
             activity,
             title,
             message,
             MotionToastStyle.ERROR,
             MotionToast.GRAVITY_BOTTOM,
-            MotionToast.SHORT_DURATION,
+            if (!long) MotionToast.SHORT_DURATION else MotionToast.LONG_DURATION,
             ResourcesCompat.getFont(context, www.sanju.motiontoast.R.font.helvetica_regular)
         )
     }
@@ -58,14 +58,14 @@ object MotionToasts {
      * @param activity The activity in which the toast should be displayed.
      * @param context The context used for retrieving resources.
      */
-    fun warning(title: String, message: String, activity: Activity, context: Context) {
+    fun warning(title: String, message: String, activity: Activity, context: Context, long: Boolean = false) {
         MotionToast.createColorToast(
             activity,
             title,
             message,
             MotionToastStyle.WARNING,
             MotionToast.GRAVITY_BOTTOM,
-            MotionToast.SHORT_DURATION,
+            if (!long) MotionToast.SHORT_DURATION else MotionToast.LONG_DURATION,
             ResourcesCompat.getFont(context, www.sanju.motiontoast.R.font.helvetica_regular)
         )
     }
@@ -78,14 +78,14 @@ object MotionToasts {
      * @param activity The activity in which the toast should be displayed.
      * @param context The context used for retrieving resources.
      */
-    fun info(title: String, message: String, activity: Activity, context: Context) {
+    fun info(title: String, message: String, activity: Activity, context: Context, long: Boolean = false) {
         MotionToast.createColorToast(
             activity,
             title,
             message,
             MotionToastStyle.INFO,
             MotionToast.GRAVITY_BOTTOM,
-            MotionToast.SHORT_DURATION,
+            if (!long) MotionToast.SHORT_DURATION else MotionToast.LONG_DURATION,
             ResourcesCompat.getFont(context, www.sanju.motiontoast.R.font.helvetica_regular)
         )
     }
@@ -98,14 +98,14 @@ object MotionToasts {
      * @param activity The activity in which the toast should be displayed.
      * @param context The context used for retrieving resources.
      */
-    fun delete(title: String, message: String, activity: Activity, context: Context) {
+    fun delete(title: String, message: String, activity: Activity, context: Context, long: Boolean = false) {
         MotionToast.createColorToast(
             activity,
             title,
             message,
             MotionToastStyle.DELETE,
             MotionToast.GRAVITY_BOTTOM,
-            MotionToast.SHORT_DURATION,
+            if (!long) MotionToast.SHORT_DURATION else MotionToast.LONG_DURATION,
             ResourcesCompat.getFont(context, www.sanju.motiontoast.R.font.helvetica_regular)
         )
     }

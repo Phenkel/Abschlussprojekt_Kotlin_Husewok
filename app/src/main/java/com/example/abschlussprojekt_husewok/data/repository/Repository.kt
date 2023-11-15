@@ -1,9 +1,12 @@
 package com.example.abschlussprojekt_husewok.data.repository
 
+import com.example.abschlussprojekt_husewok.data.model.Bored
 import com.example.abschlussprojekt_husewok.data.model.Housework
+import com.example.abschlussprojekt_husewok.data.model.Joke
 import com.example.abschlussprojekt_husewok.data.model.User
 import com.example.abschlussprojekt_husewok.data.remote.BoredApi
 import com.example.abschlussprojekt_husewok.data.remote.JokeApi
+import com.example.abschlussprojekt_husewok.data.remote.NetworkResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -35,6 +38,14 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
     val houseworkList: StateFlow<List<Housework>>
         get() = firebase.houseworkList
 
+    // Get the bored state flow from the Bored repository
+    val newBored: StateFlow<NetworkResult<Bored>>
+        get() = bored.newBored
+
+    // Get the joke state flow from the Joke repository
+    val newJoke: StateFlow<NetworkResult<Joke>>
+        get() = joke.newJoke
+
     // Create a state flow for the detailed housework
     private val _detailedHousework = MutableStateFlow<Housework?>(null)
     val detailedHousework: StateFlow<Housework?>
@@ -47,5 +58,19 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
      */
     fun updateDetailedHousework(housework: Housework) {
         _detailedHousework.value = housework
+    }
+
+    /**
+     * Retrieves a reward based on the user's current reward type.
+     * If the reward type is "Joke", a joke is retrieved. Otherwise, a random activity is retrieved.
+     */
+    suspend fun getReward() {
+        if (currentUser.value?.reward == "Joke") {
+            // Retrieve a joke if the reward type is "Joke"
+            joke.getJoke()
+        } else {
+            // Retrieve a random activity if the reward type is not "Joke"
+            bored.getBored()
+        }
     }
 }

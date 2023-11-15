@@ -142,7 +142,7 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                                                 val user = auth.currentUser
                                                 user?.uid?.let { viewModel.createNewUserFirebase(it) }
                                             }
-                                            navController.navigate("home")
+                                            navController.navigate("onboarding")
                                         } else {
                                             Log.w(TAG, "signInWithEmail:failure", signInTask.exception)
                                         }
