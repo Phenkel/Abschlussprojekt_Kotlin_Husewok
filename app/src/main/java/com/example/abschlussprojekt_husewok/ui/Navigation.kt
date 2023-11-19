@@ -2,8 +2,10 @@ package com.example.abschlussprojekt_husewok.ui
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.abschlussprojekt_husewok.ui.theme.layout.addTaskScreen.AddTaskScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.detailScreen.DetailScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen.HomeScreen
@@ -27,7 +29,13 @@ fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel
         composable("login") { LoginScreen(navController, viewModel) }
         composable("home") { HomeScreen(navController, viewModel) }
         composable("list") { ListScreen(navController, viewModel) }
-        composable("detail") { DetailScreen(navController, viewModel) }
+        composable(
+            route = "detail/{stringValue}",
+            arguments = listOf(navArgument("stringValue") { type = NavType.StringType })
+        ) { backStackEntry ->
+            val stringValue = backStackEntry.arguments?.getString("stringValue") ?: ""
+            DetailScreen(navController, viewModel, stringValue)
+        }
         composable("addTask") { AddTaskScreen(navController, viewModel) }
         composable("profile") { ProfileScreen(navController, viewModel) }
         composable("onboarding") { OnboardingScreen(navController, viewModel) }

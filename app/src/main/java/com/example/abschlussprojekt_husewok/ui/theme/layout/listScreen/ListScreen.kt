@@ -1,6 +1,5 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,7 +18,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -29,81 +27,67 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.BasicTopAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.buttons.WideButton
-import com.example.abschlussprojekt_husewok.ui.theme.components.scaffolds.BasicScaffold
+import com.example.abschlussprojekt_husewok.ui.theme.composables.bottomAppBars.AnimatedBottomAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.editables.SortingButtons
+import com.example.abschlussprojekt_husewok.ui.theme.composables.topAppBars.BasicTopAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.buttons.WideButton
+import com.example.abschlussprojekt_husewok.ui.theme.composables.cards.SwipeableHouseworkListCard
+import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.BasicScaffold
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
-import com.example.abschlussprojekt_husewok.utils.MotionToasts
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 /**
- * A composable function that represents the list screen of the app.
+ * Composable function for the list screen.
  *
- * @param navController The NavController used for navigating between screens.
- * @param viewModel The MainViewModel used for accessing and updating housework data.
+ * @param navController The NavController for navigating between screens.
+ * @param viewModel The MainViewModel instance for accessing data and business logic.
  */
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ListScreen(navController: NavController, viewModel: MainViewModel) {
-    // Update the housework list when the composable is first composed
-    LaunchedEffect(Unit) {
-        viewModel.updateHouseworkList()
-    }
-
-    // Collect the housework list state from the view model
+    // Collect the houseworkList state from the viewModel
     val houseworkList by viewModel.houseworkList.collectAsStateWithLifecycle()
 
-    // Define the scroll behavior for the top app bar
+    // Set up scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    // Get the current context
+    // Retrieve the current context
     val context = LocalContext.current
 
-    // Create a coroutine scope for refreshing the housework list
+    // Set up coroutine scope for internet operations
+    val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    // Set up main coroutine scope
+    val mainScope = MainScope()
+
+    // Set up coroutine scope for pull-to-refresh
     val refreshScope = rememberCoroutineScope()
 
-    // State variable for refreshing the housework list
+    // State variable for refreshing state
     var refreshing by remember { mutableStateOf(false) }
 
-    // Refresh the housework list
+    // Function for refreshing the housework list
     fun refresh() = refreshScope.launch {
         refreshing = true
-
-        // Update the housework list
-        viewModel.updateHouseworkList()
-
-        // Simulate a delay for refreshing
-        delay(500)
-
-        // Show a success toast if the housework list is not empty
-        if (houseworkList.isNotEmpty()) {
-            MotionToasts.success(
-                title = "Success",
-                message = "Housework list found",
-                activity = context as Activity,
-                context = context
-            )
-        } else {
-            // Show an error toast if the housework list is empty
-            MotionToasts.error(
-                title = "Error",
-                message = "No housework list found. Please reload again",
-                activity = context as Activity,
-                context = context
-            )
-        }
-
+        ListScreenFunctions.refresh(
+            viewModel,
+            internetScope,
+            context,
+            houseworkList
+        )
         refreshing = false
     }
 
-    // Create a pull refresh state
+    // Create the pull-to-refresh state
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = ::refresh)
 
-    // Compose the list screen UI using BasicScaffold
+    // Compose the list screen layout
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "home") },
         bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false) }
@@ -125,54 +109,41 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
                     .fillMaxSize()
                     .pullRefresh(pullRefreshState)
             ) {
+                // Sorting buttons
                 item {
-                    // Display the sorting buttons
                     SortingButtons(
                         byLikedOnClick = {
-                            viewModel.sortHouseworkList("Liked")
-                            MotionToasts.info(
-                                title = "Sorted by liked",
-                                message = "Liked tasks will be shown first",
-                                activity = context as Activity,
-                                context = context
-                            )
+                            mainScope.launch { ListScreenFunctions.sortByLiked(
+                                viewModel, internetScope, context) }
                         },
                         byLockedOnClick = {
-                            viewModel.sortHouseworkList("Locked")
-                            MotionToasts.info(
-                                title = "Sorted by locked",
-                                message = "Locked tasks will be shown first",
-                                activity = context as Activity,
-                                context = context
-                            )
+                            mainScope.launch { ListScreenFunctions.sortByLocked(
+                                viewModel, internetScope, context) }
                         },
                         byRandomOnClick = {
-                            viewModel.sortHouseworkList("Random")
-                            MotionToasts.info(
-                                title = "Sorted by random",
-                                message = "Have fun searching",
-                                activity = context as Activity,
-                                context = context
-                            )
+                            mainScope.launch { ListScreenFunctions.sortByRandom(
+                                viewModel, internetScope, context) }
                         }
                     )
                 }
+
+                // "Add new task" button
                 item {
-                    // Display the "Add new task" button
                     WideButton(text = "Add new task", icon = Icons.Outlined.Add, primary = true) {
                         navController.navigate("addTask")
                     }
                 }
+
+                // Housework list
                 items(houseworkList) { houseworkItem ->
-                    // Display the swipeable housework list card
                     SwipeableHouseworkListCard(housework = houseworkItem, houseworkList = houseworkList) {
                         viewModel.updateDetailedHousework(houseworkItem)
-                        navController.navigate("detail")
+                        navController.navigate("detail/${houseworkItem.id}")
                     }
                 }
             }
 
-            // Display the pull refresh indicator
+            // Pull-to-refresh indicator
             PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
         }
     }

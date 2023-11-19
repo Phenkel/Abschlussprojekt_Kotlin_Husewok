@@ -1,6 +1,5 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen
 
-import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -25,99 +23,67 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.abschlussprojekt_husewok.ui.theme.Purple80
-import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.progressIndicator.FullScreenProgressIndicator
-import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.NoNavigationTopAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.scaffolds.BasicScaffold
+import com.example.abschlussprojekt_husewok.ui.theme.composables.bottomAppBars.AnimatedBottomAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.cards.HomeScreenCard
+import com.example.abschlussprojekt_husewok.ui.theme.composables.topAppBars.NoNavigationTopAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.BasicScaffold
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
-import com.example.abschlussprojekt_husewok.utils.MotionToasts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 /**
- * A composable function that represents the home screen of the app.
+ * Composable function for the home screen.
  *
- * @param navController The NavController used for navigating between screens.
- * @param viewModel The MainViewModel used for accessing and updating data.
+ * @param navController The NavController for navigating between screens.
+ * @param viewModel The MainViewModel instance for accessing data and business logic.
  */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
-    // Collect the state values from the view model
+    // Collect the current user, active housework, and loading states from the view model
     val user by viewModel.currentUser.collectAsStateWithLifecycle()
     val activeHousework by viewModel.activeHousework.collectAsStateWithLifecycle()
-    val houseworkList by viewModel.houseworkList.collectAsStateWithLifecycle()
-    val bored by viewModel.bored.collectAsStateWithLifecycle()
-    val joke by viewModel.joke.collectAsStateWithLifecycle()
+    val firstLoading by viewModel.firstLoading.collectAsStateWithLifecycle()
 
-    // State variables for loading and progress
-    var loading by remember { mutableStateOf(false) }
-    var progress by remember { mutableFloatStateOf(0f) }
-
-    // Get the current context
+    // Retrieve the current context
     val context = LocalContext.current
 
-    // Create coroutine scopes for Firebase and API operations
-    val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    val apiScope = CoroutineScope(Dispatchers.IO)
-
-    // Create a main coroutine scope
+    // Set up coroutine scopes for internet operations and UI updates
+    val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     val mainScope = MainScope()
 
-    // Create a scroll state for the scrollable content
+    // Set up scroll state and refresh scope for pull-to-refresh functionality
     val scrollState = rememberScrollState()
-
-    // Create a coroutine scope for refreshing the screen
     val refreshScope = rememberCoroutineScope()
     var refreshing by remember { mutableStateOf(false) }
 
-    // Refresh the screen
+    // Function to handle refresh action
     fun refresh() = refreshScope.launch {
         refreshing = true
-        HomeScreenFunctions.refresh(viewModel, context, firebaseScope, activeHousework, houseworkList)
+        HomeScreenFunctions.loadHousework(viewModel, context, internetScope)
         refreshing = false
     }
 
-    // Create a pull refresh state
+    // Set up pull-to-refresh state
     val pullRefreshState = rememberPullRefreshState(refreshing = refreshing, onRefresh = ::refresh)
 
-    // Perform initial loading if active housework is null or housework list is empty
-    if (activeHousework == null || houseworkList.isEmpty()) {
+    // Load housework data if it's the first loading
+    if (firstLoading) {
         LaunchedEffect(Unit) {
-            loading = true
-            withContext(NonCancellable) {
-                for (i in 1..100) {
-                    if (i == 50) firebaseScope.launch { viewModel.updateHouseworkList() }
-                    if (i == 100) firebaseScope.launch { viewModel.getActiveHousework() }
-                    progress = i.toFloat() / 100
-                    delay(10)
-                }
-            }
-            loading = false
+            HomeScreenFunctions.loadHousework(viewModel, context, internetScope)
+            viewModel.firstLoaded()
         }
-    }
-    // Perform actions when active housework is locked
-    else if (activeHousework?.isLocked() == true) {
-        LaunchedEffect(Unit) {
-            HomeScreenFunctions.onCreate(viewModel, context, firebaseScope, houseworkList)
-        }
-    }
-    // Perform actions when active housework is "All done"
-    else if (activeHousework?.title == "All done") {
-        HomeScreenFunctions.allDoneFound(viewModel, context, firebaseScope, houseworkList)
     }
 
-    // Compose the home screen UI using BasicScaffold
+    // Compose the home screen layout
     BasicScaffold(
         topBar = { NoNavigationTopAppBar() },
-        bottomBar = { AnimatedBottomAppBar(navController, 0, true, false, false) }
+        bottomBar = {
+            AnimatedBottomAppBar(navController, 0, true, false, false)
+        }
     ) { innerPadding ->
         Box(
             modifier = Modifier
@@ -132,43 +98,34 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.fillMaxSize(1f)
             ) {
+                // Render the active housework card if available
                 activeHousework?.let { hw ->
                     HomeScreenCard(
                         skipButtonEnabled = (user?.skipCoins ?: 0) > 0,
                         skipButtonOnClick = {
-                            HomeScreenFunctions.skipButton(viewModel, firebaseScope, activeHousework)
+                            HomeScreenFunctions.skipButton(viewModel, internetScope, activeHousework)
                         },
                         doneButtonOnClick = {
-                            HomeScreenFunctions.doneButton(
-                                viewModel,
-                                context,
-                                firebaseScope,
-                                apiScope,
-                                mainScope,
-                                hw,
-                                user,
-                                bored,
-                                joke
-                            )
+                            mainScope.launch {
+                                HomeScreenFunctions.doneButton(
+                                    viewModel, context, internetScope, hw, user
+                                )
+                            }
                         },
                         fabOnClick = {
-                            MotionToasts.info(
-                                title = "${hw.task1}\n${hw.task2}\n${hw.task3}",
-                                message = hw.title,
-                                activity = context as Activity,
-                                context = context
-                            )
+                            HomeScreenFunctions.infoButton(context, hw)
                         },
                         iconButtonOnClick = {
-                            HomeScreenFunctions.iconButton(viewModel, firebaseScope, hw)
+                            mainScope.launch {
+                                HomeScreenFunctions.favoriteButton(viewModel, internetScope, hw)
+                            }
                         },
                         housework = hw
                     )
                 }
             }
-            if (loading) {
-                FullScreenProgressIndicator(progress, Purple80)
-            }
+
+            // Pull-to-refresh indicator
             PullRefreshIndicator(refreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
         }
     }

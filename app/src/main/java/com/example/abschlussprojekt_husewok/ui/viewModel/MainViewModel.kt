@@ -3,6 +3,8 @@ package com.example.abschlussprojekt_husewok.ui.viewModel
 import androidx.lifecycle.ViewModel
 import com.example.abschlussprojekt_husewok.data.repository.Repository
 import com.example.abschlussprojekt_husewok.data.model.Housework
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 
 /**
  * ViewModel class for the app.
@@ -20,6 +22,18 @@ class MainViewModel(
     val houseworkList = repository.houseworkList
     val joke = repository.newJoke
     val bored = repository.newBored
+
+    // State Flow for tracking the first loading state
+    private var _firstLoading = MutableStateFlow(true)
+    val firstLoading: StateFlow<Boolean>
+        get() = _firstLoading
+
+    /**
+     * Sets the first loading state to false.
+     */
+    fun firstLoaded() {
+        _firstLoading.value = false
+    }
 
     /**
      * Updates the current user's data from Firestore.
@@ -131,5 +145,12 @@ class MainViewModel(
      */
     suspend fun getReward() {
         repository.getReward()
+    }
+
+    /**
+     * Clears all user associated data.
+     */
+    fun logoutClearData() {
+        repository.firebase.logoutClearData()
     }
 }

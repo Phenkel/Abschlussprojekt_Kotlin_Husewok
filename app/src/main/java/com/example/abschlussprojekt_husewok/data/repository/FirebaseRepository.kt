@@ -514,7 +514,7 @@ class FirebaseRepository {
             "Locked" -> {
                 // Sort the housework list by locked status and then by title
                 _houseworkList.value = _houseworkList.value.sortedWith(
-                    compareBy({ !it.isLocked() }, { it.title })
+                    compareBy({ it.isLocked() }, { it.title })
                 )
             }
             "Random" -> {
@@ -547,5 +547,14 @@ class FirebaseRepository {
                     Log.w(Logger.TAG, "deleteHousework:failure", exception)
                 }
         }
+    }
+
+    /**
+     * Clears all user associated data.
+     */
+    fun logoutClearData() {
+        _currentUser.value = null
+        _activeHousework.value = null
+        _houseworkList.value = emptyList()
     }
 }

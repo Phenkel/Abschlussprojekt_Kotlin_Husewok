@@ -9,8 +9,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.ui.theme.Orange80
-import com.example.abschlussprojekt_husewok.ui.theme.components.scaffolds.OnlyContentScaffold
-import com.example.abschlussprojekt_husewok.ui.theme.components.progressIndicator.FullScreenProgressIndicator
+import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.OnlyContentScaffold
+import com.example.abschlussprojekt_husewok.ui.theme.composables.progressIndicator.FullScreenProgressIndicator
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.Constants.auth
 import kotlinx.coroutines.delay

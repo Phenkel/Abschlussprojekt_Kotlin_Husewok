@@ -22,9 +22,9 @@ import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.ui.theme.Orange40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
-import com.example.abschlussprojekt_husewok.ui.theme.components.cards.CardWithAnimatedBorder
-import com.example.abschlussprojekt_husewok.ui.theme.components.scaffolds.OnlyContentScaffold
-import com.example.abschlussprojekt_husewok.ui.theme.layout.listScreen.HouseworkListCard
+import com.example.abschlussprojekt_husewok.ui.theme.composables.cards.CardWithAnimatedBorder
+import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.OnlyContentScaffold
+import com.example.abschlussprojekt_husewok.ui.theme.composables.cards.HouseworkListCard
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView

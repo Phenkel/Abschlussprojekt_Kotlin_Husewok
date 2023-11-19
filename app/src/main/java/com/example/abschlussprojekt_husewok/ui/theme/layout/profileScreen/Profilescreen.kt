@@ -15,17 +15,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
-import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.BasicTopAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.backgroundGrey
-import com.example.abschlussprojekt_husewok.ui.theme.components.buttons.WideButton
-import com.example.abschlussprojekt_husewok.ui.theme.components.scaffolds.BasicScaffold
-import com.example.abschlussprojekt_husewok.ui.theme.components.statics.HouseworkImage
+import com.example.abschlussprojekt_husewok.ui.theme.composables.bottomAppBars.AnimatedBottomAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.topAppBars.BasicTopAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.buttons.WideButton
+import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.BasicScaffold
+import com.example.abschlussprojekt_husewok.ui.theme.composables.statics.HouseworkImage
+import com.example.abschlussprojekt_husewok.ui.theme.composables.editables.RewardRow
+import com.example.abschlussprojekt_husewok.ui.theme.composables.statics.UserInfoRow
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
@@ -49,9 +48,6 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
 
     // Define the scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-
-    // Create a coroutine scope for Firebase operations
-    val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
     // Compose the profile screen UI using BasicScaffold
     BasicScaffold(
@@ -85,9 +81,7 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
             user?.reward?.let {
                 RewardRow(it) {
                     // Update the user's reward when clicked
-                    firebaseScope.launch {
-                        viewModel.updateUserReward()
-                    }
+                    viewModel.updateUserReward()
                 }
             }
 
@@ -95,6 +89,7 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
             WideButton(text = "Logout", icon = Icons.Outlined.ExitToApp, primary = false) {
                 // Perform logout actions and navigate to the login screen
                 auth.signOut()
+                viewModel.logoutClearData()
                 navController.navigate("login")
             }
         }

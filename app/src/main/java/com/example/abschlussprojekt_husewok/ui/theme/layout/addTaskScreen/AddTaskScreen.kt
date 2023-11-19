@@ -22,35 +22,36 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
-import com.example.abschlussprojekt_husewok.data.model.Housework
-import com.example.abschlussprojekt_husewok.ui.theme.components.bottomAppBars.AnimatedBottomAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.topAppBars.BasicTopAppBar
-import com.example.abschlussprojekt_husewok.ui.theme.components.editables.WideTextField
-import com.example.abschlussprojekt_husewok.ui.theme.components.statics.HouseworkImage
-import com.example.abschlussprojekt_husewok.ui.theme.components.buttons.WideButton
-import com.example.abschlussprojekt_husewok.ui.theme.components.editables.LikedDislikedSwitch
-import com.example.abschlussprojekt_husewok.ui.theme.components.editables.LockedDurationDaysEdit
-import com.example.abschlussprojekt_husewok.ui.theme.components.scaffolds.BasicScaffold
+import com.example.abschlussprojekt_husewok.ui.theme.composables.bottomAppBars.AnimatedBottomAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.topAppBars.BasicTopAppBar
+import com.example.abschlussprojekt_husewok.ui.theme.composables.editables.WideTextField
+import com.example.abschlussprojekt_husewok.ui.theme.composables.statics.HouseworkImage
+import com.example.abschlussprojekt_husewok.ui.theme.composables.buttons.WideButton
+import com.example.abschlussprojekt_husewok.ui.theme.composables.editables.LikedDislikedSwitch
+import com.example.abschlussprojekt_husewok.ui.theme.composables.editables.LockedDurationDaysEdit
+import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.BasicScaffold
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 /**
- * A composable function that represents the screen for adding a new task.
+ * Composable function for the add task screen.
  *
- * @param navController The NavController used for navigating between screens.
- * @param viewModel The MainViewModel used for accessing and updating housework data.
+ * @param navController The NavController for navigating between screens.
+ * @param viewModel The MainViewModel instance for accessing data and business logic.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
-    // Create mutable state variables for the task details
+    // State variables for input fields
     var title by remember { mutableStateOf("") }
     var task1 by remember { mutableStateOf("") }
     var task2 by remember { mutableStateOf("") }
@@ -58,13 +59,19 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
     var lockDurationDays by remember { mutableLongStateOf(7) }
     var liked by remember { mutableStateOf(true) }
 
-    // Define the scroll behavior for the top app bar
+    // Set up scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    // Create a coroutine scope for Firebase operations
-    val firebaseScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    // Retrieve the current context
+    val context = LocalContext.current
 
-    // Compose the add task screen UI using BasicScaffold
+    // Set up coroutine scope for internet operations
+    val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
+    // Set up main coroutine scope
+    val mainScope = MainScope()
+
+    // Compose the add task screen layout
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "list") },
         bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false) }
@@ -85,57 +92,40 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
                     calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                 )
             )
-
-            // Display the housework image
             HouseworkImage(image = R.drawable.img_placeholder)
 
-            // Display the title text field
+            // Input fields for title and tasks
             WideTextField(value = title, label = "Title") { value -> title = value }
-
-            // Display the task 1 text field
             WideTextField(value = task1, label = "Task 1") { value -> task1 = value }
-
-            // Display the task 2 text field
             WideTextField(value = task2, label = "Task 2") { value -> task2 = value }
-
-            // Display the task 3 text field
             WideTextField(value = task3, label = "Task 3") { value -> task3 = value }
 
-            // Display the liked/disliked switch
+            // Switch for setting liked/disliked status
             LikedDislikedSwitch(liked = liked) { value -> liked = value }
 
-            // Display the locked duration days editor
+            // Editable field for setting lock duration in days
             LockedDurationDaysEdit(
                 lockDurationDays = lockDurationDays,
                 addOnClick = { lockDurationDays++ },
                 removeOnClick = { lockDurationDays-- }
             )
 
-            // Display the "Create Task" button
+            // Button for creating the task
             WideButton(text = "Create Task", icon = Icons.Outlined.AddCircle, primary = true) {
-                firebaseScope.launch {
-                    // Add the new task to Firebase
-                    viewModel.upsertHouseworkFirebase(
-                        Housework(
-                            image = R.drawable.img_placeholder,
-                            title = title,
-                            task1 = task1,
-                            task2 = task2,
-                            task3 = task3,
-                            isLiked = liked,
-                            lockDurationDays = lockDurationDays,
-                            lockExpirationDate = "",
-                            default = false,
-                            id = "default"
-                        )
+                mainScope.launch {
+                    AddTaskScreenFunctions.addTask(
+                        viewModel,
+                        internetScope,
+                        navController,
+                        context,
+                        title,
+                        task1,
+                        task2,
+                        task3,
+                        liked,
+                        lockDurationDays
                     )
-
-                    // Update the housework list
-                    viewModel.updateHouseworkList()
                 }
-
-                // Navigate back to the list screen
-                navController.popBackStack("list", false)
             }
 
             Spacer(
