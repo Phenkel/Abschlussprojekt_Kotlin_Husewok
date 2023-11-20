@@ -17,7 +17,6 @@ class MainViewModel(
 ) : ViewModel() {
     // State Flows for accessing data from the repository
     val currentUser = repository.currentUser
-    val detailedHousework = repository.detailedHousework
     val activeHousework = repository.activeHousework
     val houseworkList = repository.houseworkList
     val joke = repository.newJoke
@@ -42,15 +41,6 @@ class MainViewModel(
      */
     suspend fun updateCurrentUser(uid: String) {
         repository.firebase.updateCurrentUser(uid)
-    }
-
-    /**
-     * Updates the detailed housework information.
-     *
-     * @param housework The housework object containing the updated information.
-     */
-    fun updateDetailedHousework(housework: Housework) {
-        repository.updateDetailedHousework(housework)
     }
 
     /**

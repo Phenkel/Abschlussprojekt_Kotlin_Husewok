@@ -63,7 +63,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     // Function to handle refresh action
     fun refresh() = refreshScope.launch {
         refreshing = true
-        HomeScreenFunctions.loadHousework(viewModel, context, internetScope)
+        HomeScreenFunctions.loadHousework(viewModel, navController, context, internetScope)
         refreshing = false
     }
 
@@ -73,7 +73,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     // Load housework data if it's the first loading
     if (firstLoading) {
         LaunchedEffect(Unit) {
-            HomeScreenFunctions.loadHousework(viewModel, context, internetScope)
+            HomeScreenFunctions.loadHousework(viewModel, navController, context, internetScope)
             viewModel.firstLoaded()
         }
     }
@@ -103,12 +103,12 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
                     HomeScreenCard(
                         skipButtonEnabled = (user?.skipCoins ?: 0) > 0,
                         skipButtonOnClick = {
-                            HomeScreenFunctions.skipButton(viewModel, internetScope, activeHousework)
+                            HomeScreenFunctions.skipButton(viewModel, navController, internetScope, activeHousework)
                         },
                         doneButtonOnClick = {
                             mainScope.launch {
                                 HomeScreenFunctions.doneButton(
-                                    viewModel, context, internetScope, hw, user
+                                    viewModel, navController, context, internetScope, hw, user
                                 )
                             }
                         },

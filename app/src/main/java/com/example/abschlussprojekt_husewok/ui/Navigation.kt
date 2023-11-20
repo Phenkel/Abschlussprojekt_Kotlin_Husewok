@@ -14,6 +14,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.layout.loginScreen.LoginScr
 import com.example.abschlussprojekt_husewok.ui.theme.layout.onboardingScreen.OnboardingScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.profileScreen.ProfileScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.splashScreen.SplashScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.gameScreens.ticTacToeScreen.TicTacToeScreen
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 
 /**
@@ -39,5 +40,6 @@ fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel
         composable("addTask") { AddTaskScreen(navController, viewModel) }
         composable("profile") { ProfileScreen(navController, viewModel) }
         composable("onboarding") { OnboardingScreen(navController, viewModel) }
+        composable("tictactoe") { TicTacToeScreen(navController, viewModel) }
     }
 }

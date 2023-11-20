@@ -16,50 +16,46 @@ import com.example.abschlussprojekt_husewok.utils.Constants.auth
 import kotlinx.coroutines.delay
 
 /**
- * A Composable function that represents the splash screen of the app.
+ * Composable function for the splash screen.
  *
- * @param navController The NavController used for navigating between screens.
- * @param viewModel The MainViewModel used for updating the current user.
+ * @param navController The NavController for navigating between screens.
+ * @param viewModel The MainViewModel instance for accessing data and business logic.
  */
 @Composable
 fun SplashScreen(navController: NavController, viewModel: MainViewModel) {
-    // State to track if the loading process is ongoing
+    // Define mutable state variables for loading and progress
     var loading by remember { mutableStateOf(false) }
-
-    // State to track the progress of the loading process
     var progress by remember { mutableFloatStateOf(0f) }
 
-    // Launch the effect when the composable is first composed
+    // Execute the code inside LaunchedEffect when the composable is launched
     LaunchedEffect(Unit) {
         loading = true
 
-        // Simulate a loading process by updating the progress
+        // Simulate a loading progress from 1 to 100
         for (i in 1..100) {
             progress = i.toFloat() / 100
             delay(5)
         }
 
-        // Check if the user is authenticated
+        // Check if a user is already logged in
         val user = auth.currentUser
         if (user == null) {
             loading = false
-
-            // Navigate to the login screen if not authenticated
+            // Navigate to the login screen
             navController.navigate("login")
         } else {
-            // Update the current user
+            // Update the current user in the view model
             viewModel.updateCurrentUser(user.uid)
             loading = false
-
-            // Navigate to the home screen if authenticated
+            // Navigate to the home screen
             navController.navigate("home")
         }
     }
 
-    // Compose the content of the splash screen
+    // Create the splash screen layout using OnlyContentScaffold
     OnlyContentScaffold {
         if (loading) {
-            // Show a full-screen progress indicator during loading
+            // Display a full-screen progress indicator with the current progress
             FullScreenProgressIndicator(progress, Orange80)
         }
     }

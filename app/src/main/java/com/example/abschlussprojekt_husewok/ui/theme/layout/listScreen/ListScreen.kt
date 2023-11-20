@@ -137,7 +137,6 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
                 // Housework list
                 items(houseworkList) { houseworkItem ->
                     SwipeableHouseworkListCard(housework = houseworkItem, houseworkList = houseworkList) {
-                        viewModel.updateDetailedHousework(houseworkItem)
                         navController.navigate("detail/${houseworkItem.id}")
                     }
                 }

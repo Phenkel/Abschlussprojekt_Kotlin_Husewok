@@ -98,11 +98,10 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .verticalScroll(state = rememberScrollState())
         ) {
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)))
+
+            // Display the housework image
             HouseworkImage(image = housework.image)
 
             // Input fields for title and tasks
@@ -157,11 +156,8 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
                 }
             }
 
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)))
         }
     }
 }

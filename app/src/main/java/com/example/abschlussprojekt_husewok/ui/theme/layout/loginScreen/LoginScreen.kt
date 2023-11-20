@@ -62,14 +62,8 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 email = value
             }
 
-            // Spacer
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(
-                        percentage = 0.02f, dimension = CalcSizes.Dimension.Height
-                    )
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)))
 
             // Password text field
             PasswordTextField(
@@ -84,14 +78,8 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 }
             )
 
-            // Spacer
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(
-                        percentage = 0.02f, dimension = CalcSizes.Dimension.Height
-                    )
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)))
 
             // Register button
             WideButton(
@@ -109,14 +97,8 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 )
             }
 
-            // Spacer
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(
-                        percentage = 0.02f, dimension = CalcSizes.Dimension.Height
-                    )
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)))
 
             // Login button
             WideButton(

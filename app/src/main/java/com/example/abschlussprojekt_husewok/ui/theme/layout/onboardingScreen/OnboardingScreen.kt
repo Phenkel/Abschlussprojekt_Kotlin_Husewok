@@ -30,41 +30,43 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 
-/**
- * A composable function that represents the onboarding screen of the app.
- *
- * @param navController The NavController used for navigating between screens.
- * @param viewModel The MainViewModel used for accessing and updating data.
- */
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
+    // Composable function for the onboarding screen
     OnlyContentScaffold { innerPadding ->
         Column(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize(1f)
+                .fillMaxSize()
                 .padding(innerPadding)
         ) {
+            // Card dimensions and spacing
+            val cardWidthPercentage = 0.2f
+            val cardHeightPercentage = 0.15f
+            val cardWidth = CalcSizes.calcDp(cardWidthPercentage, CalcSizes.Dimension.Width)
+            val cardHeight = CalcSizes.calcDp(cardHeightPercentage, CalcSizes.Dimension.Height)
+            val cardLeftSpace = -CalcSizes.calcDp(0.075f, CalcSizes.Dimension.Width)
+            val cardRightSpace = -CalcSizes.calcDp(0.075f, CalcSizes.Dimension.Width)
+
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxHeight(1f)
-                    .fillMaxWidth(0.8f)
+                    .fillMaxSize()
                     .padding(vertical = 16.dp)
             ) {
-                // Display the onboarding text
+                // Text displaying instructions
                 Text(
                     text = "You can swipe cards\nto get more info",
                     color = Color.White,
-                    fontSize = CalcSizes.calcSp(percentage = 0.05f),
+                    fontSize = CalcSizes.calcSp(0.05f),
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
                 )
 
-                // Display the swipeable item view
+                // Swipeable card view
                 SwipeAbleItemView(
                     leftViewIcons = arrayListOf(
                         Triple(
@@ -85,29 +87,14 @@ fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
                     leftViewBackgroundColor = Orange40,
                     rightViewBackgroundColor = Purple40,
                     position = 1,
-                    leftViewWidth = CalcSizes.calcDp(
-                        percentage = 0.2f,
-                        dimension = CalcSizes.Dimension.Width
-                    ),
-                    rightViewWidth = CalcSizes.calcDp(
-                        percentage = 0.2f,
-                        dimension = CalcSizes.Dimension.Width
-                    ),
-                    height = CalcSizes.calcDp(
-                        percentage = 0.15f,
-                        dimension = CalcSizes.Dimension.Height
-                    ),
+                    leftViewWidth = cardWidth,
+                    rightViewWidth = cardWidth,
+                    height = cardHeight,
                     cornerRadius = 20.dp,
-                    leftSpace = (-CalcSizes.calcDp(
-                        percentage = 0.075f,
-                        dimension = CalcSizes.Dimension.Width
-                    )),
-                    rightSpace = (-CalcSizes.calcDp(
-                        percentage = 0.075f,
-                        dimension = CalcSizes.Dimension.Width
-                    ))
+                    leftSpace = cardLeftSpace,
+                    rightSpace = cardRightSpace
                 ) {
-                    // Display the card with animated border
+                    // Card content
                     CardWithAnimatedBorder(
                         content = {
                             HouseworkListCard(

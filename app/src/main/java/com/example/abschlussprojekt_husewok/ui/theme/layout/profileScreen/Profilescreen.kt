@@ -29,65 +29,56 @@ import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import com.example.abschlussprojekt_husewok.utils.Constants.auth
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 /**
- * A composable function that represents the profile screen of the app.
+ * Composable function for the profile screen.
  *
- * @param navController The NavController used for navigating between screens.
- * @param viewModel The MainViewModel used for accessing user data and performing actions.
+ * @param navController The NavController for navigating between screens.
+ * @param viewModel The MainViewModel instance for accessing data and business logic.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
-    // Collect the current user state from the view model
+    // Get the current user state from the view model
     val user by viewModel.currentUser.collectAsStateWithLifecycle()
 
     // Define the scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
-    // Compose the profile screen UI using BasicScaffold
+    // Create the basic scaffold with top and bottom app bars
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "home") },
         bottomBar = { AnimatedBottomAppBar(navController, 2, false, false, true) }
     ) { innerPadding ->
         Column(
-            verticalArrangement = Arrangement.spacedBy(
-                calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
-            ),
+            verticalArrangement = Arrangement.spacedBy(calcDp(0.02f, CalcSizes.Dimension.Height)),
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .fillMaxSize(1f)
+                .fillMaxSize()
                 .padding(innerPadding)
         ) {
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(0.02f, CalcSizes.Dimension.Height)))
+
             // Display the housework image
             HouseworkImage(image = R.drawable.play_store_512)
 
-            // Display the user information rows
+            // Display user information rows
             UserInfoRow("UserID:", user?.userId)
             UserInfoRow("Tasks Done/Skipped:", "${user?.tasksDone} / ${user?.tasksSkipped}")
             UserInfoRow("Games Won/Lost:", "${user?.gamesWon} / ${user?.gamesLost}")
             UserInfoRow("Skip Coins:", user?.skipCoins.toString())
 
-            // Display the user reward row if available
-            user?.reward?.let {
-                RewardRow(it) {
-                    // Update the user's reward when clicked
+            // Display the user's reward row if available
+            user?.reward?.let { reward ->
+                RewardRow(reward) {
                     viewModel.updateUserReward()
                 }
             }
 
             // Display the logout button
             WideButton(text = "Logout", icon = Icons.Outlined.ExitToApp, primary = false) {
-                // Perform logout actions and navigate to the login screen
+                // Sign out the user, clear data, and navigate to the login screen
                 auth.signOut()
                 viewModel.logoutClearData()
                 navController.navigate("login")

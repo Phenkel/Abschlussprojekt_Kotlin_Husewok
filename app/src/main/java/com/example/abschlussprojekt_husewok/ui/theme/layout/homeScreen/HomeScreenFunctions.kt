@@ -3,6 +3,7 @@ package com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.data.model.User
 import com.example.abschlussprojekt_husewok.data.remote.NetworkResult
@@ -107,6 +108,7 @@ object HomeScreenFunctions {
      */
     suspend fun loadHousework(
         viewModel: MainViewModel,
+        navController: NavController,
         context: Context,
         internetScope: CoroutineScope,
     ) {
@@ -128,15 +130,11 @@ object HomeScreenFunctions {
 
                 if (housework?.isLocked() == true) {
                     if (unlockedHousework) {
-                        // Update the active housework if there are unlocked housework items
-                        val updateActiveHouseworkSuccess = suspendOperation(internetScope) {
-                            viewModel.updateActiveHousework(true)
-                        }
-
-                        if (updateActiveHouseworkSuccess) {
-                            housework = viewModel.activeHousework.value
-                            showSuccessToast("Housework loaded", housework?.title, context, false)
-                        }
+                        // Navigate to a random game screen if there is unlocked housework
+                        val gameScreen = listOf(
+                            navController.navigate("tictactoe")
+                        )
+                        gameScreen.random()
                     } else {
                         // Show success toast when all housework items are locked
                         internetScope.launch {
@@ -146,15 +144,11 @@ object HomeScreenFunctions {
                     }
                 } else if (housework?.title == "All done") {
                     if (unlockedHousework) {
-                        // Update the active housework if there are unlocked housework items
-                        val updateActiveHouseworkSuccess = suspendOperation(internetScope) {
-                            viewModel.updateActiveHousework(true)
-                        }
-
-                        if (updateActiveHouseworkSuccess) {
-                            housework = viewModel.activeHousework.value
-                            showSuccessToast("Housework loaded", housework?.title, context, false)
-                        }
+                        // Navigate to a random game screen if there is unlocked housework
+                        val gameScreen = listOf(
+                            navController.navigate("tictactoe")
+                        )
+                        gameScreen.random()
                     } else {
                         // Show success toast when all housework items are locked
                         internetScope.launch {
@@ -194,18 +188,17 @@ object HomeScreenFunctions {
      */
     fun skipButton(
         viewModel: MainViewModel,
+        navController: NavController,
         internetScope: CoroutineScope,
         housework: Housework?
     ) {
         // Check if the housework item is not already marked as "All done"
         if (housework?.title != "All done") {
-            // Launch a coroutine in the provided internetScope to update the active housework
-            internetScope.launch {
-                viewModel.updateActiveHousework(true)
-            }
-
-            // Update user tasks and skip coins
-            viewModel.updateUserTasksAndSkipCoins(false)
+            // Navigate to a random game screen if there is unlocked housework
+            val gameScreen = listOf(
+                navController.navigate("tictactoe")
+            )
+            gameScreen.random()
         }
     }
 
@@ -220,6 +213,7 @@ object HomeScreenFunctions {
      */
     suspend fun doneButton(
         viewModel: MainViewModel,
+        navController: NavController,
         context: Context,
         internetScope: CoroutineScope,
         housework: Housework,
@@ -237,8 +231,23 @@ object HomeScreenFunctions {
             }
 
             if (updateUserAndHouseworkSuccess) {
-                // Update the active housework status
-                viewModel.updateActiveHousework(true)
+                val houseworkList = viewModel.houseworkList.value
+                val unlockedHousework = houseworkList.any { !it.isLocked() }
+                var housework = viewModel.activeHousework.value
+
+                if (unlockedHousework) {
+                    // Navigate to a random game screen if there is unlocked housework
+                    val gameScreen = listOf(
+                        navController.navigate("tictactoe")
+                    )
+                    gameScreen.random()
+                } else {
+                    // Show success toast when all housework items are locked
+                    internetScope.launch {
+                        viewModel.updateActiveHousework(true)
+                    }
+                    showSuccessToast("All Done", "There is no housework left", context, false)
+                }
 
                 // Get the reward for the user
                 val getRewardSuccess = suspendOperation(internetScope) {

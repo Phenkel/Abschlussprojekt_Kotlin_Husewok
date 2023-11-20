@@ -46,20 +46,6 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
     val newJoke: StateFlow<NetworkResult<Joke>>
         get() = joke.newJoke
 
-    // Create a state flow for the detailed housework
-    private val _detailedHousework = MutableStateFlow<Housework?>(null)
-    val detailedHousework: StateFlow<Housework?>
-        get() = _detailedHousework
-
-    /**
-     * Updates the detailed housework information.
-     *
-     * @param housework The housework object containing the updated information.
-     */
-    fun updateDetailedHousework(housework: Housework) {
-        _detailedHousework.value = housework
-    }
-
     /**
      * Retrieves a reward based on the user's current reward type.
      * If the reward type is "Joke", a joke is retrieved. Otherwise, a random activity is retrieved.

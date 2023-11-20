@@ -87,11 +87,10 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
                 .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .verticalScroll(state = rememberScrollState())
         ) {
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)))
+
+            // Display the housework image
             HouseworkImage(image = R.drawable.img_placeholder)
 
             // Input fields for title and tasks
@@ -128,11 +127,8 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
                 }
             }
 
-            Spacer(
-                modifier = Modifier.height(
-                    calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
-                )
-            )
+            // Add vertical spacing with calculated height
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)))
         }
     }
 }
