@@ -12,10 +12,10 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 /**
- * A helper object containing functions related to the Tic-Tac-Toe screen.
+ * A helper object containing functions related to the scratching ticket screen.
  */
 object ScratchingTicketScreenFunctions {
-    private const val SCRATCHINGTICKETFUNCTIONS: String = "TicTacToeScreenFunctions"
+    private const val SCRATCHINGTICKETFUNCTIONS: String = "ScratchingTicketScreenFunctions"
     /**
      * Displays a success toast with the given title and message.
      *
@@ -87,7 +87,7 @@ object ScratchingTicketScreenFunctions {
             // Show a success toast with the updated housework title
             showSuccessToast(
                 title = viewModel.activeHousework.value?.title.toString(),
-                message = "New housework",
+                message = if (gameWon) "Game won" else "Game lost",
                 context
             )
 

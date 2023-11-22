@@ -149,7 +149,7 @@ object TicTacToeScreenFunctions {
             // Show a success toast with the updated housework title
             showSuccessToast(
                 title = viewModel.activeHousework.value?.title.toString(),
-                message = "New housework",
+                message = if (gameWon) "Game won" else "Game lost",
                 context
             )
 

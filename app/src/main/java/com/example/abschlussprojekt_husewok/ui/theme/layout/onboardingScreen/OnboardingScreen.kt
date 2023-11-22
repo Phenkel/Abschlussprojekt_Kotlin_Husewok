@@ -1,6 +1,7 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout.onboardingScreen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -20,19 +27,35 @@ import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.ui.theme.Orange40
+import com.example.abschlussprojekt_husewok.ui.theme.Orange80
 import com.example.abschlussprojekt_husewok.ui.theme.Purple40
 import com.example.abschlussprojekt_husewok.ui.theme.Purple80
 import com.example.abschlussprojekt_husewok.ui.theme.composables.cards.CardWithAnimatedBorder
 import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.OnlyContentScaffold
 import com.example.abschlussprojekt_husewok.ui.theme.composables.cards.HouseworkListCard
+import com.example.abschlussprojekt_husewok.ui.theme.composables.progressIndicator.FullScreenProgressIndicator
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
+    // Define mutable state variables for loading and progress
+    var loading by remember { mutableStateOf(false) }
+    var progress by remember { mutableFloatStateOf(0f) }
+    val loadingScope = rememberCoroutineScope()
+
+    // Set up coroutine scopes for internet operations and UI updates
+    val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+
     // Composable function for the onboarding screen
     OnlyContentScaffold { innerPadding ->
         Column(
@@ -53,9 +76,7 @@ fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
             Column(
                 verticalArrangement = Arrangement.SpaceEvenly,
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(vertical = 16.dp)
+                modifier = Modifier.fillMaxSize(1f)
             ) {
                 // Text displaying instructions
                 Text(
@@ -66,56 +87,78 @@ fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
                     textAlign = TextAlign.Center
                 )
 
-                // Swipeable card view
-                SwipeAbleItemView(
-                    leftViewIcons = arrayListOf(
-                        Triple(
-                            painterResource(id = R.drawable.ic_house),
-                            Purple80,
-                            "Go"
-                        )
-                    ),
-                    rightViewIcons = arrayListOf(
-                        Triple(
-                            painterResource(id = R.drawable.ic_house),
-                            Purple80,
-                            "Go"
-                        )
-                    ),
-                    onClick = { navController.navigate("home") },
-                    swipeDirection = SwipeDirection.LEFT,
-                    leftViewBackgroundColor = Orange40,
-                    rightViewBackgroundColor = Purple40,
-                    position = 1,
-                    leftViewWidth = cardWidth,
-                    rightViewWidth = cardWidth,
-                    height = cardHeight,
-                    cornerRadius = 20.dp,
-                    leftSpace = cardLeftSpace,
-                    rightSpace = cardRightSpace
-                ) {
-                    // Card content
-                    CardWithAnimatedBorder(
-                        content = {
-                            HouseworkListCard(
-                                housework = Housework(
-                                    image = R.drawable.play_store_512,
-                                    title = "Swipe me to start",
-                                    task1 = "",
-                                    task2 = "",
-                                    task3 = "",
-                                    isLiked = true,
-                                    lockDurationDays = 7,
-                                    lockExpirationDate = "",
-                                    default = true,
-                                    id = ""
-                                )
+                Box(modifier = Modifier.fillMaxWidth(0.8f)) {
+                    // Swipeable card view
+                    SwipeAbleItemView(
+                        leftViewIcons = arrayListOf(
+                            Triple(
+                                painterResource(id = R.drawable.ic_house),
+                                Purple80,
+                                "Go"
                             )
+                        ),
+                        rightViewIcons = arrayListOf(
+                            Triple(
+                                painterResource(id = R.drawable.ic_house),
+                                Purple80,
+                                "Go"
+                            )
+                        ),
+                        onClick = {
+                            loadingScope.launch {
+                                loading = true
+                                for (i in 1..100) {
+                                    progress = i.toFloat() / 100
+                                    delay(10)
+                                    if (i == 100) {
+                                        OnboardingScreenFunctions.loadData(
+                                            viewModel,
+                                            navController,
+                                            internetScope
+                                        )
+                                        loading = false
+                                    }
+                                }
+                            }
                         },
-                        liked = true
-                    )
+                        swipeDirection = SwipeDirection.LEFT,
+                        leftViewBackgroundColor = Orange40,
+                        rightViewBackgroundColor = Purple40,
+                        position = 1,
+                        leftViewWidth = cardWidth,
+                        rightViewWidth = cardWidth,
+                        height = cardHeight,
+                        cornerRadius = 20.dp,
+                        leftSpace = cardLeftSpace,
+                        rightSpace = cardRightSpace
+                    ) {
+                        // Card content
+                        CardWithAnimatedBorder(
+                            content = {
+                                HouseworkListCard(
+                                    housework = Housework(
+                                        image = R.drawable.play_store_512,
+                                        title = "Swipe me to start",
+                                        task1 = "",
+                                        task2 = "",
+                                        task3 = "",
+                                        isLiked = true,
+                                        lockDurationDays = 7,
+                                        lockExpirationDate = "",
+                                        default = true,
+                                        id = ""
+                                    )
+                                )
+                            },
+                            liked = true
+                        )
+                    }
                 }
             }
+        }
+        if (loading) {
+            // Display a full-screen progress indicator with the current progress
+            FullScreenProgressIndicator(progress, Orange80)
         }
     }
 }

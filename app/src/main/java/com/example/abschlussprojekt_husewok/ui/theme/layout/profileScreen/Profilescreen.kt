@@ -64,7 +64,7 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
             HouseworkImage(image = R.drawable.play_store_512)
 
             // Display user information rows
-            UserInfoRow("UserID:", user?.userId)
+            UserInfoRow("UserID:", user?.userId?.substring(0,10) + "...")
             UserInfoRow("Tasks Done/Skipped:", "${user?.tasksDone} / ${user?.tasksSkipped}")
             UserInfoRow("Games Won/Lost:", "${user?.gamesWon} / ${user?.gamesLost}")
             UserInfoRow("Skip Coins:", user?.skipCoins.toString())
