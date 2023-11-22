@@ -106,6 +106,8 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
 
     // Third party libraries
+    implementation("com.github.omkar-tenkale:ExplodingComposable:1.0.1")
+    implementation("com.github.JaberAhamed:CardScratch:1.0")
     implementation("com.github.esatgozcu:Compose-Rolling-Number:1.0.5")
     implementation("com.exyte:animated-navigation-bar:1.0.0")
     implementation("com.github.popovanton0:heart-switch:1.4.0")

@@ -126,15 +126,18 @@ object HomeScreenFunctions {
             if (getActiveHouseworkSuccess) {
                 val houseworkList = viewModel.houseworkList.value
                 val unlockedHousework = houseworkList.any { !it.isLocked() }
-                var housework = viewModel.activeHousework.value
+                val housework = viewModel.activeHousework.value
 
                 if (housework?.isLocked() == true) {
                     if (unlockedHousework) {
-                        // Navigate to a random game screen if there is unlocked housework
-                        val gameScreen = listOf(
-                            navController.navigate("tictactoe")
-                        )
-                        gameScreen.random()
+                        // List of game destinations
+                        val gameDestinations = listOf("tictactoe", "scratching")
+
+                        // Select a random game destination index
+                        val randomIndex = (gameDestinations.indices).random()
+
+                        // Navigate to the randomly selected game screen
+                        navController.navigate(gameDestinations[randomIndex])
                     } else {
                         // Show success toast when all housework items are locked
                         internetScope.launch {
@@ -144,11 +147,14 @@ object HomeScreenFunctions {
                     }
                 } else if (housework?.title == "All done") {
                     if (unlockedHousework) {
-                        // Navigate to a random game screen if there is unlocked housework
-                        val gameScreen = listOf(
-                            navController.navigate("tictactoe")
-                        )
-                        gameScreen.random()
+                        // List of game destinations
+                        val gameDestinations = listOf("tictactoe", "scratching")
+
+                        // Select a random game destination index
+                        val randomIndex = (gameDestinations.indices).random()
+
+                        // Navigate to the randomly selected game screen
+                        navController.navigate(gameDestinations[randomIndex])
                     } else {
                         // Show success toast when all housework items are locked
                         internetScope.launch {
@@ -182,23 +188,22 @@ object HomeScreenFunctions {
     /**
      * Handles the skip button action for a housework item.
      *
-     * @param viewModel The MainViewModel instance to access housework data.
-     * @param internetScope The CoroutineScope used for launching the updateActiveHousework coroutine.
      * @param housework The housework item to skip.
      */
     fun skipButton(
-        viewModel: MainViewModel,
         navController: NavController,
-        internetScope: CoroutineScope,
         housework: Housework?
     ) {
         // Check if the housework item is not already marked as "All done"
         if (housework?.title != "All done") {
-            // Navigate to a random game screen if there is unlocked housework
-            val gameScreen = listOf(
-                navController.navigate("tictactoe")
-            )
-            gameScreen.random()
+            // List of game destinations
+            val gameDestinations = listOf("tictactoe", "scratching")
+
+            // Select a random game destination index
+            val randomIndex = (gameDestinations.indices).random()
+
+            // Navigate to the randomly selected game screen
+            navController.navigate(gameDestinations[randomIndex])
         }
     }
 
@@ -231,70 +236,80 @@ object HomeScreenFunctions {
             }
 
             if (updateUserAndHouseworkSuccess) {
-                val houseworkList = viewModel.houseworkList.value
-                val unlockedHousework = houseworkList.any { !it.isLocked() }
-                var housework = viewModel.activeHousework.value
 
-                if (unlockedHousework) {
-                    // Navigate to a random game screen if there is unlocked housework
-                    val gameScreen = listOf(
-                        navController.navigate("tictactoe")
-                    )
-                    gameScreen.random()
-                } else {
-                    // Show success toast when all housework items are locked
-                    internetScope.launch {
-                        viewModel.updateActiveHousework(true)
+                val updateHouseworkListSuccess = suspendOperation(internetScope) {
+                    viewModel.updateHouseworkList()
+                }
+
+                if (updateHouseworkListSuccess) {
+                    val houseworkList = viewModel.houseworkList.value
+                    val unlockedHousework = houseworkList.any { !it.isLocked() }
+
+                    if (unlockedHousework) {
+                        // List of game destinations
+                        val gameDestinations = listOf("tictactoe", "scratching")
+
+                        // Select a random game destination index
+                        val randomIndex = (gameDestinations.indices).random()
+
+                        // Navigate to the randomly selected game screen
+                        navController.navigate(gameDestinations[randomIndex])
+                    } else {
+                        // Show success toast when all housework items are locked
+                        internetScope.launch {
+                            viewModel.updateActiveHousework(true)
+                        }
+                        showSuccessToast("All Done", "There is no housework left", context, false)
                     }
-                    showSuccessToast("All Done", "There is no housework left", context, false)
-                }
+                    // Get the reward for the user
+                    val getRewardSuccess = suspendOperation(internetScope) {
+                        viewModel.getReward()
+                    }
 
-                // Get the reward for the user
-                val getRewardSuccess = suspendOperation(internetScope) {
-                    viewModel.getReward()
-                }
+                    if (getRewardSuccess) {
+                        // Check the user's reward type
+                        if (user?.reward == "Joke") {
+                            // Fetch and display a joke reward
+                            viewModel.joke.value.let { jokeResult ->
+                                when (jokeResult) {
+                                    is NetworkResult.Success -> {
+                                        showSuccessToast(
+                                            "${jokeResult.data?.setup}\n${jokeResult.data?.punchline}",
+                                            "Joke Reward - ${jokeResult.data?.type}",
+                                            context,
+                                            true
+                                        )
+                                    }
 
-                if (getRewardSuccess) {
-                    // Check the user's reward type
-                    if (user?.reward == "Joke") {
-                        // Fetch and display a joke reward
-                        viewModel.joke.value.let { jokeResult ->
-                            when (jokeResult) {
-                                is NetworkResult.Success -> {
-                                    showSuccessToast(
-                                        "${jokeResult.data?.setup}\n${jokeResult.data?.punchline}",
-                                        "Joke Reward - ${jokeResult.data?.type}",
-                                        context,
-                                        true
-                                    )
+                                    else -> {
+                                        Log.w("JokeAPI", "Failed to fetch Joke - ${jokeResult.message.toString()}")
+                                    }
                                 }
+                            }
+                        } else {
+                            // Fetch and display a bored reward
+                            viewModel.bored.value.let { boredResult ->
+                                when (boredResult) {
+                                    is NetworkResult.Success -> {
+                                        showSuccessToast(
+                                            "${boredResult.data?.activity}",
+                                            "Bored Reward - ${boredResult.data?.participants}, ${boredResult.data?.type}",
+                                            context,
+                                            true
+                                        )
+                                    }
 
-                                else -> {
-                                    Log.w("JokeAPI", "Failed to fetch Joke - ${jokeResult.message.toString()}")
+                                    else -> {
+                                        Log.w(HOMEFUNCTIONS, "Failed to fetch Bored - ${boredResult.message.toString()}")
+                                    }
                                 }
                             }
                         }
                     } else {
-                        // Fetch and display a bored reward
-                        viewModel.bored.value.let { boredResult ->
-                            when (boredResult) {
-                                is NetworkResult.Success -> {
-                                    showSuccessToast(
-                                        "${boredResult.data?.activity}",
-                                        "Bored Reward - ${boredResult.data?.participants}, ${boredResult.data?.type}",
-                                        context,
-                                        true
-                                    )
-                                }
-
-                                else -> {
-                                    Log.w(HOMEFUNCTIONS, "Failed to fetch Bored - ${boredResult.message.toString()}")
-                                }
-                            }
-                        }
+                        Log.w(HOMEFUNCTIONS, "Failed to get reward")
                     }
                 } else {
-                    Log.w(HOMEFUNCTIONS, "Failed to get reward")
+                    Log.w(HOMEFUNCTIONS, "Failed to update housework list")
                 }
             } else {
                 Log.w(HOMEFUNCTIONS, "Failed to update user and housework")

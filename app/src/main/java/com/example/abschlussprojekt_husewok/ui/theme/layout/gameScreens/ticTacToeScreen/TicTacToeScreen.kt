@@ -21,6 +21,8 @@ import com.example.abschlussprojekt_husewok.R
 import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.NoBottomBarScaffold
 import com.example.abschlussprojekt_husewok.ui.theme.composables.topAppBars.NoNavigationTopAppBar
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
+import dev.omkartenkale.explodable.Explodable
+import dev.omkartenkale.explodable.rememberExplosionController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -52,6 +54,9 @@ fun TicTacToeScreen(navController: NavController, viewModel: MainViewModel) {
     // Create coroutine scopes for internet and main operations
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     val mainScope = MainScope()
+
+    // Create the explosion controller for the game end
+    val explosionController = rememberExplosionController()
 
     // If it's the AI's turn and the game is not already won, perform AI move
     if (!playerTurn && gameWon == null) {
@@ -87,15 +92,7 @@ fun TicTacToeScreen(navController: NavController, viewModel: MainViewModel) {
 
                 // Finish the game if won, lost or draw
                 if (gameWon != null) {
-                    mainScope.launch {
-                        TicTacToeScreenFunctions.getNewHousework(
-                            viewModel,
-                            navController,
-                            internetScope,
-                            context,
-                            gameWon as Boolean
-                        )
-                    }
+                    explosionController.explode()
                 }
 
                 // Switch to the Player's turn
@@ -112,66 +109,76 @@ fun TicTacToeScreen(navController: NavController, viewModel: MainViewModel) {
                 .fillMaxSize(1f)
                 .padding(innerPadding)
         ) {
-            val (header, board, icons) = createRefs()
+            val (header, explode, board, icons) = createRefs()
 
             // Display the player and turns
             TicTacToePlayer(
                 playerTurn,
                 Modifier.constrainAs(header) {
                     top.linkTo(parent.top)
-                    bottom.linkTo(board.top)
+                    bottom.linkTo(explode.top)
                     centerHorizontallyTo(parent)
                 }
             )
 
-            // Display the tic tac toe board
-            TicTacToeBoard(
-                Modifier.constrainAs(board) {
+            Explodable(
+                controller = explosionController,
+                onExplode = {
+                    mainScope.launch {
+                        TicTacToeScreenFunctions.getNewHousework(
+                            viewModel,
+                            navController,
+                            internetScope,
+                            context,
+                            gameWon as Boolean
+                        )
+                    }
+                },
+                modifier = Modifier.constrainAs(explode) {
                     centerTo(parent)
                 }
-            )
+            ) {
+                // Display the tic tac toe board
+                TicTacToeBoard(
+                    modifier = Modifier.constrainAs(board) {
+                        centerTo(parent)
+                    }
+                )
 
-            // Display the tic tac toe icons
-            TicTacToeIcons(
-                moves,
-                Modifier.constrainAs(icons) {
-                    centerTo(board)
-                }
-            ) { move ->
-                // Display the empty move
-                IconButton(
-                    onClick = {
-                        if (playerTurn && gameWon == null) {
-                            // Make a move for the player
-                            moves[move] = true
+                // Display the tic tac toe icons
+                TicTacToeIcons(
+                    moves,
+                    modifier = Modifier.constrainAs(icons) {
+                        centerTo(board)
+                    }
+                ) { move ->
+                    // Display the empty move
+                    IconButton(
+                        onClick = {
+                            if (playerTurn && gameWon == null) {
+                                // Make a move for the player
+                                moves[move] = true
 
-                            // Check if the game is won
-                            gameWon = TicTacToeScreenFunctions.gameOverCheck(moves)
+                                // Check if the game is won
+                                gameWon = TicTacToeScreenFunctions.gameOverCheck(moves)
 
-                            // Finish the game if won, lost or draw
-                            if (gameWon != null) {
-                                mainScope.launch {
-                                    TicTacToeScreenFunctions.getNewHousework(
-                                        viewModel,
-                                        navController,
-                                        internetScope,
-                                        context,
-                                        gameWon as Boolean
-                                    )
+                                // Finish the game if won, lost or draw
+                                if (gameWon != null) {
+                                    explosionController.explode()
                                 }
-                            }
 
-                            // Switch to the AI's turn
-                            playerTurn = false
-                        }
-                    },
-                    modifier = Modifier.fillMaxSize(1f)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_empty_circle),
-                        contentDescription = null,
-                        tint = Color.Transparent
-                    )
+                                // Switch to the AI's turn
+                                playerTurn = false
+                            }
+                        },
+                        modifier = Modifier.fillMaxSize(1f)
+                    ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_empty_circle),
+                            contentDescription = null,
+                            tint = Color.Transparent
+                        )
+                    }
                 }
             }
         }

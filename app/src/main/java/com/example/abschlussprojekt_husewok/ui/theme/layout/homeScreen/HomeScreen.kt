@@ -103,7 +103,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
                     HomeScreenCard(
                         skipButtonEnabled = (user?.skipCoins ?: 0) > 0,
                         skipButtonOnClick = {
-                            HomeScreenFunctions.skipButton(viewModel, navController, internetScope, activeHousework)
+                            HomeScreenFunctions.skipButton(navController, activeHousework)
                         },
                         doneButtonOnClick = {
                             mainScope.launch {
