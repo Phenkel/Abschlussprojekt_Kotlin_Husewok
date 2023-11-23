@@ -21,6 +21,7 @@ class MainViewModel(
     val houseworkList = repository.houseworkList
     val joke = repository.newJoke
     val bored = repository.newBored
+    val palmOutput = repository.palmOutput
 
     // State Flow for tracking the first loading state
     private var _firstLoading = MutableStateFlow(true)
@@ -142,5 +143,9 @@ class MainViewModel(
      */
     fun logoutClearData() {
         repository.firebase.logoutClearData()
+    }
+
+    suspend fun generateText(question: String) {
+        repository.palm.generateText(question)
     }
 }

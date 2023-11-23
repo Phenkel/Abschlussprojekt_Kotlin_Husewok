@@ -28,14 +28,22 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcSp
  * @param onClick The callback function to invoke when the button is clicked.
  */
 @Composable
-fun WideButton(text: String, icon: ImageVector, primary: Boolean, onClick: () -> Unit) {
+fun WideButton(
+    text: String,
+    icon: ImageVector,
+    primary: Boolean,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    onClick: () -> Unit
+) {
     Button(
         shape = ShapeDefaults.ExtraSmall,
         colors = ButtonDefaults.buttonColors(
             containerColor = if (primary) Purple40 else Orange80,
             contentColor = if (primary) Orange80 else Purple40
         ),
-        modifier = Modifier
+        enabled = enabled,
+        modifier = modifier
             .width(calcDp(percentage = 0.8f, dimension = CalcSizes.Dimension.Width))
             .height(calcDp(percentage = 0.05f, dimension = CalcSizes.Dimension.Height)),
         onClick = onClick

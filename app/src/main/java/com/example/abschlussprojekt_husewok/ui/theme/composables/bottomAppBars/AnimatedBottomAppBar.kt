@@ -3,6 +3,8 @@ package com.example.abschlussprojekt_husewok.ui.theme.composables.bottomAppBars
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -30,6 +32,8 @@ import com.exyte.animatednavbar.items.wigglebutton.WiggleButton
  * @param homeSelected Whether the home page is selected.
  * @param listSelected Whether the list page is selected.
  * @param profileSelected Whether the profile page is selected.
+ * @param chatSelected Whether the chat page is selected.
+ *
  */
 @Composable
 fun AnimatedBottomAppBar(
@@ -37,13 +41,15 @@ fun AnimatedBottomAppBar(
     page: Int,
     homeSelected: Boolean,
     listSelected: Boolean,
-    profileSelected: Boolean
+    profileSelected: Boolean,
+    chatSelected: Boolean
 ) {
     // Initialize the selected states
     var selected by remember { mutableIntStateOf(page) }
     var home by remember { mutableStateOf(homeSelected) }
     var list by remember { mutableStateOf(listSelected) }
     var profile by remember { mutableStateOf(profileSelected) }
+    var chat by remember { mutableStateOf(chatSelected) }
 
     // Compose the animated navigation bar
     AnimatedNavigationBar(
@@ -53,7 +59,7 @@ fun AnimatedBottomAppBar(
     ) {
         // Compose the home button
         Box(
-            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
+            modifier = Modifier.size(calcDp(percentage = 0.2f, dimension = CalcSizes.Dimension.Width)),
             contentAlignment = Alignment.BottomCenter
         ) {
             WiggleButton(
@@ -63,6 +69,7 @@ fun AnimatedBottomAppBar(
                     home = true
                     list = false
                     profile = false
+                    chat = false
                     navController.popBackStack("home", false)
                 },
                 icon = R.drawable.ic_house,
@@ -76,7 +83,7 @@ fun AnimatedBottomAppBar(
 
         // Compose the list button
         Box(
-            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
+            modifier = Modifier.size(calcDp(percentage = 0.2f, dimension = CalcSizes.Dimension.Width)),
             contentAlignment = Alignment.BottomCenter
         ) {
             WiggleButton(
@@ -86,6 +93,7 @@ fun AnimatedBottomAppBar(
                     home = false
                     list = true
                     profile = false
+                    chat = false
                     navController.navigate("list")
                 },
                 icon = R.drawable.ic_list,
@@ -99,7 +107,7 @@ fun AnimatedBottomAppBar(
 
         // Compose the profile button
         Box(
-            modifier = Modifier.size(calcDp(percentage = 0.06f, dimension = CalcSizes.Dimension.Height)),
+            modifier = Modifier.size(calcDp(percentage = 0.2f, dimension = CalcSizes.Dimension.Width)),
             contentAlignment = Alignment.BottomCenter
         ) {
             WiggleButton(
@@ -109,9 +117,34 @@ fun AnimatedBottomAppBar(
                     home = false
                     list = false
                     profile = true
+                    chat = false
                     navController.navigate("profile")
                 },
                 icon = R.drawable.ic_profile,
+                backgroundIcon = R.drawable.ic_circle,
+                backgroundIconColor = Purple80,
+                outlineColor = Orange40,
+                wiggleColor = Purple40,
+                modifier = Modifier.fillMaxSize(0.9f)
+            )
+        }
+
+        // Compose the chat button
+        Box(
+            modifier = Modifier.size(calcDp(percentage = 0.2f, dimension = CalcSizes.Dimension.Width)),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            WiggleButton(
+                isSelected = chat,
+                onClick = {
+                    selected = 3
+                    home = false
+                    list = false
+                    profile = false
+                    chat = true
+                    navController.navigate("chat")
+                },
+                icon = R.drawable.ic_chat,
                 backgroundIcon = R.drawable.ic_circle,
                 backgroundIconColor = Purple80,
                 outlineColor = Orange40,

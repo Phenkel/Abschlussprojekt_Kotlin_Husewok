@@ -82,7 +82,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     BasicScaffold(
         topBar = { NoNavigationTopAppBar() },
         bottomBar = {
-            AnimatedBottomAppBar(navController, 0, true, false, false)
+            AnimatedBottomAppBar(navController, 0, true, false, false, false)
         }
     ) { innerPadding ->
         Box(

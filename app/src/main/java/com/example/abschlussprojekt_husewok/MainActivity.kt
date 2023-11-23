@@ -26,7 +26,6 @@ class MainActivity : ComponentActivity() {
                 // Create an instance of MainViewModel using the ViewModelProvider
                 val viewModel: MainViewModel = viewModel(
                     it, "MainViewModel", MainViewModelFactory(
-                        /*LocalContext.current.applicationContext as Application*/
                         Repository(BoredApi, JokeApi)
                     )
                 )

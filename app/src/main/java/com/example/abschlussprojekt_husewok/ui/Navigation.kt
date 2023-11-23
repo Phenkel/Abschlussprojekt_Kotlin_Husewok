@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.abschlussprojekt_husewok.ui.theme.layout.addTaskScreen.AddTaskScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.chatbotScreen.ChatbotScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.detailScreen.DetailScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.gameScreens.scratchingTicketScreen.ScratchingTicketScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen.HomeScreen
@@ -43,5 +44,6 @@ fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel
         composable("onboarding") { OnboardingScreen(navController, viewModel) }
         composable("tictactoe") { TicTacToeScreen(navController, viewModel) }
         composable("scratching") { ScratchingTicketScreen(navController, viewModel) }
+        composable("chat") { ChatbotScreen(navController, viewModel) }
     }
 }

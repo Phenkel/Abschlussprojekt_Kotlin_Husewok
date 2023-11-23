@@ -48,7 +48,7 @@ fun ProfileScreen(navController: NavController, viewModel: MainViewModel) {
     // Create the basic scaffold with top and bottom app bars
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "home") },
-        bottomBar = { AnimatedBottomAppBar(navController, 2, false, false, true) }
+        bottomBar = { AnimatedBottomAppBar(navController, 2, false, false, true, false) }
     ) { innerPadding ->
         Column(
             verticalArrangement = Arrangement.spacedBy(calcDp(0.02f, CalcSizes.Dimension.Height)),

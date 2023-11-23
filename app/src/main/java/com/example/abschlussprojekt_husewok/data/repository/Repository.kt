@@ -7,7 +7,6 @@ import com.example.abschlussprojekt_husewok.data.model.User
 import com.example.abschlussprojekt_husewok.data.remote.BoredApi
 import com.example.abschlussprojekt_husewok.data.remote.JokeApi
 import com.example.abschlussprojekt_husewok.data.remote.NetworkResult
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -25,6 +24,9 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
 
     // Create an instance of the Joke Repository
     val joke = JokeRepository(jokeApi)
+
+    // Create an instance of the Google Palm Repository
+    val palm = GooglePalmRepository()
 
     // Get the current user state flow from the Firebase repository
     val currentUser: StateFlow<User?>
@@ -45,6 +47,10 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
     // Get the joke state flow from the Joke repository
     val newJoke: StateFlow<NetworkResult<Joke>>
         get() = joke.newJoke
+
+    // Get the palm output state from the Palm repository
+    val palmOutput: StateFlow<String>
+        get() = palm.palmOutput
 
     /**
      * Retrieves a reward based on the user's current reward type.

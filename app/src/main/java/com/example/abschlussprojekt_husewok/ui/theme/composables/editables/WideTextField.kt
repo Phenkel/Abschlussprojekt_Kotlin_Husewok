@@ -20,11 +20,11 @@ import com.example.abschlussprojekt_husewok.ui.theme.Purple80
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WideTextField(value: String, label: String, onValueChange: (string: String) -> Unit) {
+fun WideTextField(value: String, label: String, modifier: Modifier = Modifier ,onValueChange: (string: String) -> Unit) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = Modifier.fillMaxWidth(0.8f),
+        modifier = modifier.fillMaxWidth(0.8f),
         colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = Purple80,
             unfocusedBorderColor = Orange80,

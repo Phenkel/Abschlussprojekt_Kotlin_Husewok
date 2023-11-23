@@ -90,7 +90,7 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
     // Compose the list screen layout
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "home") },
-        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false) }
+        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false, false) }
     ) { innerPadding ->
         Box(
             modifier = Modifier

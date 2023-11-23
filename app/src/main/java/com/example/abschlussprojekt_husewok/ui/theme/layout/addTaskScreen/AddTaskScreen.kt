@@ -74,7 +74,7 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
     // Compose the add task screen layout
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "list") },
-        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false) }
+        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false, false) }
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

@@ -40,6 +40,12 @@ android {
             )
         }
     }
+    configurations {
+        all {
+            resolutionStrategy {
+            }
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -56,6 +62,8 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "META-INF/INDEX.LIST"
+            excludes += "META-INF/DEPENDENCIES"
         }
     }
 }
@@ -102,8 +110,9 @@ dependencies {
     implementation("com.google.firebase:firebase-firestore:24.9.1")
     implementation("com.google.firebase:firebase-storage-ktx:20.2.1")
 
-    // Google Play Services
-    implementation("com.google.android.gms:play-services-auth:20.7.0")
+    // Google PALM Generative AI
+    implementation("com.google.cloud:gapic-google-cloud-ai-generativelanguage-v1beta3-java:0.0.0-SNAPSHOT")
+    implementation("io.grpc:grpc-okhttp:1.53.0")
 
     // Third party libraries
     implementation("com.github.omkar-tenkale:ExplodingComposable:1.0.1")

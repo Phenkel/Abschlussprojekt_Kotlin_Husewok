@@ -85,7 +85,7 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
     // Create the detail screen layout using BasicScaffold
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "list") },
-        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false) }
+        bottomBar = { AnimatedBottomAppBar(navController, 1, false, true, false, false) }
     ) { innerPadding ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
