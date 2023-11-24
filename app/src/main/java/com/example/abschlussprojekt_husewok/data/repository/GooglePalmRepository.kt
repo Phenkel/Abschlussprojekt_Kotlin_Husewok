@@ -1,5 +1,6 @@
 package com.example.abschlussprojekt_husewok.data.repository
 
+/*
 import android.util.Log
 import com.google.ai.generativelanguage.v1beta3.GenerateTextRequest
 import com.google.ai.generativelanguage.v1beta3.TextPrompt
@@ -8,32 +9,32 @@ import com.google.ai.generativelanguage.v1beta3.TextServiceSettings
 import com.google.api.gax.core.FixedCredentialsProvider
 import com.google.api.gax.grpc.InstantiatingGrpcChannelProvider
 import com.google.api.gax.rpc.FixedHeaderProvider
+ */
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class GooglePalmRepository {
     private val API_KEY = "AIzaSyA-sDVvoRK2rofZu09Jj_FLRI7qkHHvU_k"
 
-    private lateinit var client: TextServiceClient
+    //private var client: TextServiceClient
 
     private val _palmOutput = MutableStateFlow("")
     val palmOutput: StateFlow<String>
         get() = _palmOutput
 
+    /*
     init {
         client = intialiteTextServiceClient(API_KEY)
     }
 
-    private fun intialiteTextServiceClient(apiKey: String) : TextServiceClient {
+    private fun intialiteTextServiceClient(apiKey: String): TextServiceClient {
         val transportChannelProvider = InstantiatingGrpcChannelProvider.newBuilder()
-            .setHeaderProvider(FixedHeaderProvider.create(hashMapOf("x-goog-api-key" to System.getenv(apiKey))))
+            .setHeaderProvider(FixedHeaderProvider.create(hashMapOf("x-goog-api-key" to apiKey)))
             .build()
-
         val settings = TextServiceSettings.newBuilder()
             .setTransportChannelProvider(transportChannelProvider)
             .setCredentialsProvider(FixedCredentialsProvider.create(null))
             .build()
-
         val textServiceClient = TextServiceClient.create(settings)
         return textServiceClient
     }
@@ -68,4 +69,5 @@ class GooglePalmRepository {
             Log.w("GOOGLE PALM", "generateText:failure", e)
         }
     }
+     */
 }

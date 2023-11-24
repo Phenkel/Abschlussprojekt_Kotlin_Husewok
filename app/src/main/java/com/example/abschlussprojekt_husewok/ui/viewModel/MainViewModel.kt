@@ -145,7 +145,13 @@ class MainViewModel(
         repository.firebase.logoutClearData()
     }
 
+    /*
     suspend fun generateText(question: String) {
         repository.palm.generateText(question)
+    }
+     */
+
+    fun addFeedback(title: String, description: String) {
+        repository.firebase.addFeedback(title, description)
     }
 }

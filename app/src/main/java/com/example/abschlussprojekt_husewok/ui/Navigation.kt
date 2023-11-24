@@ -1,5 +1,7 @@
 package com.example.abschlussprojekt_husewok.ui
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -7,7 +9,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.abschlussprojekt_husewok.ui.theme.layout.addTaskScreen.AddTaskScreen
-import com.example.abschlussprojekt_husewok.ui.theme.layout.chatbotScreen.ChatbotScreen
+import com.example.abschlussprojekt_husewok.ui.theme.layout.feedbackScreen.FeedbackScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.detailScreen.DetailScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.gameScreens.scratchingTicketScreen.ScratchingTicketScreen
 import com.example.abschlussprojekt_husewok.ui.theme.layout.homeScreen.HomeScreen
@@ -28,22 +30,86 @@ import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 @Composable
 fun NavigationAppHost(navController: NavHostController, viewModel: MainViewModel) {
     NavHost(navController = navController, startDestination = "splash") {
-        composable("splash") { SplashScreen(navController, viewModel) }
-        composable("login") { LoginScreen(navController, viewModel) }
-        composable("home") { HomeScreen(navController, viewModel) }
-        composable("list") { ListScreen(navController, viewModel) }
+        composable(
+            "splash",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { SplashScreen(navController, viewModel) }
+        composable(
+            "login",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { LoginScreen(navController, viewModel) }
+        composable(
+            "home",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { HomeScreen(navController, viewModel) }
+        composable(
+            "list",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { ListScreen(navController, viewModel) }
         composable(
             route = "detail/{stringValue}",
-            arguments = listOf(navArgument("stringValue") { type = NavType.StringType })
+            arguments = listOf(navArgument("stringValue") { type = NavType.StringType }),
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
         ) { backStackEntry ->
             val stringValue = backStackEntry.arguments?.getString("stringValue") ?: ""
             DetailScreen(navController, viewModel, stringValue)
         }
-        composable("addTask") { AddTaskScreen(navController, viewModel) }
-        composable("profile") { ProfileScreen(navController, viewModel) }
-        composable("onboarding") { OnboardingScreen(navController, viewModel) }
-        composable("tictactoe") { TicTacToeScreen(navController, viewModel) }
-        composable("scratching") { ScratchingTicketScreen(navController, viewModel) }
-        composable("chat") { ChatbotScreen(navController, viewModel) }
+        composable(
+            "addTask",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { AddTaskScreen(navController, viewModel) }
+        composable(
+            "profile",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { ProfileScreen(navController, viewModel) }
+        composable(
+            "onboarding",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { OnboardingScreen(navController, viewModel) }
+        composable(
+            "tictactoe",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { TicTacToeScreen(navController, viewModel) }
+        composable(
+            "scratching",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { ScratchingTicketScreen(navController, viewModel) }
+        composable(
+            "feedback",
+            enterTransition = { fadeIn() },
+            exitTransition = { fadeOut() },
+            popEnterTransition = { fadeIn() },
+            popExitTransition = { fadeOut() }
+        ) { FeedbackScreen(navController, viewModel) }
     }
 }

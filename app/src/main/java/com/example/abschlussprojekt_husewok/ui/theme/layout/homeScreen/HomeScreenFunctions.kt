@@ -192,10 +192,14 @@ object HomeScreenFunctions {
      */
     fun skipButton(
         navController: NavController,
+        viewModel: MainViewModel,
         housework: Housework?
     ) {
         // Check if the housework item is not already marked as "All done"
         if (housework?.title != "All done") {
+            // Update the users tasks and skip coins
+            viewModel.updateUserTasksAndSkipCoins(false)
+
             // List of game destinations
             val gameDestinations = listOf("tictactoe", "scratching")
 

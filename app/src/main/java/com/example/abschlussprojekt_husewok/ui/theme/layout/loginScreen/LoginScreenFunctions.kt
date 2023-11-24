@@ -7,7 +7,6 @@ import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.Constants.auth
 import com.example.abschlussprojekt_husewok.utils.MotionToasts
-import com.google.firebase.appcheck.internal.util.Logger
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -15,6 +14,7 @@ import kotlinx.coroutines.launch
  * A helper object containing functions related to the login screen.
  */
 object LoginScreenFunctions {
+    private const val LOGINFUNCTIONS = "LoginScreenFunction"
     // Regular expressions for email and password validation
     private val emailRegex = """^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$""".toRegex()
     private val passwordRegex = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$".toRegex()
@@ -46,7 +46,7 @@ object LoginScreenFunctions {
      * @param context The Context used for displaying toasts.
      */
     private fun handleLoginFailure(message: String, context: Context) {
-        Log.w(Logger.TAG, "signInWithEmail:failure")
+        Log.w(LOGINFUNCTIONS, "signInWithEmail:failure")
 
         // Show a warning toast for login failure
         MotionToasts.warning(
@@ -64,7 +64,7 @@ object LoginScreenFunctions {
      * @param context The Context used for displaying toasts.
      */
     private fun handleRegistrationFailure(message: String, context: Context) {
-        Log.w(Logger.TAG, "createUserWithEmail:failure")
+        Log.w(LOGINFUNCTIONS, "createUserWithEmail:failure")
 
         // Show a warning toast for registration failure
         MotionToasts.warning(
@@ -104,7 +104,7 @@ object LoginScreenFunctions {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(Logger.TAG, "signInWithEmail:success")
+                    Log.d(LOGINFUNCTIONS, "signInWithEmail:success")
 
                     // Update the current user in the view model
                     internetScope.launch {
@@ -150,13 +150,13 @@ object LoginScreenFunctions {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    Log.d(Logger.TAG, "createUserWithEmail:success")
+                    Log.d(LOGINFUNCTIONS, "createUserWithEmail:success")
 
                     // Sign in the user with the newly created account
                     auth.signInWithEmailAndPassword(email, password)
                         .addOnCompleteListener { signInTask ->
                             if (signInTask.isSuccessful) {
-                                Log.d(Logger.TAG, "signInWithEmail:success")
+                                Log.d(LOGINFUNCTIONS, "signInWithEmail:success")
 
                                 // Perform necessary operations with the user
                                 internetScope.launch {

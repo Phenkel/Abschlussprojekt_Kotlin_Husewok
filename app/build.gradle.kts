@@ -1,17 +1,8 @@
 plugins {
-
-    // Android
     id("com.android.application")
-
-    // Kotlin
     id("org.jetbrains.kotlin.android")
-
-    // Kapt
     id("kotlin-kapt")
-
-    // Firebase
     id("com.google.gms.google-services")
-
 }
 
 android {
@@ -33,6 +24,7 @@ android {
 
     buildTypes {
         release {
+            isShrinkResources = false
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -40,25 +32,31 @@ android {
             )
         }
     }
-    configurations {
-        all {
-            resolutionStrategy {
-            }
+
+    configurations.all {
+        resolutionStrategy {
+            //exclude(group = "com.google.firebase", module = "protolite-well-known-types")
+            //exclude(group = "com.google.protobuf", module = "protobuf-javalite")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
+
     kotlinOptions {
         jvmTarget = "17"
     }
+
     buildFeatures {
         compose = true
     }
+
     composeOptions {
         kotlinCompilerExtensionVersion = "1.4.3"
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
@@ -69,7 +67,6 @@ android {
 }
 
 dependencies {
-
     // Local unit tests
     testImplementation("junit:junit:4.13.2")
 
@@ -96,6 +93,17 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
+    //implementation("com.google.protobuf:protobuf-java:3.23.2")
+    //implementation("ch.qos.logback:logback-classic:1.2.11")
+    //implementation("io.grpc:grpc-protobuf:1.46.0")
+    //implementation("io.grpc:grpc-stub:1.46.0")
+    //implementation("com.google.protobuf:protobuf-javalite:3.22.3")
+    //implementation("com.google.protobuf:protobuf-javalite:3.19.2")
+
+    // Google PALM Generative AI
+    //implementation("com.google.cloud:gapic-google-cloud-ai-generativelanguage-v1beta3-java:0.0.0-SNAPSHOT")
+    //implementation("io.grpc:grpc-okhttp:1.53.0")
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
@@ -107,12 +115,8 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.5.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
     implementation("com.google.firebase:firebase-auth")
-    implementation("com.google.firebase:firebase-firestore:24.9.1")
-    implementation("com.google.firebase:firebase-storage-ktx:20.2.1")
-
-    // Google PALM Generative AI
-    implementation("com.google.cloud:gapic-google-cloud-ai-generativelanguage-v1beta3-java:0.0.0-SNAPSHOT")
-    implementation("io.grpc:grpc-okhttp:1.53.0")
+    implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage-ktx")
 
     // Third party libraries
     implementation("com.github.omkar-tenkale:ExplodingComposable:1.0.1")

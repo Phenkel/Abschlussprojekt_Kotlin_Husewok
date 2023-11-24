@@ -6,11 +6,11 @@ import com.example.abschlussprojekt_husewok.data.exampledata.HouseworkData
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.data.model.User
 import com.example.abschlussprojekt_husewok.utils.Constants.firestore
-import com.google.firebase.appcheck.internal.util.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
 
+private const val FIREBASE = "FIREBASE"
 /**
  * Firebase Repository class that provides access to Firebase.
  */
@@ -75,10 +75,10 @@ class FirebaseRepository {
             // Update the user document with the updated user data
             userRef.set(updatedUser)
                 .addOnSuccessListener {
-                    Log.d(Logger.TAG, "updateCurrentUserFirebase:success")
+                    Log.d(FIREBASE, "updateCurrentUserFirebase:success")
                 }
                 .addOnFailureListener { exception ->
-                    Log.w(Logger.TAG, "updateCurrentUserFirebase:failure", exception)
+                    Log.w(FIREBASE, "updateCurrentUserFirebase:failure", exception)
                 }
         }
     }
@@ -109,9 +109,9 @@ class FirebaseRepository {
                 activeHousework = userData?.get("activeHousework").toString()
             )
 
-            Log.d(Logger.TAG, "updateCurrentUserLocal:success")
+            Log.d(FIREBASE, "updateCurrentUserLocal:success")
         } catch (exception: Exception) {
-            Log.w(Logger.TAG, "updateCurrentUserLocal:failure", exception)
+            Log.w(FIREBASE, "updateCurrentUserLocal:failure", exception)
         }
     }
 
@@ -153,9 +153,9 @@ class FirebaseRepository {
                 // Update the housework list
                 _houseworkList.value = houseworkList
 
-                Log.d(Logger.TAG, "updateHouseworkListLocal:success")
+                Log.d(FIREBASE, "updateHouseworkListLocal:success")
             } catch (exception: Exception) {
-                Log.w(Logger.TAG, "updateHouseworkListLocal:failure", exception)
+                Log.w(FIREBASE, "updateHouseworkListLocal:failure", exception)
             }
         }
     }
@@ -194,10 +194,10 @@ class FirebaseRepository {
             // Set the updated housework data in Firestore
             userHouseworkRef.set(updatedHousework)
                 .addOnSuccessListener {
-                    Log.d(Logger.TAG, "upsertHouseworkFirebase:success")
+                    Log.d(FIREBASE, "upsertHouseworkFirebase:success")
                 }
                 .addOnFailureListener { exception ->
-                    Log.w(Logger.TAG, "upsertHouseworkFirebase:failure", exception)
+                    Log.w(FIREBASE, "upsertHouseworkFirebase:failure", exception)
                 }
         }
     }
@@ -225,10 +225,10 @@ class FirebaseRepository {
         // Set the new user data in Firestore
         userRef.set(newUser)
             .addOnSuccessListener {
-                Log.d(Logger.TAG, "createUserDocumentFirebase:success")
+                Log.d(FIREBASE, "createUserDocumentFirebase:success")
             }
             .addOnFailureListener { exception ->
-                Log.w(Logger.TAG, "createUserDocumentFirebase:failure", exception)
+                Log.w(FIREBASE, "createUserDocumentFirebase:failure", exception)
             }
 
         // Update the current user value
@@ -416,7 +416,7 @@ class FirebaseRepository {
                     id = "All done"
                 )
             }
-            Log.d("REPOSITORY", "updateActiveHousework:Success")
+            Log.d(FIREBASE, "updateActiveHousework:Success")
         } catch (e: Exception) {
             _activeHousework.value = Housework(
                 image = R.drawable.img_placeholder,
@@ -430,7 +430,7 @@ class FirebaseRepository {
                 default = true,
                 id = "All done"
             )
-            Log.w("REPOSITORY", "updateActiveHousework:Failure", e)
+            Log.w(FIREBASE, "updateActiveHousework:Failure", e)
         }
 
 
@@ -491,9 +491,9 @@ class FirebaseRepository {
                     id = "All done"
                 )
 
-                Log.d(Logger.TAG, "getActiveHousework:success")
+                Log.d(FIREBASE, "getActiveHousework:success")
             } catch (exception: Exception) {
-                Log.w(Logger.TAG, "getActiveHousework:failure", exception)
+                Log.w(FIREBASE, "getActiveHousework:failure", exception)
             }
         }
     }
@@ -541,10 +541,10 @@ class FirebaseRepository {
             // Delete the housework item
             userHouseworkRef.delete()
                 .addOnSuccessListener {
-                    Log.d(Logger.TAG, "deleteHousework:success")
+                    Log.d(FIREBASE, "deleteHousework:success")
                 }
                 .addOnFailureListener { exception ->
-                    Log.w(Logger.TAG, "deleteHousework:failure", exception)
+                    Log.w(FIREBASE, "deleteHousework:failure", exception)
                 }
         }
     }
@@ -556,5 +556,16 @@ class FirebaseRepository {
         _currentUser.value = null
         _activeHousework.value = null
         _houseworkList.value = emptyList()
+    }
+
+    fun addFeedback(title: String, description: String) {
+        val feedback = hashMapOf(
+            "title" to title,
+            "description" to description
+        )
+        val feedbackRef = firestore
+            .collection("feedback")
+            .document(generateRandomId())
+        feedbackRef.set(feedback)
     }
 }

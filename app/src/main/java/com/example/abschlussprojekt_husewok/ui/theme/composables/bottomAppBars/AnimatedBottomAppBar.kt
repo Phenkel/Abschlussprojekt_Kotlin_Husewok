@@ -42,14 +42,14 @@ fun AnimatedBottomAppBar(
     homeSelected: Boolean,
     listSelected: Boolean,
     profileSelected: Boolean,
-    chatSelected: Boolean
+    feedbackSelected: Boolean
 ) {
     // Initialize the selected states
     var selected by remember { mutableIntStateOf(page) }
     var home by remember { mutableStateOf(homeSelected) }
     var list by remember { mutableStateOf(listSelected) }
     var profile by remember { mutableStateOf(profileSelected) }
-    var chat by remember { mutableStateOf(chatSelected) }
+    var feedback by remember { mutableStateOf(feedbackSelected) }
 
     // Compose the animated navigation bar
     AnimatedNavigationBar(
@@ -69,7 +69,7 @@ fun AnimatedBottomAppBar(
                     home = true
                     list = false
                     profile = false
-                    chat = false
+                    feedback = false
                     navController.popBackStack("home", false)
                 },
                 icon = R.drawable.ic_house,
@@ -93,7 +93,7 @@ fun AnimatedBottomAppBar(
                     home = false
                     list = true
                     profile = false
-                    chat = false
+                    feedback = false
                     navController.navigate("list")
                 },
                 icon = R.drawable.ic_list,
@@ -117,7 +117,7 @@ fun AnimatedBottomAppBar(
                     home = false
                     list = false
                     profile = true
-                    chat = false
+                    feedback = false
                     navController.navigate("profile")
                 },
                 icon = R.drawable.ic_profile,
@@ -135,14 +135,14 @@ fun AnimatedBottomAppBar(
             contentAlignment = Alignment.BottomCenter
         ) {
             WiggleButton(
-                isSelected = chat,
+                isSelected = feedback,
                 onClick = {
                     selected = 3
                     home = false
                     list = false
                     profile = false
-                    chat = true
-                    navController.navigate("chat")
+                    feedback = true
+                    navController.navigate("feedback")
                 },
                 icon = R.drawable.ic_chat,
                 backgroundIcon = R.drawable.ic_circle,
