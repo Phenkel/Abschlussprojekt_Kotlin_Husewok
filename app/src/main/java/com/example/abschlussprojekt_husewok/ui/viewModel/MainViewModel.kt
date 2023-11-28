@@ -21,7 +21,6 @@ class MainViewModel(
     val houseworkList = repository.houseworkList
     val joke = repository.newJoke
     val bored = repository.newBored
-    val palmOutput = repository.palmOutput
 
     // State Flow for tracking the first loading state
     private var _firstLoading = MutableStateFlow(true)
@@ -143,14 +142,15 @@ class MainViewModel(
      */
     fun logoutClearData() {
         repository.firebase.logoutClearData()
+        _firstLoading.value = true
     }
 
-    /*
-    suspend fun generateText(question: String) {
-        repository.palm.generateText(question)
-    }
+    /**
+     * Function that adds feedback to the Firestore database.
+     *
+     * @param title The title of the feedback.
+     * @param description The description of the feedback.
      */
-
     fun addFeedback(title: String, description: String) {
         repository.firebase.addFeedback(title, description)
     }

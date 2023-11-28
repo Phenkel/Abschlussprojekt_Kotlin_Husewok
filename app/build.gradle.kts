@@ -35,8 +35,6 @@ android {
 
     configurations.all {
         resolutionStrategy {
-            //exclude(group = "com.google.firebase", module = "protolite-well-known-types")
-            //exclude(group = "com.google.protobuf", module = "protobuf-javalite")
         }
     }
 
@@ -93,17 +91,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1")
 
-    //implementation("com.google.protobuf:protobuf-java:3.23.2")
-    //implementation("ch.qos.logback:logback-classic:1.2.11")
-    //implementation("io.grpc:grpc-protobuf:1.46.0")
-    //implementation("io.grpc:grpc-stub:1.46.0")
-    //implementation("com.google.protobuf:protobuf-javalite:3.22.3")
-    //implementation("com.google.protobuf:protobuf-javalite:3.19.2")
-
-    // Google PALM Generative AI
-    //implementation("com.google.cloud:gapic-google-cloud-ai-generativelanguage-v1beta3-java:0.0.0-SNAPSHOT")
-    //implementation("io.grpc:grpc-okhttp:1.53.0")
-
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
@@ -119,6 +106,7 @@ dependencies {
     implementation("com.google.firebase:firebase-storage-ktx")
 
     // Third party libraries
+    implementation("com.wajahatkarim:flippable:1.0.6")
     implementation("com.github.omkar-tenkale:ExplodingComposable:1.0.1")
     implementation("com.github.JaberAhamed:CardScratch:1.0")
     implementation("com.github.esatgozcu:Compose-Rolling-Number:1.0.5")

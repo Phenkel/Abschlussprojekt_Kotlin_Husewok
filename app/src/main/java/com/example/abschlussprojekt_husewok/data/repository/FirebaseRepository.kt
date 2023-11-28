@@ -558,14 +558,25 @@ class FirebaseRepository {
         _houseworkList.value = emptyList()
     }
 
+    /**
+     * Function that adds feedback to the Firestore database.
+     *
+     * @param title The title of the feedback.
+     * @param description The description of the feedback.
+     */
     fun addFeedback(title: String, description: String) {
+        // Create a HashMap to store the feedback data
         val feedback = hashMapOf(
             "title" to title,
             "description" to description
         )
+
+        // Get a reference to the "feedback" collection in Firestore and generate a random document ID
         val feedbackRef = firestore
             .collection("feedback")
             .document(generateRandomId())
+
+        // Set the feedback data in the Firestore document
         feedbackRef.set(feedback)
     }
 }

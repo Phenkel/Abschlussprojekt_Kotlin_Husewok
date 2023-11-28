@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
 
                 // Set up the navigation host with the NavController and MainViewModel
-                NavigationAppHost(navController, viewModel)
+                NavigationAppHost(navController, viewModel, this)
             }
         }
     }

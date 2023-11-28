@@ -74,7 +74,6 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     if (firstLoading) {
         LaunchedEffect(Unit) {
             HomeScreenFunctions.loadHousework(viewModel, navController, context, internetScope)
-            viewModel.firstLoaded()
         }
     }
 

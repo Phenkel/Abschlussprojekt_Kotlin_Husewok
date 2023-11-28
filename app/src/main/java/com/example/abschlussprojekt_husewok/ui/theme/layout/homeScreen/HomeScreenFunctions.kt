@@ -131,40 +131,50 @@ object HomeScreenFunctions {
                 if (housework?.isLocked() == true) {
                     if (unlockedHousework) {
                         // List of game destinations
-                        val gameDestinations = listOf("tictactoe", "scratching")
+                        val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
 
                         // Select a random game destination index
                         val randomIndex = (gameDestinations.indices).random()
 
                         // Navigate to the randomly selected game screen
                         navController.navigate(gameDestinations[randomIndex])
+
+                        viewModel.firstLoaded()
                     } else {
                         // Show success toast when all housework items are locked
                         internetScope.launch {
                             viewModel.updateActiveHousework(true)
                         }
                         showSuccessToast("All Done", "There is no housework left", context, false)
+
+                        viewModel.firstLoaded()
                     }
                 } else if (housework?.title == "All done") {
                     if (unlockedHousework) {
                         // List of game destinations
-                        val gameDestinations = listOf("tictactoe", "scratching")
+                        val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
 
                         // Select a random game destination index
                         val randomIndex = (gameDestinations.indices).random()
 
                         // Navigate to the randomly selected game screen
                         navController.navigate(gameDestinations[randomIndex])
+
+                        viewModel.firstLoaded()
                     } else {
                         // Show success toast when all housework items are locked
                         internetScope.launch {
                             viewModel.updateActiveHousework(true)
                         }
                         showSuccessToast("All Done", "There is no housework left", context, false)
+
+                        viewModel.firstLoaded()
                     }
                 } else if (housework != null) {
                     // Show success toast when active housework is loaded
                     showSuccessToast("Housework loaded", housework.title, context, false)
+
+                    viewModel.firstLoaded()
                 } else {
                     Log.w(HOMEFUNCTIONS, "Failed to load housework")
 
@@ -201,7 +211,7 @@ object HomeScreenFunctions {
             viewModel.updateUserTasksAndSkipCoins(false)
 
             // List of game destinations
-            val gameDestinations = listOf("tictactoe", "scratching")
+            val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
 
             // Select a random game destination index
             val randomIndex = (gameDestinations.indices).random()
@@ -251,7 +261,7 @@ object HomeScreenFunctions {
 
                     if (unlockedHousework) {
                         // List of game destinations
-                        val gameDestinations = listOf("tictactoe", "scratching")
+                        val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
 
                         // Select a random game destination index
                         val randomIndex = (gameDestinations.indices).random()

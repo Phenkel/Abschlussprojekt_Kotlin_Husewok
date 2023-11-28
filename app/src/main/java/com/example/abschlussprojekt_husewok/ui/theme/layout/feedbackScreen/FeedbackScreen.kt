@@ -40,26 +40,32 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
+/**
+ * Composable function that displays the feedback screen.
+ *
+ * @param navController The navigation controller for navigating between screens.
+ * @param viewModel The view model for accessing and updating data.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FeedbackScreen(navController: NavController, viewModel: MainViewModel) {
-    var title by remember {
-        mutableStateOf("")
-    }
-    var description by remember {
-        mutableStateOf("")
-    }
+    // State variables for the title and description input fields
+    var title by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
 
+    // Scroll state for the feedback screen
     val scrollState = rememberScrollState()
 
-    // Set up scroll behavior for the top app bar
+    // Scroll behavior for the top app bar
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
 
+    // Get the current context
     val context = LocalContext.current
 
-    // Create coroutine scope for internet operations
+    // Coroutine scope for internet operations
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
+    // Compose the feedback screen UI
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "home") },
         bottomBar = { AnimatedBottomAppBar(navController, 3, false, false, false, true) }
@@ -76,30 +82,37 @@ fun FeedbackScreen(navController: NavController, viewModel: MainViewModel) {
                     calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)
                 ),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth(1f)
+                modifier = Modifier.fillMaxWidth(1f)
             ) {
+                // Input field for the feedback title
                 WideTextField(
                     value = title,
                     label = "Title",
                     onValueChange = { value -> title = value }
                 )
+
+                // Input field for the feedback description
                 WideTextField(
                     value = description,
                     label = "Description",
                     onValueChange = { value -> description = value }
                 )
+
+                // Button to send the feedback
                 WideButton(
                     text = "Send feedback",
                     icon = Icons.Outlined.Email,
                     primary = true
                 ) {
-                    if (title.isNotEmpty() || description.isNotEmpty()) {
+                    if (title.isNotEmpty() && description.isNotEmpty()) {
+                        // Launch a coroutine in the IO context to submit the feedback
                         internetScope.launch {
                             viewModel.addFeedback(title, description)
                             title = ""
                             description = ""
                         }
+
+                        // Show a success toast message
                         MotionToasts.success(
                             title = "Thanks for sending a feedback",
                             message = "It means much to me",
@@ -107,6 +120,7 @@ fun FeedbackScreen(navController: NavController, viewModel: MainViewModel) {
                             context = context
                         )
                     } else {
+                        // Show an error toast message if any field is empty
                         MotionToasts.error(
                             title = "Please fill out every field",
                             message = "Could not send feedback",
@@ -115,6 +129,8 @@ fun FeedbackScreen(navController: NavController, viewModel: MainViewModel) {
                         )
                     }
                 }
+
+                // Scrollable box for displaying additional information
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(0.8f)
@@ -123,19 +139,19 @@ fun FeedbackScreen(navController: NavController, viewModel: MainViewModel) {
                     Text(
                         text = "Feedback and Improvement Center\n" +
                                 "\n" +
-                                "We'd love to hear from you! Your feedback helps us make Hûséwøk better. Whether you want to report a bug, suggest a new feature, or share your thoughts, this is the place to do it.\n" +
+                                "I'd love to hear from you! Your feedback helps me make Hûséwøk better. Whether you want to report a bug, suggest a new feature, or share your thoughts, this is the place to do it.\n" +
                                 "\n" +
                                 "How Can You Help?\n" +
                                 "\n" +
-                                "Report Bugs: Encountered a glitch? Let us know the details so we can squash it.\n" +
+                                "Report Bugs: Encountered a glitch? Let me know the details so I can squash it.\n" +
                                 "\n" +
-                                "Suggest Features: Have an idea to make Hûséwøk even more awesome? We're all ears.\n" +
+                                "Suggest Features: Have an idea to make Hûséwøk even more awesome? I'm all ears.\n" +
                                 "\n" +
                                 "General Feedback: Share your thoughts, positive or constructive. Your insights matter!\n" +
                                 "\n" +
                                 "Your Feedback Matters:\n" +
                                 "\n" +
-                                "We appreciate the time you take to help us improve. Every suggestion and bug report makes Hûséwøk a better experience for everyone.\n" +
+                                "I appreciate the time you take to help me improve. Every suggestion and bug report makes Hûséwøk a better experience for everyone.\n" +
                                 "\n" +
                                 "Thank You for Being Part of Hûséwøk!",
                         color = Color.White,

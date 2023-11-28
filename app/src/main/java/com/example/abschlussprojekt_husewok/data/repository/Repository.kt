@@ -25,9 +25,6 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
     // Create an instance of the Joke Repository
     val joke = JokeRepository(jokeApi)
 
-    // Create an instance of the Google Palm Repository
-    val palm = GooglePalmRepository()
-
     // Get the current user state flow from the Firebase repository
     val currentUser: StateFlow<User?>
         get() = firebase.currentUser
@@ -47,10 +44,6 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
     // Get the joke state flow from the Joke repository
     val newJoke: StateFlow<NetworkResult<Joke>>
         get() = joke.newJoke
-
-    // Get the palm output state from the Palm repository
-    val palmOutput: StateFlow<String>
-        get() = palm.palmOutput
 
     /**
      * Retrieves a reward based on the user's current reward type.
