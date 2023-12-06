@@ -3,7 +3,6 @@ package com.example.abschlussprojekt_husewok.ui.theme.layout.onboardingScreen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -40,7 +39,6 @@ import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -111,11 +109,12 @@ fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
                                     progress = i.toFloat() / 100
                                     delay(10)
                                     if (i == 100) {
-                                        OnboardingScreenFunctions.loadData(
-                                            viewModel,
-                                            navController,
-                                            internetScope
-                                        )
+                                        internetScope.launch {
+                                            OnboardingScreenFunctions.loadData(
+                                                viewModel,
+                                                navController
+                                            )
+                                        }
                                         loading = false
                                     }
                                 }

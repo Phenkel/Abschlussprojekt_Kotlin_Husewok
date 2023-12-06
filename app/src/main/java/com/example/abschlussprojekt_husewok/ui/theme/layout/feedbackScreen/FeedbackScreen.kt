@@ -4,8 +4,10 @@ import android.app.Activity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -77,6 +79,8 @@ fun FeedbackScreen(navController: NavController, viewModel: MainViewModel) {
                 .fillMaxSize(1f)
                 .padding(innerPadding)
         ) {
+            Spacer(modifier = Modifier.height(calcDp(percentage = 0.05f, dimension = CalcSizes.Dimension.Height)))
+
             Column(
                 verticalArrangement = Arrangement.spacedBy(
                     calcDp(percentage = 0.02f, dimension = CalcSizes.Dimension.Height)

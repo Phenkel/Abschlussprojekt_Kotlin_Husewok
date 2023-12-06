@@ -78,9 +78,8 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
     // Get the current context
     val context = LocalContext.current
 
-    // Create coroutine scopes for internet and main operations
+    // Create coroutine scope for internet operations
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-    val mainScope = MainScope()
 
     // Create the detail screen layout using BasicScaffold
     BasicScaffold(
@@ -125,10 +124,9 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
 
             // Button for updating the task
             WideButton(text = "Update Task", icon = Icons.Outlined.Refresh, primary = true) {
-                mainScope.launch {
+                internetScope.launch {
                     DetailScreenFunctions.updateTask(
                         viewModel,
-                        internetScope,
                         navController,
                         context,
                         housework,
@@ -145,10 +143,9 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
             // Button for deleting the task if it is not default
             if (!housework.default) {
                 WideButton(text = "Delete Task", icon = Icons.Outlined.Delete, primary = false) {
-                    mainScope.launch {
+                    internetScope.launch {
                         DetailScreenFunctions.deleteTask(
                             viewModel,
-                            internetScope,
                             navController,
                             houseworkId
                         )

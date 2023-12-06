@@ -110,7 +110,7 @@ fun ColorGuessScreen(navController: NavController, viewModel: MainViewModel) {
                 flipDurationMs = 1000,
                 onFlippedListener = {
                     scope.launch {
-                        delay(1000)
+                        delay(500)
                         explosionController.explode()
                     }
                 }

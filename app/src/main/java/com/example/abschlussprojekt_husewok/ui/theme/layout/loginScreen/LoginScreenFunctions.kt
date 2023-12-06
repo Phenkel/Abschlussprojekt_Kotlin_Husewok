@@ -9,6 +9,8 @@ import com.example.abschlussprojekt_husewok.utils.Constants.auth
 import com.example.abschlussprojekt_husewok.utils.MotionToasts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * A helper object containing functions related to the login screen.
@@ -81,7 +83,6 @@ object LoginScreenFunctions {
      * @param viewModel The MainViewModel used for accessing and updating data.
      * @param context The Context used for displaying toasts.
      * @param navController The NavController used for navigating between screens.
-     * @param internetScope The CoroutineScope used for the network operation.
      * @param email The email entered by the user.
      * @param password The password entered by the user.
      */
@@ -89,7 +90,6 @@ object LoginScreenFunctions {
         viewModel: MainViewModel,
         context: Context,
         navController: NavController,
-        internetScope: CoroutineScope,
         email: String,
         password: String
     ) {
@@ -107,13 +107,10 @@ object LoginScreenFunctions {
                     Log.d(LOGINFUNCTIONS, "signInWithEmail:success")
 
                     // Update the current user in the view model
-                    internetScope.launch {
-                        val user = auth.currentUser
-                        viewModel.updateCurrentUser(user?.uid.toString())
+                    val user = auth.currentUser
+                    viewModel.updateCurrentUser(user?.uid.toString()).addOnSuccessListener {
+                        navController.navigate("home")
                     }
-
-                    // Navigate to the home screen
-                    navController.navigate("home")
                 } else {
                     // Handle login failure with the appropriate error message
                     handleLoginFailure(task.exception?.message.toString(), context)

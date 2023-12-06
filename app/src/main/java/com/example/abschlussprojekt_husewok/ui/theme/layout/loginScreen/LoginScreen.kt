@@ -27,7 +27,9 @@ import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Composable function for the login screen.
@@ -45,8 +47,9 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
     // Retrieve the current context
     val context = LocalContext.current
 
-    // Set up coroutine scope for internet operations
+    // Set up coroutine scopes for internet operations and UI updates
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    val mainScope = MainScope()
 
     // Compose the login screen layout
     OnlyContentScaffold { innerPadding ->
@@ -110,7 +113,6 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                     viewModel,
                     context,
                     navController,
-                    internetScope,
                     email,
                     password
                 )

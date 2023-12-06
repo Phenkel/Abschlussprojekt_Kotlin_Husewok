@@ -124,11 +124,10 @@ fun TicTacToeScreen(navController: NavController, viewModel: MainViewModel) {
             Explodable(
                 controller = explosionController,
                 onExplode = {
-                    mainScope.launch {
+                    internetScope.launch {
                         TicTacToeScreenFunctions.getNewHousework(
                             viewModel,
                             navController,
-                            internetScope,
                             context,
                             gameWon as Boolean
                         )

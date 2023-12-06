@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.util.Log
 import androidx.navigation.NavController
+import com.example.abschlussprojekt_husewok.ui.theme.layout.gameScreens.ticTacToeScreen.TicTacToeScreenFunctions
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.MotionToasts
 import kotlinx.coroutines.CoroutineScope
@@ -34,73 +35,36 @@ object ColorGuessScreenFunctions {
     }
 
     /**
-     * Executes a suspend function within a CoroutineScope and returns a boolean indicating the success of the operation.
+     * Retrieves a new housework item based on the outcome of the game and updates the active housework in the ViewModel.
+     * Shows a success toast message indicating the result of the game.
+     * If there is a failure in updating the housework, recursively calls itself to retry.
      *
-     * @param internetScope The CoroutineScope used for the suspend operation.
-     * @param operation The suspend function to be executed.
-     * @return Returns true if the operation completes successfully, false otherwise.
+     * @param viewModel The instance of the MainViewModel.
+     * @param navController The NavController used for navigating.
+     * @param context The context used for displaying toast messages.
+     * @param gameWon Indicates whether the game was won or lost.
      */
-    private suspend fun suspendOperation(
-        internetScope: CoroutineScope,
-        operation: suspend CoroutineScope.() -> Unit
-    ): Boolean {
-        return suspendCoroutine { continuation ->
-            // Launch a coroutine within the internetScope
-            internetScope.launch {
-                try {
-                    // Execute the suspend operation
-                    operation()
-
-                    // Resume the continuation with a value of true indicating successful completion
-                    continuation.resume(true)
-                } catch (e: Exception) {
-                    // Resume the continuation with a value of false indicating unsuccessful completion
-                    continuation.resume(false)
-                }
-            }
-        }
-    }
-
-    /**
-     * Asynchronously retrieves new housework and updates the active housework in the ViewModel.
-     * Shows a success toast if the update is successful, otherwise retries the operation.
-     *
-     * @param viewModel The MainViewModel instance.
-     * @param navController The NavController instance.
-     * @param internetScope The CoroutineScope for internet operations.
-     * @param context The Context instance.
-     * @param gameWon A boolean indicating whether the game was won or not.
-     */
-    suspend fun getNewHousework(
+    fun getNewHousework(
         viewModel: MainViewModel,
         navController: NavController,
-        internetScope: CoroutineScope,
         context: Context,
         gameWon: Boolean
     ) {
-        // Perform the updateActiveHousework operation asynchronously
-        val updateHouseworkSuccess = suspendOperation(internetScope) {
-            viewModel.updateActiveHousework(gameWon)
-        }
-
-        if (updateHouseworkSuccess) {
-            // Show a success toast with the updated housework title
+        viewModel.updateActiveHousework(gameWon).addOnSuccessListener {
+            // Show a success toast message with the title of the active housework and the result of the game
             showSuccessToast(
                 title = viewModel.activeHousework.value?.title.toString(),
                 message = if (gameWon) "Game won" else "Game lost",
                 context
             )
+        }.addOnFailureListener { exception ->
+            // Log a warning if there is a failure in updating the housework
+            Log.w(COLORGUESSFUNCTIONS, "Failed to update housework", exception)
 
-            // Navigates to home screen
-            navController.navigate("home")
-        } else {
-            Log.w(COLORGUESSFUNCTIONS, "Failed to update housework")
-
-            // Retry the operation if the update was not successful
+            // Retry getting new housework by recursively calling the function
             getNewHousework(
                 viewModel,
                 navController,
-                internetScope,
                 context,
                 gameWon
             )

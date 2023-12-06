@@ -68,9 +68,6 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
     // Set up coroutine scope for internet operations
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
 
-    // Set up main coroutine scope
-    val mainScope = MainScope()
-
     // Compose the add task screen layout
     BasicScaffold(
         topBar = { BasicTopAppBar(scrollBehavior, navController, "list") },
@@ -111,10 +108,9 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
 
             // Button for creating the task
             WideButton(text = "Create Task", icon = Icons.Outlined.AddCircle, primary = true) {
-                mainScope.launch {
+                internetScope.launch {
                     AddTaskScreenFunctions.addTask(
                         viewModel,
-                        internetScope,
                         navController,
                         context,
                         title,

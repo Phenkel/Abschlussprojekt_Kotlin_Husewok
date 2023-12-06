@@ -3,6 +3,7 @@ package com.example.abschlussprojekt_husewok.ui.viewModel
 import androidx.lifecycle.ViewModel
 import com.example.abschlussprojekt_husewok.data.repository.Repository
 import com.example.abschlussprojekt_husewok.data.model.Housework
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -39,15 +40,15 @@ class MainViewModel(
      *
      * @param uid The user ID.
      */
-    suspend fun updateCurrentUser(uid: String) {
-        repository.firebase.updateCurrentUser(uid)
+    fun updateCurrentUser(uid: String): Task<String> {
+        return repository.firebase.updateCurrentUser(uid)
     }
 
     /**
      * Updates the housework list from Firestore.
      */
-    suspend fun updateHouseworkList() {
-        repository.firebase.updateHouseworkList()
+    fun updateHouseworkList(): Task<String> {
+        return repository.firebase.updateHouseworkList()
     }
 
     /**
@@ -55,8 +56,8 @@ class MainViewModel(
      *
      * @param housework The housework object to upsert.
      */
-    fun upsertHouseworkFirebase(housework: Housework) {
-        repository.firebase.upsertHouseworkFirebase(housework)
+    fun upsertHouseworkFirebase(housework: Housework): Task<String> {
+         return repository.firebase.upsertHouseworkFirebase(housework)
     }
 
     /**
@@ -100,8 +101,8 @@ class MainViewModel(
      *
      * @param sortBy The criteria to sort the housework list by.
      */
-    fun sortHouseworkList(sortBy: String) {
-        repository.firebase.sortHouseworkList(sortBy)
+    fun sortHouseworkList(sortBy: String): Task<String> {
+        return repository.firebase.sortHouseworkList(sortBy)
     }
 
     /**
@@ -109,15 +110,15 @@ class MainViewModel(
      *
      * @param won Whether the player won the game or not.
      */
-    fun updateActiveHousework(won: Boolean) {
-        repository.firebase.updateActiveHousework(won)
+    fun updateActiveHousework(won: Boolean): Task<String> {
+        return repository.firebase.updateActiveHousework(won)
     }
 
     /**
      * Retrieves the active housework for the current user.
      */
-    suspend fun getActiveHousework() {
-        repository.firebase.getActiveHousework()
+    fun getActiveHousework(): Task<String> {
+        return repository.firebase.getActiveHousework()
     }
 
     /**
@@ -125,16 +126,16 @@ class MainViewModel(
      *
      * @param id The ID of the housework item to delete.
      */
-    fun deleteHousework(id: String) {
-        repository.firebase.deleteHousework(id)
+    fun deleteHousework(id: String): Task<String> {
+        return repository.firebase.deleteHousework(id)
     }
 
     /**
      * Retrieves a reward based on the user's current reward type.
      * If the reward type is "Joke", a joke is retrieved. Otherwise, a random activity is retrieved.
      */
-    suspend fun getReward() {
-        repository.getReward()
+    suspend fun getReward(): Task<String> {
+        return repository.getReward()
     }
 
     /**

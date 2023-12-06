@@ -13,61 +13,28 @@ import kotlin.coroutines.suspendCoroutine
  */
 object OnboardingScreenFunctions {
     private const val ONBOARDINGFUNCTIONS: String = "OnboardingScreenFunctions"
-    /**
-     * Executes a suspend function within a CoroutineScope and returns a boolean indicating the success of the operation.
-     *
-     * @param internetScope The CoroutineScope used for the suspend operation.
-     * @param operation The suspend function to be executed.
-     * @return Returns true if the operation completes successfully, false otherwise.
-     */
-    private suspend fun suspendOperation(
-        internetScope: CoroutineScope,
-        operation: suspend CoroutineScope.() -> Unit
-    ): Boolean {
-        return suspendCoroutine { continuation ->
-            // Launch a coroutine within the internetScope
-            internetScope.launch {
-                try {
-                    // Execute the suspend operation
-                    operation()
-
-                    // Resume the continuation with a value of true indicating successful completion
-                    continuation.resume(true)
-                } catch (e: Exception) {
-                    // Resume the continuation with a value of false indicating unsuccessful completion
-                    continuation.resume(false)
-                }
-            }
-        }
-    }
 
     /**
-     * Suspended function that loads data from the server and performs navigation based on the result.
+     * Loads the necessary data for the app by updating the housework list and fetching the active housework.
+     * Once the data is loaded, navigates to the home screen.
      *
-     * @param viewModel The view model for accessing and updating data.
-     * @param navController The navigation controller for navigating between screens.
-     * @param internetScope The coroutine scope for internet operations.
+     * @param viewModel The instance of the MainViewModel.
+     * @param navController The NavController used for navigation.
      */
-    suspend fun loadData(viewModel: MainViewModel, navController: NavController, internetScope: CoroutineScope) {
-        // Update the housework list and check if it was successful
-        val updateHouseworkListSuccess = suspendOperation(internetScope) {
-            viewModel.updateHouseworkList()
-        }
-
-        if (updateHouseworkListSuccess) {
-            // Get active housework and check if it was successful
-            val getActiveHouseworkSuccess = suspendOperation(internetScope) {
-                viewModel.getActiveHousework()
-            }
-
-            if (getActiveHouseworkSuccess) {
-                // Navigate to the "home" screen if active housework was successfully retrieved
+    fun loadData(viewModel: MainViewModel, navController: NavController) {
+        // Update the housework list
+        viewModel.updateHouseworkList().addOnSuccessListener {
+            // Fetch the active housework
+            viewModel.getActiveHousework().addOnSuccessListener {
+                // Navigate to the home screen
                 navController.navigate("home")
-            } else {
-                Log.w(ONBOARDINGFUNCTIONS, "Failed to get active housework")
+            }.addOnFailureListener { exception ->
+                // Log the failure to fetch the active housework
+                Log.w(ONBOARDINGFUNCTIONS, "Failed to get active housework", exception)
             }
-        } else {
-            Log.w(ONBOARDINGFUNCTIONS, "Failed to update housework list")
+        }.addOnFailureListener { exception ->
+            // Log the failure to update the housework list
+            Log.w(ONBOARDINGFUNCTIONS, "Failed to update housework list", exception)
         }
     }
 }

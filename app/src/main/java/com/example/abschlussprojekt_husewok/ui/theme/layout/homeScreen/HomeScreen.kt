@@ -63,7 +63,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     // Function to handle refresh action
     fun refresh() = refreshScope.launch {
         refreshing = true
-        HomeScreenFunctions.loadHousework(viewModel, navController, context, internetScope)
+        HomeScreenFunctions.loadHousework(viewModel, navController, context, mainScope)
         refreshing = false
     }
 
@@ -73,7 +73,7 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
     // Load housework data if it's the first loading
     if (firstLoading) {
         LaunchedEffect(Unit) {
-            HomeScreenFunctions.loadHousework(viewModel, navController, context, internetScope)
+            HomeScreenFunctions.loadHousework(viewModel, navController, context, mainScope)
         }
     }
 
@@ -105,18 +105,18 @@ fun HomeScreen(navController: NavController, viewModel: MainViewModel) {
                             HomeScreenFunctions.skipButton(navController, viewModel, activeHousework)
                         },
                         doneButtonOnClick = {
-                            mainScope.launch {
+                            internetScope.launch {
                                 HomeScreenFunctions.doneButton(
-                                    viewModel, navController, context, internetScope, hw, user
+                                    viewModel, navController, context, internetScope, mainScope, hw, user
                                 )
                             }
                         },
                         fabOnClick = {
-                            HomeScreenFunctions.infoButton(context, hw)
+                            HomeScreenFunctions.infoButton(context, mainScope, hw)
                         },
                         iconButtonOnClick = {
-                            mainScope.launch {
-                                HomeScreenFunctions.favoriteButton(viewModel, internetScope, hw)
+                            internetScope.launch {
+                                HomeScreenFunctions.favoriteButton(viewModel, hw)
                             }
                         },
                         housework = hw

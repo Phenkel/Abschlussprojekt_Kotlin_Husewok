@@ -6,11 +6,14 @@ import com.example.abschlussprojekt_husewok.data.exampledata.HouseworkData
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.data.model.User
 import com.example.abschlussprojekt_husewok.utils.Constants.firestore
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.tasks.await
+import kotlin.IllegalStateException
 
 private const val FIREBASE = "FIREBASE"
+
 /**
  * Firebase Repository class that provides access to Firebase.
  */
@@ -73,33 +76,35 @@ class FirebaseRepository {
             val userRef = firestore.collection("user").document(currentUser.userId)
 
             // Update the user document with the updated user data
-            userRef.set(updatedUser)
-                .addOnSuccessListener {
-                    Log.d(FIREBASE, "updateCurrentUserFirebase:success")
-                }
-                .addOnFailureListener { exception ->
-                    Log.w(FIREBASE, "updateCurrentUserFirebase:failure", exception)
-                }
+            userRef.set(updatedUser).addOnSuccessListener {
+                Log.d(FIREBASE, "updateCurrentUserFirebase:success")
+            }.addOnFailureListener { exception ->
+                Log.w(FIREBASE, "updateCurrentUserFirebase:failure", exception)
+            }
+        } ?: run {
+            Log.w(FIREBASE, "updateCurrentUserFirebase:failure", IllegalStateException("User is null"))
         }
     }
 
     /**
-     * Updates the current user's data from Firestore.
+     * Updates the current user data by fetching the user document from Firebase Firestore
+     * and setting the value of the _currentUser StateFlow.
      *
-     * @param uid The user ID.
+     * @param uid The unique identifier of the user.
+     * @return A [Task] that represents the asynchronous operation.
      */
-    suspend fun updateCurrentUser(uid: String) {
-        // Get the reference to the user document in Firestore
+    fun updateCurrentUser(uid: String): Task<String> {
+        // Create a TaskCompletionSource to handle the asynchronous operation
+        val src = TaskCompletionSource<String>()
+
+        // Get the reference to the user document
         val userRef = firestore.collection("user").document(uid)
 
-        try {
-            // Get the user document and retrieve the data
-            val result = userRef.get().await()
-            val userData = result.data
-
-            // Create a User object with the retrieved data
+        // Fetch the user document from Firebase Firestore
+        userRef.get().addOnSuccessListener { userData ->
+            // Create a new User object from the fetched user data
             _currentUser.value = User(
-                userId = result.id,
+                userId = uid,
                 skipCoins = userData?.get("skipCoins").toString().toLong(),
                 tasksDone = userData?.get("tasksDone").toString().toLong(),
                 tasksSkipped = userData?.get("tasksSkipped").toString().toLong(),
@@ -109,31 +114,45 @@ class FirebaseRepository {
                 activeHousework = userData?.get("activeHousework").toString()
             )
 
+            // Set the result of the TaskCompletionSource to "success"
+            src.setResult("success")
+
             Log.d(FIREBASE, "updateCurrentUserLocal:success")
-        } catch (exception: Exception) {
+        }.addOnFailureListener { exception ->
+            // Set the result of the TaskCompletionSource to "failure"
+            src.setResult("failure")
+
             Log.w(FIREBASE, "updateCurrentUserLocal:failure", exception)
         }
+
+        // Return the Task associated with the TaskCompletionSource
+        return src.task
     }
 
     /**
-     * Updates the housework list from Firestore.
+     * Updates the housework list by fetching the housework items from Firebase Firestore
+     * and setting the value of the _houseworkList StateFlow.
+     *
+     * @return A [Task] that represents the asynchronous operation.
      */
-    suspend fun updateHouseworkList() {
-        // Check if the current user is available
+    fun updateHouseworkList(): Task<String> {
+        // Create a TaskCompletionSource to handle the asynchronous operation
+        val src = TaskCompletionSource<String>()
+
+        // Check if the current user is not null
         _currentUser.value?.let { currentUser ->
-            // Get the reference to the user's housework collection in Firestore
-            val userHouseworkRef = firestore
-                .collection("user")
-                .document(currentUser.userId)
-                .collection("housework")
+            // Get the reference to the user's housework collection
+            val userHouseworkRef =
+                firestore.collection("user").document(currentUser.userId).collection("housework")
 
-            try {
-                // Get the housework documents and retrieve the data
-                val result = userHouseworkRef.get().await()
-                val houseworkList = mutableListOf<Housework>()
+            // Create a mutable list to store the fetched housework items
+            val houseworkList = mutableListOf<Housework>()
 
+            // Fetch the housework items from Firebase Firestore
+            userHouseworkRef.get().addOnSuccessListener { result ->
+                // Iterate through the fetched documents
                 for (document in result) {
-                    // Create a Housework object with the retrieved data
+                    // Create a Housework object from the document data
                     val housework = Housework(
                         image = document.data["image"].toString().toInt(),
                         title = document.data["title"].toString(),
@@ -146,27 +165,45 @@ class FirebaseRepository {
                         default = document.data["default"].toString().toBoolean(),
                         id = document.data["id"].toString()
                     )
-
+                    // Add the housework item to the list
                     houseworkList.add(housework)
                 }
 
-                // Update the housework list
+                // Set the value of the _houseworkList StateFlow
                 _houseworkList.value = houseworkList
 
+                // Set the result of the TaskCompletionSource to "success"
+                src.setResult("success")
+
                 Log.d(FIREBASE, "updateHouseworkListLocal:success")
-            } catch (exception: Exception) {
+            }.addOnFailureListener { exception ->
+                // Set the exception of the TaskCompletionSource
+                src.setException(exception)
+
                 Log.w(FIREBASE, "updateHouseworkListLocal:failure", exception)
             }
+        } ?: run {
+            // Set the exception of the TaskCompletionSource
+            src.setException(IllegalStateException("User is null"))
+
+            Log.w(FIREBASE, "getActiveHousework:failure", IllegalStateException("User is null"))
         }
+
+        // Return the Task associated with the TaskCompletionSource
+        return src.task
     }
 
     /**
-     * Upserts the housework data to Firebase Firestore.
+     * Upserts (updates/inserts) a housework item in Firebase Firestore.
      *
-     * @param housework The housework object to upsert.
+     * @param housework The housework item to be upserted.
+     * @return A [Task] that represents the asynchronous operation.
      */
-    fun upsertHouseworkFirebase(housework: Housework) {
-        // Create a map of the updated housework data
+    fun upsertHouseworkFirebase(housework: Housework): Task<String> {
+        // Create a TaskCompletionSource to handle the asynchronous operation
+        val src = TaskCompletionSource<String>()
+
+        // Create a map of updated housework data
         val updatedHousework = hashMapOf(
             "default" to housework.default,
             "id" to if (housework.id == "default") generateRandomId() else housework.id,
@@ -180,26 +217,39 @@ class FirebaseRepository {
             "title" to housework.title
         )
 
-        // Check if the current user is available
+        // Check if the current user is not null
         _currentUser.value?.let { currentUser ->
+            // Get the ID of the updated housework
             val updatedHouseworkId = updatedHousework["id"].toString()
 
-            // Get the reference to the user's housework document in Firestore
-            val userHouseworkRef = firestore
-                .collection("user")
-                .document(currentUser.userId)
-                .collection("housework")
-                .document(updatedHouseworkId)
+            // Get the reference to the user's housework document
+            val userHouseworkRef =
+                firestore.collection("user").document(currentUser.userId).collection("housework")
+                    .document(updatedHouseworkId)
 
-            // Set the updated housework data in Firestore
-            userHouseworkRef.set(updatedHousework)
-                .addOnSuccessListener {
-                    Log.d(FIREBASE, "upsertHouseworkFirebase:success")
-                }
-                .addOnFailureListener { exception ->
-                    Log.w(FIREBASE, "upsertHouseworkFirebase:failure", exception)
-                }
+            // Upsert the updated housework data in Firebase Firestore
+            userHouseworkRef.set(updatedHousework).addOnSuccessListener {
+                // Set the result of the TaskCompletionSource to "success"
+                src.setResult("success")
+
+                Log.d(FIREBASE, "upsertHouseworkFirebase:success")
+            }.addOnFailureListener { exception ->
+                // Set the exception of the TaskCompletionSource
+                src.setException(exception)
+
+                Log.w(FIREBASE, "upsertHouseworkFirebase:failure", exception)
+            }
+        } ?: run {
+            // Set the exception of the TaskCompletionSource
+            src.setException(IllegalStateException("User is null"))
+
+            Log.w(
+                FIREBASE, "upsertHouseworkFirebase:failure", IllegalStateException("User is null")
+            )
         }
+
+        // Return the Task associated with the TaskCompletionSource
+        return src.task
     }
 
     /**
@@ -223,13 +273,11 @@ class FirebaseRepository {
         val userRef = firestore.collection("user").document(uid)
 
         // Set the new user data in Firestore
-        userRef.set(newUser)
-            .addOnSuccessListener {
-                Log.d(FIREBASE, "createUserDocumentFirebase:success")
-            }
-            .addOnFailureListener { exception ->
-                Log.w(FIREBASE, "createUserDocumentFirebase:failure", exception)
-            }
+        userRef.set(newUser).addOnSuccessListener {
+            Log.d(FIREBASE, "createUserDocumentFirebase:success")
+        }.addOnFailureListener { exception ->
+            Log.w(FIREBASE, "createUserDocumentFirebase:failure", exception)
+        }
 
         // Update the current user value
         _currentUser.value = User(
@@ -378,16 +426,22 @@ class FirebaseRepository {
     }
 
     /**
-     * Updates the active housework based on the game result.
+     * Updates the active housework item based on the result of the task completion.
+     * Selects a random housework item from the liked or disliked housework list, depending on the outcome.
+     * If there are no liked or disliked housework items available, a default "All done" housework item is set.
      *
-     * @param won Whether the game was won or not.
+     * @param won Indicates whether the game was won or lost.
+     * @return A [Task] that resolves to a string indicating the result of the update ("success" or an error message).
      */
-    fun updateActiveHousework(won: Boolean) {
-        // Create lists to store liked and disliked housework
+    fun updateActiveHousework(won: Boolean): Task<String> {
+        // Create a TaskCompletionSource to track the completion of the update process
+        val src = TaskCompletionSource<String>()
+
+        // Create mutable lists to store liked and disliked housework items
         val likedHousework = mutableListOf<Housework>()
         val dislikedHousework = mutableListOf<Housework>()
 
-        // Iterate through the housework list and categorize them
+        // Iterate through the housework list and separate liked and disliked housework items
         _houseworkList.value.forEach { housework ->
             if (housework.isLiked && !housework.isLocked()) {
                 likedHousework.add(housework)
@@ -396,13 +450,13 @@ class FirebaseRepository {
             }
         }
 
-        // Select the active housework based on the game result and availability
         try {
+            // Update the active housework item based on the outcome and availability of liked and disliked housework
             _activeHousework.value = when {
                 won && likedHousework.isNotEmpty() -> likedHousework.random()
-                won && likedHousework.isEmpty() -> dislikedHousework.random()
+                won && likedHousework.isEmpty() && dislikedHousework.isNotEmpty() -> dislikedHousework.random()
                 !won && dislikedHousework.isNotEmpty() -> dislikedHousework.random()
-                !won && dislikedHousework.isEmpty() -> likedHousework.random()
+                !won && dislikedHousework.isEmpty() && likedHousework.isNotEmpty() -> likedHousework.random()
                 else -> Housework(
                     image = R.drawable.img_placeholder,
                     title = "All done",
@@ -417,7 +471,9 @@ class FirebaseRepository {
                 )
             }
             Log.d(FIREBASE, "updateActiveHousework:Success")
+            src.setResult("success")
         } catch (e: Exception) {
+            // Set a default "All done" housework item if an exception occurs during the update
             _activeHousework.value = Housework(
                 image = R.drawable.img_placeholder,
                 title = "All done",
@@ -431,54 +487,50 @@ class FirebaseRepository {
                 id = "All done"
             )
             Log.w(FIREBASE, "updateActiveHousework:Failure", e)
+            src.setException(e)
         }
 
-
-        // Update the active housework for the current user
+        // Update the active housework item in the current user's data
         _currentUser.value?.let { currentUser ->
-            _currentUser.value = _activeHousework.value?.id?.let { activeHousework ->
-                User(
-                    userId = currentUser.userId,
-                    skipCoins = currentUser.skipCoins,
-                    tasksDone = currentUser.tasksDone,
-                    tasksSkipped = currentUser.tasksSkipped,
-                    gamesWon = currentUser.gamesWon,
-                    gamesLost = currentUser.gamesLost,
-                    reward = currentUser.reward,
-                    activeHousework = activeHousework
-                )
-            }
+            _currentUser.value = _activeHousework.value?.id?.let { currentUser.copy(activeHousework = it) }
+        } ?: run {
+            Log.w(FIREBASE, "updateActiveHousework:failure", IllegalStateException("User is null"))
+            src.setException(IllegalStateException("User is null"))
         }
 
-        // Update the current user in Firestore
+        // Update the current user's data in Firestore
         updateCurrentUserFirestore()
+
+        return src.task
     }
 
     /**
-     * Retrieves the active housework for the current user.
+     * Fetches the active housework item for the current user from Firebase Firestore
+     * and sets the value of the _activeHousework StateFlow.
+     *
+     * @return A [Task] that represents the asynchronous operation.
      */
-    suspend fun getActiveHousework() {
-        // Check if there is a current user
+    fun getActiveHousework(): Task<String> {
+        // Create a TaskCompletionSource to handle the asynchronous operation
+        val src = TaskCompletionSource<String>()
+
+        // Check if the current user is not null
         _currentUser.value?.let { currentUser ->
-            // Get the reference to the user document in Firestore
-            val userRef = firestore
-                .collection("user")
-                .document(currentUser.userId)
+            // Get the reference to the user's document in Firebase Firestore
+            val userRef = firestore.collection("user").document(currentUser.userId)
 
-            try {
-                // Retrieve the user document from Firestore
-                val result = userRef.get().await()
-
-                // Get the active housework ID from the user document
+            // Fetch the user document from Firebase Firestore
+            userRef.get().addOnSuccessListener { result ->
+                // Get the ID of the active housework from the user document
                 val activeHouseworkId = result.data?.get("activeHousework").toString()
 
-                // Find the active housework based on the retrieved ID
+                // Find the active housework item from the _houseworkList StateFlow
                 val activeHousework = _houseworkList.value.find { housework ->
                     housework.id == activeHouseworkId
                 }
 
-                // Update the active housework value
-                _activeHousework.value = if (activeHousework != null) activeHousework else Housework(
+                // Set the value of the _activeHousework StateFlow
+                _activeHousework.value = activeHousework ?: Housework(
                     image = R.drawable.img_placeholder,
                     title = "All done",
                     task1 = "You completed every task",
@@ -491,62 +543,100 @@ class FirebaseRepository {
                     id = "All done"
                 )
 
+                // Set the result of the TaskCompletionSource to "success"
+                src.setResult("success")
+
                 Log.d(FIREBASE, "getActiveHousework:success")
-            } catch (exception: Exception) {
+            }.addOnFailureListener { exception ->
+                // Set the exception of the TaskCompletionSource
+                src.setException(exception)
+
                 Log.w(FIREBASE, "getActiveHousework:failure", exception)
             }
+        } ?: run {
+            // Set the exception of the TaskCompletionSource
+            src.setException(IllegalStateException("User is null"))
+
+            Log.w(FIREBASE, "getActiveHousework:failure", IllegalStateException("User is null"))
         }
+
+        // Return the Task associated with the TaskCompletionSource
+        return src.task
     }
 
     /**
-     * Sorts the housework list based on the specified criteria.
+     * Sorts the housework list based on the specified sort criteria.
      *
-     * @param sortBy The criteria to sort the housework list by.
+     * @param sortBy The sort criteria to apply to the housework list.
+     * @return A [Task] that represents the asynchronous operation.
      */
-    fun sortHouseworkList(sortBy: String) {
+    fun sortHouseworkList(sortBy: String): Task<String> {
+        // Create a TaskCompletionSource to handle the asynchronous operation
+        val src = TaskCompletionSource<String>()
+
+        // Use a when statement to determine the sort criteria
         when (sortBy) {
             "Liked" -> {
-                // Sort the housework list by liked status and then by title
+                // Sort the housework list by the "isLiked" property in descending order, then by title in ascending order
                 _houseworkList.value = _houseworkList.value.sortedWith(
                     compareBy({ !it.isLiked }, { it.title })
                 )
+                // Set the result of the TaskCompletionSource to "success"
+                src.setResult("success")
             }
             "Locked" -> {
-                // Sort the housework list by locked status and then by title
+                // Sort the housework list by the "isLocked" property in ascending order, then by title in ascending order
                 _houseworkList.value = _houseworkList.value.sortedWith(
                     compareBy({ it.isLocked() }, { it.title })
                 )
+                // Set the result of the TaskCompletionSource to "success"
+                src.setResult("success")
             }
             "Random" -> {
                 // Shuffle the housework list randomly
                 _houseworkList.value = _houseworkList.value.shuffled()
+                // Set the result of the TaskCompletionSource to "success"
+                src.setResult("success")
+            }
+            else -> {
+                // Set an exception for an invalid sort criteria
+                src.setException(IllegalArgumentException("Invalid sort criteria"))
             }
         }
+
+        // Return the Task associated with the TaskCompletionSource
+        return src.task
     }
 
     /**
-     * Deletes a housework item from the Firestore database.
+     * Deletes a housework item with the specified id from the Firestore database.
      *
-     * @param id The ID of the housework item to delete.
+     * @param id The id of the housework item to be deleted.
+     * @return A task that resolves to a string indicating the result of the deletion ("success" or an error message).
      */
-    fun deleteHousework(id: String) {
-        _currentUser.value?.let { currentUser ->
-            // Get the reference to the user's housework document
-            val userHouseworkRef = firestore
-                .collection("user")
-                .document(currentUser.userId)
-                .collection("housework")
-                .document(id)
+    fun deleteHousework(id: String): Task<String> {
+        // Create a TaskCompletionSource to track the completion of the deletion process
+        val src = TaskCompletionSource<String>()
 
-            // Delete the housework item
-            userHouseworkRef.delete()
-                .addOnSuccessListener {
-                    Log.d(FIREBASE, "deleteHousework:success")
-                }
-                .addOnFailureListener { exception ->
-                    Log.w(FIREBASE, "deleteHousework:failure", exception)
-                }
+        // Check if the current user is not null
+        _currentUser.value?.let { currentUser ->
+            // Get a reference to the housework item in the Firestore collection for the current user
+            val userHouseworkRef = firestore.collection("user").document(currentUser.userId)
+                .collection("housework").document(id)
+
+            // Delete the housework item from Firestore
+            userHouseworkRef.delete().addOnSuccessListener {
+                // Set the result of the deletion as "success" and log a success message
+                src.setResult("success")
+                Log.d(FIREBASE, "deleteHousework:success")
+            }.addOnFailureListener { exception ->
+                // Set the exception as the result of the deletion and log a failure message
+                src.setException(exception)
+                Log.w(FIREBASE, "deleteHousework:failure", exception)
+            }
         }
+
+        return src.task
     }
 
     /**
@@ -567,14 +657,11 @@ class FirebaseRepository {
     fun addFeedback(title: String, description: String) {
         // Create a HashMap to store the feedback data
         val feedback = hashMapOf(
-            "title" to title,
-            "description" to description
+            "title" to title, "description" to description
         )
 
         // Get a reference to the "feedback" collection in Firestore and generate a random document ID
-        val feedbackRef = firestore
-            .collection("feedback")
-            .document(generateRandomId())
+        val feedbackRef = firestore.collection("feedback").document(generateRandomId())
 
         // Set the feedback data in the Firestore document
         feedbackRef.set(feedback)

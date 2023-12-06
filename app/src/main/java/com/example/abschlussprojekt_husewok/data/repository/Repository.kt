@@ -7,6 +7,7 @@ import com.example.abschlussprojekt_husewok.data.model.User
 import com.example.abschlussprojekt_husewok.data.remote.BoredApi
 import com.example.abschlussprojekt_husewok.data.remote.JokeApi
 import com.example.abschlussprojekt_husewok.data.remote.NetworkResult
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.flow.StateFlow
 
 /**
@@ -45,16 +46,10 @@ class Repository(boredApi: BoredApi, jokeApi: JokeApi) {
     val newJoke: StateFlow<NetworkResult<Joke>>
         get() = joke.newJoke
 
-    /**
-     * Retrieves a reward based on the user's current reward type.
-     * If the reward type is "Joke", a joke is retrieved. Otherwise, a random activity is retrieved.
-     */
-    suspend fun getReward() {
-        if (currentUser.value?.reward == "Joke") {
-            // Retrieve a joke if the reward type is "Joke"
+    suspend fun getReward(): Task<String> {
+        return if (currentUser.value?.reward == "Joke") {
             joke.getJoke()
         } else {
-            // Retrieve a random activity if the reward type is not "Joke"
             bored.getBored()
         }
     }

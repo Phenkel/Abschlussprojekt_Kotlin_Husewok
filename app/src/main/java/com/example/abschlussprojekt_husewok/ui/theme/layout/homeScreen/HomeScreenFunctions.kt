@@ -6,381 +6,325 @@ import android.util.Log
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.example.abschlussprojekt_husewok.data.model.User
-import com.example.abschlussprojekt_husewok.data.remote.NetworkResult
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.MotionToasts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * A helper object containing functions related to the home screen.
  */
 object HomeScreenFunctions {
     private const val HOMEFUNCTIONS: String = "HomeScreenFunctions"
-    /**
-     * Displays a success toast with the given title and message.
-     *
-     * @param title The title of the toast.
-     * @param message The message of the toast.
-     * @param context The context used for displaying the toast.
-     * @param long Boolean indicating whether the toast should be displayed for a longer duration.
-     */
-    private fun showSuccessToast(title: String, message: String?, context: Context, long: Boolean) {
-        // Display a success toast using MotionToasts library
-        MotionToasts.success(
-            title = title,
-            message = message ?: "",
-            activity = context as Activity,
-            context = context,
-            long = long
-        )
-    }
+    private val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
 
     /**
-     * Displays an error toast with the given title and message.
+     * Shows a success toast message using the MotionToasts library.
      *
-     * @param title The title of the toast.
-     * @param message The message of the toast.
-     * @param context The context used for displaying the toast.
+     * @param title The title of the toast message.
+     * @param message The message of the toast. If null, an empty string will be used.
+     * @param context The Context instance.
+     * @param long Determines whether the toast should be displayed for a longer duration.
+     * @param mainScope The CoroutineScope for main thread operations.
      */
-    private fun showErrorToast(title: String, message: String, context: Context) {
-        MotionToasts.error(
-            title = title,
-            message = message,
-            activity = context as Activity,
-            context = context
-        )
-    }
-
-    /**
-     * Displays an info toast with the given title and message.
-     *
-     * @param title The title of the toast.
-     * @param message The message of the toast.
-     * @param context The context used for displaying the toast.
-     */
-    private fun showInfoToast(title: String, message: String, context: Context) {
-        MotionToasts.info(
-            title = title,
-            message = message,
-            activity = context as Activity,
-            context = context
-        )
-    }
-
-    /**
-     * Executes a suspend function within a CoroutineScope and returns a boolean indicating the success of the operation.
-     *
-     * @param internetScope The CoroutineScope used for the suspend operation.
-     * @param operation The suspend function to be executed.
-     * @return Returns true if the operation completes successfully, false otherwise.
-     */
-    private suspend fun suspendOperation(
-        internetScope: CoroutineScope,
-        operation: suspend CoroutineScope.() -> Unit
-    ): Boolean {
-        return suspendCoroutine { continuation ->
-            // Launch a coroutine within the internetScope
-            internetScope.launch {
-                try {
-                    // Execute the suspend operation
-                    operation()
-
-                    // Resume the continuation with a value of true indicating successful completion
-                    continuation.resume(true)
-                } catch (e: Exception) {
-                    // Resume the continuation with a value of false indicating unsuccessful completion
-                    continuation.resume(false)
-                }
-            }
+    private fun showSuccessToast(
+        title: String, message: String?, context: Context, long: Boolean, mainScope: CoroutineScope
+    ) {
+        mainScope.launch {
+            MotionToasts.success(
+                title = title,
+                message = message ?: "",
+                activity = context as Activity,
+                context = context,
+                long = long
+            )
         }
     }
 
     /**
-     * Suspends the execution of loading housework data.
-     * Updates the housework list and retrieves the active housework.
+     * Shows an error toast message using the MotionToasts library.
      *
-     * @param viewModel The MainViewModel instance to access housework data.
-     * @param context The context used for displaying toasts.
-     * @param internetScope The CoroutineScope used for running suspend operations.
+     * @param title The title of the toast message.
+     * @param message The message of the toast.
+     * @param context The Context instance.
+     * @param mainScope The CoroutineScope for main thread operations.
      */
-    suspend fun loadHousework(
+    private fun showErrorToast(
+        title: String, message: String, context: Context, mainScope: CoroutineScope
+    ) {
+        mainScope.launch {
+            MotionToasts.error(
+                title = title, message = message, activity = context as Activity, context = context
+            )
+        }
+    }
+
+    /**
+     * Shows an info toast message using the MotionToasts library.
+     *
+     * @param title The title of the toast message.
+     * @param message The message of the toast.
+     * @param context The Context instance.
+     * @param mainScope The CoroutineScope for main thread operations.
+     */
+    private fun showInfoToast(
+        title: String, message: String, context: Context, mainScope: CoroutineScope
+    ) {
+        mainScope.launch {
+            MotionToasts.info(
+                title = title, message = message, activity = context as Activity, context = context
+            )
+        }
+    }
+
+    /**
+     * Loads the housework data, updates the housework list and active housework,
+     * and performs navigation and toast messages based on the loaded data.
+     *
+     * @param viewModel The MainViewModel instance.
+     * @param navController The NavController instance.
+     * @param context The Context instance.
+     * @param mainScope The CoroutineScope for main thread operations.
+     */
+    fun loadHousework(
         viewModel: MainViewModel,
         navController: NavController,
         context: Context,
-        internetScope: CoroutineScope,
+        mainScope: CoroutineScope
     ) {
-        // Update the housework list
-        val updateHouseworkListSuccess = suspendOperation(internetScope) {
-            viewModel.updateHouseworkList()
-        }
-
-        if (updateHouseworkListSuccess) {
-            // Retrieve the active housework
-            val getActiveHouseworkSuccess = suspendOperation(internetScope) {
-                viewModel.getActiveHousework()
-            }
-
-            if (getActiveHouseworkSuccess) {
+        viewModel.updateHouseworkList().addOnSuccessListener {
+            // Housework list update successful
+            viewModel.getActiveHousework().addOnSuccessListener {
+                // Active housework retrieval successful
                 val houseworkList = viewModel.houseworkList.value
                 val unlockedHousework = houseworkList.any { !it.isLocked() }
                 val housework = viewModel.activeHousework.value
 
                 if (housework?.isLocked() == true) {
+                    // Active housework is locked
                     if (unlockedHousework) {
-                        // List of game destinations
-                        val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
-
-                        // Select a random game destination index
-                        val randomIndex = (gameDestinations.indices).random()
-
-                        // Navigate to the randomly selected game screen
-                        navController.navigate(gameDestinations[randomIndex])
-
+                        // There are unlocked housework items, navigate to a random game destination
+                        val randomGame = gameDestinations.random()
+                        navController.navigate(randomGame)
                         viewModel.firstLoaded()
                     } else {
-                        // Show success toast when all housework items are locked
-                        internetScope.launch {
-                            viewModel.updateActiveHousework(true)
-                        }
-                        showSuccessToast("All Done", "There is no housework left", context, false)
-
+                        // No unlocked housework items, update active housework and show a toast message
+                        viewModel.updateActiveHousework(true)
+                        showSuccessToast(
+                            "All Done", "There is no housework left", context, false, mainScope
+                        )
                         viewModel.firstLoaded()
                     }
                 } else if (housework?.title == "All done") {
+                    // Active housework is "All done"
                     if (unlockedHousework) {
-                        // List of game destinations
-                        val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
-
-                        // Select a random game destination index
-                        val randomIndex = (gameDestinations.indices).random()
-
-                        // Navigate to the randomly selected game screen
-                        navController.navigate(gameDestinations[randomIndex])
-
+                        // There are unlocked housework items, navigate to a random game destination
+                        val randomGame = gameDestinations.random()
+                        navController.navigate(randomGame)
                         viewModel.firstLoaded()
                     } else {
-                        // Show success toast when all housework items are locked
-                        internetScope.launch {
-                            viewModel.updateActiveHousework(true)
-                        }
-                        showSuccessToast("All Done", "There is no housework left", context, false)
-
+                        // No unlocked housework items, show a toast message
+                        showSuccessToast(
+                            "All Done", "There is no housework left", context, false, mainScope
+                        )
                         viewModel.firstLoaded()
                     }
                 } else if (housework != null) {
-                    // Show success toast when active housework is loaded
-                    showSuccessToast("Housework loaded", housework.title, context, false)
-
+                    // Active housework is not null, show a toast message
+                    showSuccessToast(
+                        "Housework loaded", housework.title, context, false, mainScope
+                    )
                     viewModel.firstLoaded()
                 } else {
-                    Log.w(HOMEFUNCTIONS, "Failed to load housework")
-
-                    // Show error toast when there is an error loading housework data
-                    showErrorToast("Loading error", "Please reload the page", context)
+                    // Active housework is null, show an error toast message and log the error
+                    showErrorToast(
+                        "Loading error", "Please reload the page", context, mainScope
+                    )
+                    Log.w(HOMEFUNCTIONS, "Failed to load housework - NULL")
                 }
-            } else {
-                Log.w(HOMEFUNCTIONS, "Failed to load housework")
-
-                // Show error toast when there is an error loading active housework
-                showErrorToast("Loading error", "Please reload the page", context)
+            }.addOnFailureListener { exception ->
+                // Active housework retrieval failed, show an error toast message and log the error
+                showErrorToast(
+                    "Loading error", "Please reload the page", context, mainScope
+                )
+                Log.w(HOMEFUNCTIONS, "Failed to get active housework", exception)
             }
-        } else {
-            Log.w(HOMEFUNCTIONS, "Failed to load housework list")
-
-            // Show error toast when there is an error updating the housework list
-            showErrorToast("Loading error", "Please reload the page", context)
+        }.addOnFailureListener { exception ->
+            // Housework list update failed, show an error toast message and log the error
+            showErrorToast(
+                "Loading error", "Please reload the page", context, mainScope
+            )
+            Log.w(HOMEFUNCTIONS, "Failed to update housework list", exception)
         }
     }
 
     /**
-     * Handles the skip button action for a housework item.
+     * Handles the skip button functionality by updating user tasks and skip coins,
+     * and navigating to a random game destination if the housework is not "All done".
      *
-     * @param housework The housework item to skip.
+     * @param navController The NavController instance.
+     * @param viewModel The MainViewModel instance.
+     * @param housework The Housework object.
      */
     fun skipButton(
-        navController: NavController,
-        viewModel: MainViewModel,
-        housework: Housework?
+        navController: NavController, viewModel: MainViewModel, housework: Housework?
     ) {
-        // Check if the housework item is not already marked as "All done"
+        // Check if the housework is not "All done"
         if (housework?.title != "All done") {
-            // Update the users tasks and skip coins
+            // Update user tasks and skip coins
             viewModel.updateUserTasksAndSkipCoins(false)
 
-            // List of game destinations
-            val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
-
-            // Select a random game destination index
-            val randomIndex = (gameDestinations.indices).random()
-
-            // Navigate to the randomly selected game screen
-            navController.navigate(gameDestinations[randomIndex])
+            // Navigate to a random game destination
+            val randomGame = gameDestinations.random()
+            navController.navigate(randomGame)
         }
     }
 
     /**
-     * Handles the done button action for a housework item.
+     * Handles the functionality of the done button by updating user tasks and skip coins,
+     * upserting the locked housework, updating the housework list, navigating to a random game destination,
+     * and displaying reward toast messages based on the user's reward type.
      *
-     * @param viewModel The MainViewModel instance to access housework and API data.
-     * @param context The context used for displaying toasts.
-     * @param internetScope The CoroutineScope used for launching suspend operations.
-     * @param housework The housework item to mark as done.
-     * @param user The user associated with the housework.
+     * @param viewModel The MainViewModel instance.
+     * @param navController The NavController instance.
+     * @param context The Context instance.
+     * @param internetScope The CoroutineScope for internet-related operations.
+     * @param mainScope The CoroutineScope for main thread operations.
+     * @param housework The Housework object.
+     * @param user The User object.
      */
-    suspend fun doneButton(
+    fun doneButton(
         viewModel: MainViewModel,
         navController: NavController,
         context: Context,
         internetScope: CoroutineScope,
+        mainScope: CoroutineScope,
         housework: Housework,
         user: User?
     ) {
-        // Check if the housework item is not already marked as "All done"
+        // Check if the housework is not "All done"
         if (housework.title != "All done") {
-            // Create a locked version of the housework item with updated lockExpirationDate
-            val lockedHousework = housework.copy(lockExpirationDate = housework.updateLockExpirationDate())
+            // Create a locked housework with updated lock expiration date
+            val lockedHousework =
+                housework.copy(lockExpirationDate = housework.updateLockExpirationDate())
 
-            // Update user tasks and skip coins, and upsert the locked housework into Firebase
-            val updateUserAndHouseworkSuccess = suspendOperation(internetScope) {
-                viewModel.updateUserTasksAndSkipCoins(true)
-                viewModel.upsertHouseworkFirebase(lockedHousework)
-            }
+            // Update user tasks and skip coins
+            viewModel.updateUserTasksAndSkipCoins(true)
 
-            if (updateUserAndHouseworkSuccess) {
-
-                val updateHouseworkListSuccess = suspendOperation(internetScope) {
-                    viewModel.updateHouseworkList()
-                }
-
-                if (updateHouseworkListSuccess) {
+            // Upsert the locked housework in Firebase
+            viewModel.upsertHouseworkFirebase(lockedHousework).addOnSuccessListener {
+                // Upsert successful, update housework list
+                viewModel.updateHouseworkList().addOnSuccessListener {
                     val houseworkList = viewModel.houseworkList.value
                     val unlockedHousework = houseworkList.any { !it.isLocked() }
 
                     if (unlockedHousework) {
-                        // List of game destinations
-                        val gameDestinations = listOf("tictactoe", "scratching", "colorGuess")
-
-                        // Select a random game destination index
-                        val randomIndex = (gameDestinations.indices).random()
-
-                        // Navigate to the randomly selected game screen
-                        navController.navigate(gameDestinations[randomIndex])
+                        // There are unlocked housework items, navigate to a random game destination
+                        val randomGame = gameDestinations.random()
+                        navController.navigate(randomGame)
                     } else {
-                        // Show success toast when all housework items are locked
-                        internetScope.launch {
-                            viewModel.updateActiveHousework(true)
-                        }
-                        showSuccessToast("All Done", "There is no housework left", context, false)
+                        // No unlocked housework items, update active housework and show a toast message
+                        viewModel.updateActiveHousework(true)
+                        showSuccessToast(
+                            "All Done", "There is no housework left", context, false, mainScope
+                        )
                     }
-                    // Get the reward for the user
-                    val getRewardSuccess = suspendOperation(internetScope) {
-                        viewModel.getReward()
-                    }
-
-                    if (getRewardSuccess) {
-                        // Check the user's reward type
-                        if (user?.reward == "Joke") {
-                            // Fetch and display a joke reward
-                            viewModel.joke.value.let { jokeResult ->
-                                when (jokeResult) {
-                                    is NetworkResult.Success -> {
-                                        showSuccessToast(
-                                            "${jokeResult.data?.setup}\n${jokeResult.data?.punchline}",
-                                            "Joke Reward - ${jokeResult.data?.type}",
-                                            context,
-                                            true
-                                        )
-                                    }
-
-                                    else -> {
-                                        Log.w("JokeAPI", "Failed to fetch Joke - ${jokeResult.message.toString()}")
-                                    }
-                                }
-                            }
-                        } else {
-                            // Fetch and display a bored reward
-                            viewModel.bored.value.let { boredResult ->
-                                when (boredResult) {
-                                    is NetworkResult.Success -> {
-                                        showSuccessToast(
-                                            "${boredResult.data?.activity}",
-                                            "Bored Reward - ${boredResult.data?.participants}, ${boredResult.data?.type}",
-                                            context,
-                                            true
-                                        )
-                                    }
-
-                                    else -> {
-                                        Log.w(HOMEFUNCTIONS, "Failed to fetch Bored - ${boredResult.message.toString()}")
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        Log.w(HOMEFUNCTIONS, "Failed to get reward")
-                    }
-                } else {
-                    Log.w(HOMEFUNCTIONS, "Failed to update housework list")
+                }.addOnFailureListener { exception ->
+                    // Failed to update housework list, log the error
+                    Log.w(HOMEFUNCTIONS, "Failed to update housework list", exception)
                 }
-            } else {
-                Log.w(HOMEFUNCTIONS, "Failed to update user and housework")
+            }.addOnFailureListener { exception ->
+                // Failed to upsert housework, log the error
+                Log.w(HOMEFUNCTIONS, "Failed to upsert housework", exception)
+            }
+            // Fetch and display reward toast message
+            internetScope.launch {
+                viewModel.getReward().addOnSuccessListener {
+                    if (user?.reward == "Joke") {
+                        // User's reward is a joke, display joke toast message
+                        viewModel.joke.value.data?.let { joke ->
+                            showSuccessToast(
+                                "${joke.setup}\n${joke.punchline}",
+                                "Joke Reward - ${joke.type}",
+                                context,
+                                true,
+                                mainScope
+                            )
+                        }
+                    } else {
+                        // User's reward is a bored activity, display bored activity toast message
+                        viewModel.bored.value.data?.let { bored ->
+                            showSuccessToast(
+                                bored.activity,
+                                "Bored Reward - ${bored.participants} / ${bored.type}",
+                                context,
+                                true,
+                                mainScope
+                            )
+                        }
+                    }
+                }.addOnFailureListener { exception ->
+                    // Failed to fetch reward, log the error
+                    Log.w(HOMEFUNCTIONS, "Failed to fetch reward", exception)
+                }
             }
         }
     }
 
     /**
-     * Handles the favorite button action for a housework item.
+     * Handles the functionality of the favorite button by toggling the "isLiked" property of the housework,
+     * and updating the housework list and active housework in Firebase.
      *
-     * @param viewModel The MainViewModel instance to access housework and API data.
-     * @param internetScope The CoroutineScope used for launching suspend operations.
-     * @param housework The housework item to toggle the favorite status.
+     * @param viewModel The MainViewModel instance.
+     * @param housework The Housework object.
      */
-    suspend fun favoriteButton(
-        viewModel: MainViewModel,
-        internetScope: CoroutineScope,
-        housework: Housework
+    fun favoriteButton(
+        viewModel: MainViewModel, housework: Housework
     ) {
-        // Check if the housework item is not already marked as "All done"
+        // Check if the housework is not "All done"
         if (housework.title != "All done") {
-            // Toggle the favorite status of the housework item
-            val upsertHouseworkSuccess = suspendOperation(internetScope) {
-                val updatedHousework = housework.copy(isLiked = !housework.isLiked)
-                viewModel.upsertHouseworkFirebase(updatedHousework)
-            }
+            // Toggle the "isLiked" property of the housework
+            val updatedHousework = housework.copy(isLiked = !housework.isLiked)
 
-            if (upsertHouseworkSuccess) {
-                // Update the housework list
-                val updateHouseworkListSuccess = suspendOperation(internetScope) {
-                    viewModel.updateHouseworkList()
+            // Upsert the updated housework in Firebase
+            viewModel.upsertHouseworkFirebase(updatedHousework).addOnSuccessListener {
+                // Upsert successful, update housework list
+                viewModel.updateHouseworkList().addOnSuccessListener {
+                    // Housework list updated successfully, fetch and update active housework
+                    viewModel.getActiveHousework().addOnFailureListener { exception ->
+                        // Failed to get active housework, log the error
+                        Log.w(
+                            HOMEFUNCTIONS, "Failed to get active housework", exception
+                        )
+                    }
+                }.addOnFailureListener { exception ->
+                    // Failed to update housework list, log the error
+                    Log.w(HOMEFUNCTIONS, "Failed to update housework list", exception)
                 }
-
-                if (updateHouseworkListSuccess) {
-                    // Fetch the active housework
-                    viewModel.getActiveHousework()
-                } else {
-                    Log.w(HOMEFUNCTIONS, "Failed to update housework list")
-                }
-            } else {
-                Log.w(HOMEFUNCTIONS, "Failed to upsert housework")
+            }.addOnFailureListener { exception ->
+                // Failed to upsert housework, log the error
+                Log.w(HOMEFUNCTIONS, "Failed to upsert housework", exception)
             }
         }
     }
 
     /**
-     * Handles the info button action for a housework item.
+     * Handles the functionality of the info button by displaying an information toast message
+     * with the tasks and title of the housework.
      *
-     * @param context The context used for displaying the info toast.
-     * @param housework The housework item to show the info for.
+     * @param context The Context instance.
+     * @param mainScope The CoroutineScope for main thread operations.
+     * @param housework The Housework object.
      */
-    fun infoButton(context: Context, housework: Housework) {
-        // Show an info toast with the tasks and title of the housework
+    fun infoButton(
+        context: Context, mainScope: CoroutineScope, housework: Housework
+    ) {
+        // Show an information toast message with the tasks and title of the housework
         showInfoToast(
             "${housework.task1}\n${housework.task2}\n${housework.task3}",
             housework.title,
-            context
+            context,
+            mainScope
         )
     }
 }

@@ -118,7 +118,6 @@ fun ScratchingTicketScreen(navController: NavController, viewModel: MainViewMode
                         ScratchingTicketScreenFunctions.getNewHousework(
                             viewModel,
                             navController,
-                            internetScope,
                             context,
                             winningWords.contains(randomWord)
                         )

@@ -4,6 +4,8 @@ import android.util.Log
 import com.example.abschlussprojekt_husewok.data.model.Joke
 import com.example.abschlussprojekt_husewok.data.remote.JokeApi
 import com.example.abschlussprojekt_husewok.data.remote.NetworkResult
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.TaskCompletionSource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
@@ -18,28 +20,20 @@ class JokeRepository(private val jokeApi: JokeApi) {
     val newJoke: StateFlow<NetworkResult<Joke>>
         get() = _newJoke
 
-    /**
-     * Fetches a random joke from the JokeAPI.
-     */
-    suspend fun getJoke() {
-        // Set the state to loading
+
+    suspend fun getJoke(): Task<String> {
+        val task = TaskCompletionSource<String>()
         _newJoke.value = NetworkResult.Loading()
-
         try {
-            // Make the API call to get a random joke
             val joke = jokeApi.retrofitService.getRandomJoke()
-
-            // Set the state to success with the fetched joke
             _newJoke.value = NetworkResult.Success(joke)
-
-            // Log the success message
+            task.setResult("success")
             Log.d("JokeAPI", "getJoke:Success")
         } catch (e: Exception) {
-            // Set the state to error with the exception message
             _newJoke.value = NetworkResult.Error(e.message)
-
-            // Log the error message
+            task.setException(e)
             Log.w("JokeAPI", "getJoke:Failure", e)
         }
+        return task.task
     }
 }

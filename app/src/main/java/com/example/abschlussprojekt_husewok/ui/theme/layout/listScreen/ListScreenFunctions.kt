@@ -63,140 +63,95 @@ object ListScreenFunctions {
     }
 
     /**
-     * Executes a suspend function within a CoroutineScope and returns a boolean indicating the success of the operation.
+     * Refreshes the housework list by updating it in the view model. Shows a success toast message if the
+     * housework list is found and not empty. Shows an error toast message and logs a warning if the housework
+     * list is not found or fails to load.
      *
-     * @param internetScope The CoroutineScope used for the suspend operation.
-     * @param operation The suspend function to be executed.
-     * @return Returns true if the operation completes successfully, false otherwise.
+     * @param viewModel The instance of the MainViewModel.
+     * @param context The context used for displaying toast messages.
+     * @param houseworkList The current housework list.
      */
-    private suspend fun suspendOperation(
-        internetScope: CoroutineScope,
-        operation: suspend CoroutineScope.() -> Unit
-    ): Boolean {
-        return suspendCoroutine { continuation ->
-            // Launch a coroutine within the internetScope
-            internetScope.launch {
-                try {
-                    // Execute the suspend operation
-                    operation()
-
-                    // Resume the continuation with a value of true indicating successful completion
-                    continuation.resume(true)
-                } catch (e: Exception) {
-                    // Resume the continuation with a value of false indicating unsuccessful completion
-                    continuation.resume(false)
-                }
-            }
-        }
-    }
-
-    /**
-     * Refreshes the housework list by updating it in the view model.
-     *
-     * @param viewModel The MainViewModel used for accessing and updating data.
-     * @param internetScope The CoroutineScope used for the network operation.
-     * @param context The Context used for displaying toasts.
-     * @param houseworkList The list of housework items.
-     */
-    suspend fun refresh(
+    fun refresh(
         viewModel: MainViewModel,
-        internetScope: CoroutineScope,
         context: Context,
         houseworkList: List<Housework>
     ) {
-        // Execute the suspend operation to update the housework list in the view model
-        val isSuccess = suspendOperation(internetScope) {
-            viewModel.updateHouseworkList()
-        }
-
-        // Check the result of the operation
-        if (isSuccess) {
-            // If the housework list is not empty, show a success toast
+        // Update the housework list in the view model
+        viewModel.updateHouseworkList().addOnSuccessListener {
             if (houseworkList.isNotEmpty()) {
+                // Show a success toast message if the housework list is found and not empty
                 showSuccessToast("Housework list found", context)
             } else {
-                Log.w(LISTFUNCTIONS, "Failed to load housework list")
-
-                // If the housework list is empty, show an error toast
+                // Show an error toast message and log a warning if the housework list is not found or empty
                 showErrorToast("No housework list found. Please reload again", context)
+                Log.w(LISTFUNCTIONS, "Failed to load housework list")
             }
-        } else {
-            Log.w(LISTFUNCTIONS, "Failed to load housework list")
-
-            // If the operation fails, show an error toast
-            showErrorToast("Failed to refresh housework list", context)
+        }.addOnFailureListener { exception ->
+            // Log a warning if there is a failure in loading the housework list
+            Log.w(LISTFUNCTIONS, "Failed to load housework list", exception)
         }
     }
 
     /**
-     * Sorts the housework list by the "Liked" criteria.
+     * Sorts the housework list by liked tasks in the repository. Shows an info toast message indicating
+     * that the list has been sorted by liked tasks.
      *
-     * @param viewModel The MainViewModel used for accessing and updating data.
-     * @param internetScope The CoroutineScope used for the network operation.
-     * @param context The Context used for displaying toasts.
+     * @param viewModel The instance of the MainViewModel.
+     * @param context The context used for displaying toast messages.
      */
-    suspend fun sortByLiked(
+    fun sortByLiked(
         viewModel: MainViewModel,
-        internetScope: CoroutineScope,
         context: Context
     ) {
-        val isSuccess = suspendOperation(internetScope) {
-            viewModel.sortHouseworkList("Liked")
-        }
-
-        if (isSuccess) {
+        // Sort the housework list by liked tasks in the repository
+        viewModel.sortHouseworkList("Liked").addOnSuccessListener {
+            // Show an info toast message indicating that the list has been sorted by liked tasks
             showInfoToast("Sorted by liked", "Liked tasks will be shown first", context)
-        } else {
-            Log.w(LISTFUNCTIONS, "Failed to sort housework list")
-            showErrorToast("Failed to sort by liked", context)
+        }.addOnFailureListener { exception ->
+            // Log a warning if there is a failure in sorting the housework list
+            Log.w(LISTFUNCTIONS, "Failed to sort housework list", exception)
         }
     }
 
     /**
-     * Sorts the housework list by the "Locked" criteria.
+     * Sorts the housework list by unlocked tasks in the repository. Shows an info toast message indicating
+     * that the list has been sorted by unlocked tasks.
      *
-     * @param viewModel The MainViewModel used for accessing and updating data.
-     * @param internetScope The CoroutineScope used for the network operation.
-     * @param context The Context used for displaying toasts.
+     * @param viewModel The instance of the MainViewModel.
+     * @param context The context used for displaying toast messages.
      */
-    suspend fun sortByLocked(
+    fun sortByLocked(
         viewModel: MainViewModel,
-        internetScope: CoroutineScope,
         context: Context
     ) {
-        val isSuccess = suspendOperation(internetScope) {
-            viewModel.sortHouseworkList("Locked")
-        }
-
-        if (isSuccess) {
-            showInfoToast("Sorted by locked", "Unlocked tasks will be shown first", context)
-        } else {
-            Log.w(LISTFUNCTIONS, "Failed to sort housework list")
-            showErrorToast("Failed to sort by locked", context)
+        // Sort the housework list by liked tasks in the repository
+        viewModel.sortHouseworkList("Locked").addOnSuccessListener {
+            // Show an info toast message indicating that the list has been sorted by unlocked tasks
+            showInfoToast("Sorted by liked", "Unlocked tasks will be shown first", context)
+        }.addOnFailureListener { exception ->
+            // Log a warning if there is a failure in sorting the housework list
+            Log.w(LISTFUNCTIONS, "Failed to sort housework list", exception)
         }
     }
 
     /**
-     * Shuffles the housework list randomly.
+     * Shuffles the housework list in the repository. Shows an info toast message indicating
+     * that the list has been shuffled.
      *
-     * @param viewModel The MainViewModel used for accessing and updating data.
-     * @param internetScope The CoroutineScope used for the network operation.
-     * @param context The Context used for displaying toasts.
+     * @param viewModel The instance of the MainViewModel.
+     * @param context The context used for displaying toast messages.
      */
-    suspend fun sortByRandom(
+    fun sortByRandom(
         viewModel: MainViewModel,
-        internetScope: CoroutineScope,
         context: Context
     ) {
-        val isSuccess = suspendOperation(internetScope) {
-            viewModel.sortHouseworkList("Random")
-        }
-
-        if (isSuccess) {
-            showInfoToast("Housework list shuffled", "Have fun searching", context)
-        } else {
-            Log.w(LISTFUNCTIONS, "Failed to sort housework list")
-            showErrorToast("Failed to shuffle the list", context)
+        // Shuffles the housework list in the repository
+        viewModel.sortHouseworkList("Random").addOnSuccessListener {
+            // Show an info toast message indicating that the list has been shuffled
+            showInfoToast("Sorted by liked", "Unlocked tasks will be shown first", context)
+        }.addOnFailureListener { exception ->
+            // Log a warning if there is a failure in shuffling the housework list
+            Log.w(LISTFUNCTIONS, "Failed to sort housework list", exception)
         }
     }
 }

@@ -45,10 +45,11 @@ fun SplashScreen(navController: NavController, viewModel: MainViewModel) {
             navController.navigate("login")
         } else {
             // Update the current user in the view model
-            viewModel.updateCurrentUser(user.uid)
-            loading = false
-            // Navigate to the home screen
-            navController.navigate("home")
+            viewModel.updateCurrentUser(user.uid).addOnSuccessListener {
+                loading = false
+                // Navigate to the home screen
+                navController.navigate("home")
+            }
         }
     }
 

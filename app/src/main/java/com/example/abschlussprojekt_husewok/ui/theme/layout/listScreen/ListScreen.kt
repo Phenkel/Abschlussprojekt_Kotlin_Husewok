@@ -36,10 +36,6 @@ import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.Basic
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 /**
@@ -60,12 +56,6 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
     // Retrieve the current context
     val context = LocalContext.current
 
-    // Set up coroutine scope for internet operations
-    val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
-
-    // Set up main coroutine scope
-    val mainScope = MainScope()
-
     // Set up coroutine scope for pull-to-refresh
     val refreshScope = rememberCoroutineScope()
 
@@ -77,7 +67,6 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
         refreshing = true
         ListScreenFunctions.refresh(
             viewModel,
-            internetScope,
             context,
             houseworkList
         )
@@ -113,16 +102,13 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
                 item {
                     SortingButtons(
                         byLikedOnClick = {
-                            mainScope.launch { ListScreenFunctions.sortByLiked(
-                                viewModel, internetScope, context) }
+                            ListScreenFunctions.sortByLiked(viewModel, context)
                         },
                         byLockedOnClick = {
-                            mainScope.launch { ListScreenFunctions.sortByLocked(
-                                viewModel, internetScope, context) }
+                            ListScreenFunctions.sortByLocked(viewModel, context)
                         },
                         byRandomOnClick = {
-                            mainScope.launch { ListScreenFunctions.sortByRandom(
-                                viewModel, internetScope, context) }
+                            ListScreenFunctions.sortByRandom(viewModel, context)
                         }
                     )
                 }
