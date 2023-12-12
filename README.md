@@ -59,10 +59,6 @@ Make sure you have the necessary dependencies and Android SDK versions installed
 
 This project is licensed under the Apache License, Version 2.0. For more information about the license, please refer to the [Apache License 2.0](http://www.apache.org/licenses/) website.
 
-## Apache License 2.0 Summary
-
-The Apache License 2.0 is a permissive open source license that allows users to do (nearly) anything they want with the code, with very few exceptions. It is similar to the MIT license but has some key differences.
-
 ### Permissions
 
 - You are granted a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and distribute the work and any derivative works in source or object form [[1]](https://www.apache.org/licenses/LICENSE-2.0).
