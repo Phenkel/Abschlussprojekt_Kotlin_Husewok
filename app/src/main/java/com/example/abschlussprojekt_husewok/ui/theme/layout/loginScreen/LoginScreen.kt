@@ -29,6 +29,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /**
  * Composable function for the login screen.
@@ -89,14 +90,16 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 icon = Icons.Outlined.AccountCircle,
                 primary = false
             ) {
-                LoginScreenFunctions.register(
-                    viewModel,
-                    context,
-                    navController,
-                    internetScope,
-                    email,
-                    password
-                )
+                internetScope.launch {
+                    LoginScreenFunctions.register(
+                        viewModel,
+                        context,
+                        navController,
+                        mainScope,
+                        email,
+                        password
+                    )
+                }
             }
 
             // Add vertical spacing with calculated height
@@ -108,14 +111,16 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 icon = Icons.Outlined.AccountCircle,
                 primary = true
             ) {
-                LoginScreenFunctions.login(
-                    viewModel,
-                    context,
-                    mainScope,
-                    navController,
-                    email,
-                    password
-                )
+                internetScope.launch {
+                    LoginScreenFunctions.login(
+                        viewModel,
+                        context,
+                        mainScope,
+                        navController,
+                        email,
+                        password
+                    )
+                }
             }
         }
 

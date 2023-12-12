@@ -1,6 +1,6 @@
 package com.example.abschlussprojekt_husewok.ui.theme.layout.detailScreen
 
-import androidx.compose.foundation.layout.Arrangement
+import  androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -62,7 +62,18 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
     // Find the housework with the matching ID
     val housework = houseworkList.find { housework ->
         housework.id == houseworkId
-    } as Housework
+    } ?: Housework(
+        image = R.drawable.img_placeholder,
+        title = "",
+        task1 = "",
+        task2 = "",
+        task3 = "",
+        isLiked = false,
+        lockDurationDays = 1,
+        lockExpirationDate = "",
+        default = false,
+        id = "error"
+    )
 
     // Define mutable state variables for the input fields
     var title by remember { mutableStateOf(housework.title) }

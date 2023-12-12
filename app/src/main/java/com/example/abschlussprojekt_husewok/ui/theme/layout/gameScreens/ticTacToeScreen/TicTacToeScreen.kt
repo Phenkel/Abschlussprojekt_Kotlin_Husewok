@@ -79,7 +79,8 @@ fun TicTacToeScreen(navController: NavController, viewModel: MainViewModel) {
                 gameWon,
                 playerTurn,
                 explosionController,
-                Dispatchers.IO
+                Dispatchers.IO,
+                mainScope
             )
         }
     }
@@ -171,7 +172,7 @@ fun TicTacToeScreen(navController: NavController, viewModel: MainViewModel) {
  * @param playerTurn The state variable to track the player's turn.
  * @param explosionController The explosion controller for the game end animation.
  */
-fun makePlayerMove(
+private fun makePlayerMove(
     moves: MutableList<Boolean?>,
     move: Int,
     gameWon: MutableState<Boolean?>,
@@ -201,13 +202,15 @@ fun makePlayerMove(
  * @param playerTurn The state variable to track the player's turn.
  * @param explosionController The explosion controller for the game end animation.
  * @param dispatcher The coroutine dispatcher to specify the context for the AI move.
+ * @param mainScope The coroutine scope to update the UI.
  */
-suspend fun makeAiMove(
+private suspend fun makeAiMove(
     moves: MutableList<Boolean?>,
     gameWon: MutableState<Boolean?>,
     playerTurn: MutableState<Boolean>,
     explosionController: ExplosionController,
-    dispatcher: CoroutineDispatcher
+    dispatcher: CoroutineDispatcher,
+    mainScope: CoroutineScope
 ) {
     withContext(dispatcher) {
         delay(500)
@@ -219,31 +222,41 @@ suspend fun makeAiMove(
         // Check if the AI can win in the next move
         val winningMove = TicTacToeScreenFunctions.findAiMove(freeIndices, moves, false)
         if (winningMove != null) {
-            // Make the winning move
-            moves[winningMove] = false
+            mainScope.launch {
+                // Make the winning move
+                moves[winningMove] = false
+            }
         } else {
             // Check if the player can win in the next move and block it
             val blockingMove = TicTacToeScreenFunctions.findAiMove(freeIndices, moves, true)
             if (blockingMove != null) {
-                // Make the blocking move
-                moves[blockingMove] = false
+                mainScope.launch {
+                    // Make the blocking move
+                    moves[blockingMove] = false
+                }
             } else {
-                // No winning or blocking move, make a random move
-                moves[freeIndices.random()] = false
+                mainScope.launch {
+                    // No winning or blocking move, make a random move
+                    moves[freeIndices.random()] = false
+                }
             }
         }
 
         delay(500)
 
-        // Check if the game is won
-        gameWon.value = TicTacToeScreenFunctions.gameOverCheck(moves)
+        mainScope.launch {
+            // Check if the game is won
+            gameWon.value = TicTacToeScreenFunctions.gameOverCheck(moves)
+        }
 
         // Finish the game if won, lost, or draw
         if (gameWon.value != null) {
             explosionController.explode()
         }
 
-        // Switch to the player's turn
-        playerTurn.value = true
+        mainScope.launch {
+            // Switch to the player's turn
+            playerTurn.value = true
+        }
     }
 }

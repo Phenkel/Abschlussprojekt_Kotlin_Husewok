@@ -9,12 +9,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableFloatState
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +39,7 @@ import com.example.ssjetpackcomposeswipeableview.SwipeAbleItemView
 import com.example.ssjetpackcomposeswipeableview.SwipeDirection
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -47,12 +48,13 @@ import kotlinx.coroutines.launch
 @Composable
 fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
     // Define mutable state variables for loading and progress
-    var loading by remember { mutableStateOf(false) }
-    var progress by remember { mutableFloatStateOf(0f) }
+    val loading = remember { mutableStateOf(false) }
+    val progress = remember { mutableFloatStateOf(0f) }
     val loadingScope = rememberCoroutineScope()
 
-    // Set up coroutine scopes for internet operations and UI updates
+    // Create coroutine scopes for internet and main operations
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    val mainScope = MainScope()
 
     // Composable function for the onboarding screen
     OnlyContentScaffold { innerPadding ->
@@ -104,20 +106,14 @@ fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
                         ),
                         onClick = {
                             loadingScope.launch {
-                                loading = true
-                                for (i in 1..100) {
-                                    progress = i.toFloat() / 100
-                                    delay(10)
-                                    if (i == 100) {
-                                        internetScope.launch {
-                                            OnboardingScreenFunctions.loadData(
-                                                viewModel,
-                                                navController
-                                            )
-                                        }
-                                        loading = false
-                                    }
-                                }
+                                simulateLoadingAndLoadData(
+                                    viewModel,
+                                    navController,
+                                    internetScope,
+                                    progress,
+                                    loading,
+                                    mainScope
+                                )
                             }
                         },
                         swipeDirection = SwipeDirection.LEFT,
@@ -155,9 +151,36 @@ fun OnboardingScreen(navController: NavController, viewModel: MainViewModel) {
                 }
             }
         }
-        if (loading) {
+        if (loading.value) {
             // Display a full-screen progress indicator with the current progress
-            FullScreenProgressIndicator(progress, Orange80)
+            FullScreenProgressIndicator(progress.floatValue, Orange80)
         }
+    }
+}
+
+private suspend fun simulateLoadingAndLoadData(
+    viewModel: MainViewModel,
+    navController: NavController,
+    internetScope: CoroutineScope,
+    progress: MutableFloatState,
+    loading: MutableState<Boolean>,
+    mainScope: CoroutineScope
+) {
+    mainScope.launch {
+        loading.value = true
+    }
+    for (i in 1..100) {
+        mainScope.launch {
+            progress.floatValue = i.toFloat() / 100
+        }
+        delay(10)
+        if (i == 50) {
+            internetScope.launch {
+                OnboardingScreenFunctions.loadData(viewModel, navController)
+            }
+        }
+    }
+    mainScope.launch {
+        loading.value = false
     }
 }
