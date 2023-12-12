@@ -1,11 +1,15 @@
 package com.example.abschlussprojekt_husewok.ui.viewModel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.abschlussprojekt_husewok.data.repository.Repository
 import com.example.abschlussprojekt_husewok.data.model.Housework
 import com.google.android.gms.tasks.Task
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.asTask
 
 /**
  * ViewModel class for the app.
@@ -57,7 +61,7 @@ class MainViewModel(
      * @param housework The housework object to upsert.
      */
     fun upsertHouseworkFirebase(housework: Housework): Task<String> {
-         return repository.firebase.upsertHouseworkFirebase(housework)
+        return repository.firebase.upsertHouseworkFirebase(housework)
     }
 
     /**
@@ -133,9 +137,21 @@ class MainViewModel(
     /**
      * Retrieves a reward based on the user's current reward type.
      * If the reward type is "Joke", a joke is retrieved. Otherwise, a random activity is retrieved.
+     *
+     * @return A [Task] that resolves to a string representing the reward.
      */
-    suspend fun getReward(): Task<String> {
-        return repository.getReward()
+    fun getReward(): Task<String> {
+        val deferred = CompletableDeferred<String>()
+
+        viewModelScope.launch {
+            repository.getReward().addOnSuccessListener {
+                deferred.complete(it)
+            }.addOnFailureListener { exception ->
+                deferred.completeExceptionally(exception)
+            }
+        }
+
+        return deferred.asTask()
     }
 
     /**

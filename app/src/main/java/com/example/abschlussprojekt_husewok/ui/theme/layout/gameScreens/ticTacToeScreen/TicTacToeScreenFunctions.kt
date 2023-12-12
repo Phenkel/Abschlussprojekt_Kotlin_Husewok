@@ -8,29 +8,35 @@ import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.MotionToasts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * A helper object containing functions related to the Tic-Tac-Toe screen.
  */
 object TicTacToeScreenFunctions {
     private const val TICTACTOEFUNCTIONS: String = "TicTacToeScreenFunctions"
+
     /**
-     * Displays a success toast with the given title and message.
+     * Shows a success toast using MotionToasts library.
      *
      * @param title The title of the toast.
-     * @param message The message of the toast.
-     * @param context The context used for displaying the toast.
+     * @param message The optional message to be displayed in the toast. If null, an empty string will be used.
+     * @param context The Context in which the toast is shown. Must be an instance of Activity.
+     * @param mainScope The CoroutineScope used for launching the toast operation.
      */
-    private fun showSuccessToast(title: String, message: String?, context: Context) {
-        // Display a success toast using MotionToasts library
-        MotionToasts.success(
-            title = title,
-            message = message ?: "",
-            activity = context as Activity,
-            context = context
-        )
+    private fun showSuccessToast(
+        title: String,
+        message: String?,
+        context: Context,
+        mainScope: CoroutineScope
+    ) {
+        mainScope.launch {
+            MotionToasts.success(
+                title = title,
+                message = message ?: "",
+                activity = context as Activity,
+                context = context
+            )
+        }
     }
 
     /**
@@ -96,36 +102,38 @@ object TicTacToeScreenFunctions {
     }
 
     /**
-     * Retrieves a new housework item based on the outcome of the game and updates the active housework in the ViewModel.
-     * Shows a success toast message indicating the result of the game.
-     * If there is a failure in updating the housework, recursively calls itself to retry.
+     * Retrieves new housework and updates the games in the user profile.
      *
-     * @param viewModel The instance of the MainViewModel.
-     * @param navController The NavController used for navigating.
-     * @param context The context used for displaying toast messages.
-     * @param gameWon Indicates whether the game was won or lost.
+     * @param viewModel The MainViewModel instance.
+     * @param navController The NavController used for navigation.
+     * @param mainScope The CoroutineScope used for launching coroutines.
+     * @param context The Context in which the operation is performed.
+     * @param gameWon A boolean indicating whether the game was won or lost.
      */
     fun getNewHousework(
         viewModel: MainViewModel,
         navController: NavController,
+        mainScope: CoroutineScope,
         context: Context,
         gameWon: Boolean
     ) {
         viewModel.updateActiveHousework(gameWon).addOnSuccessListener {
-            // Show a success toast message with the title of the active housework and the result of the game
+            viewModel.updateUserGames(gameWon)
+            mainScope.launch {
+                navController.navigate("home")
+            }
             showSuccessToast(
                 title = viewModel.activeHousework.value?.title.toString(),
                 message = if (gameWon) "Game won" else "Game lost",
-                context
+                context,
+                mainScope
             )
         }.addOnFailureListener { exception ->
-            // Log a warning if there is a failure in updating the housework
             Log.w(TICTACTOEFUNCTIONS, "Failed to update housework", exception)
-
-            // Retry getting new housework by recursively calling the function
             getNewHousework(
                 viewModel,
                 navController,
+                mainScope,
                 context,
                 gameWon
             )

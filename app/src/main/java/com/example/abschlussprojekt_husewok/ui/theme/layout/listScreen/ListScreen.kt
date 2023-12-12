@@ -36,6 +36,7 @@ import com.example.abschlussprojekt_husewok.ui.theme.composables.scaffolds.Basic
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
 import com.example.abschlussprojekt_husewok.utils.CalcSizes
 import com.example.abschlussprojekt_husewok.utils.CalcSizes.calcDp
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 
 /**
@@ -62,12 +63,16 @@ fun ListScreen(navController: NavController, viewModel: MainViewModel) {
     // State variable for refreshing state
     var refreshing by remember { mutableStateOf(false) }
 
+    // Set up coroutine scope for UI updates
+    val mainScope = MainScope()
+
     // Function for refreshing the housework list
     fun refresh() = refreshScope.launch {
         refreshing = true
         ListScreenFunctions.refresh(
             viewModel,
             context,
+            mainScope,
             houseworkList
         )
         refreshing = false

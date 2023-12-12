@@ -78,8 +78,9 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
     // Get the current context
     val context = LocalContext.current
 
-    // Create coroutine scope for internet operations
+    // Set up coroutine scopes for internet operations and UI updates
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    val mainScope = MainScope()
 
     // Create the detail screen layout using BasicScaffold
     BasicScaffold(
@@ -115,8 +116,8 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
             // Editable field for setting lock duration in days
             LockedDurationDaysEdit(
                 lockDurationDays = lockDurationDays,
-                addOnClick = { lockDurationDays = lockDurationDays!! + 1 },
-                removeOnClick = { lockDurationDays = lockDurationDays!! - 1 }
+                addOnClick = { lockDurationDays++ },
+                removeOnClick = { lockDurationDays-- }
             )
 
             // Show locked status
@@ -128,6 +129,7 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
                     DetailScreenFunctions.updateTask(
                         viewModel,
                         navController,
+                        mainScope,
                         context,
                         housework,
                         title,
@@ -147,6 +149,7 @@ fun DetailScreen(navController: NavController, viewModel: MainViewModel, housewo
                         DetailScreenFunctions.deleteTask(
                             viewModel,
                             navController,
+                            mainScope,
                             houseworkId
                         )
                     }

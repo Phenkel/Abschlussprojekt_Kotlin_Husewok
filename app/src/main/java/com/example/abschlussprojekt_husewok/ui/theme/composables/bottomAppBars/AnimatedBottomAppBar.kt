@@ -3,8 +3,6 @@ package com.example.abschlussprojekt_husewok.ui.theme.composables.bottomAppBars
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.MailOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -32,7 +30,7 @@ import com.exyte.animatednavbar.items.wigglebutton.WiggleButton
  * @param homeSelected Whether the home page is selected.
  * @param listSelected Whether the list page is selected.
  * @param profileSelected Whether the profile page is selected.
- * @param chatSelected Whether the chat page is selected.
+ * @param feedbackSelected Whether the feedback page is selected.
  *
  */
 @Composable

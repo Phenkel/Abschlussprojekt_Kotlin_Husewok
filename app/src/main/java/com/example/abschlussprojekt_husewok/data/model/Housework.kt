@@ -36,11 +36,11 @@ data class Housework(
      * @return True if the task is locked, false otherwise.
      */
     fun isLocked(): Boolean {
-        try {
+        return try {
             val lockExpirationDateAsDate = LocalDate.parse(lockExpirationDate, DateTimeFormatter.ISO_LOCAL_DATE)
-            return LocalDate.now().isBefore(lockExpirationDateAsDate)
+            LocalDate.now().isBefore(lockExpirationDateAsDate)
         } catch (e: DateTimeParseException) {
-            return false
+            false
         }
     }
 

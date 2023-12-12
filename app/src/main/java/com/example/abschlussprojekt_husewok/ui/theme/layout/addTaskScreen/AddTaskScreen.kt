@@ -65,8 +65,9 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
     // Retrieve the current context
     val context = LocalContext.current
 
-    // Set up coroutine scope for internet operations
+    // Set up coroutine scopes for internet operations and UI updates
     val internetScope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    val mainScope = MainScope()
 
     // Compose the add task screen layout
     BasicScaffold(
@@ -112,6 +113,7 @@ fun AddTaskScreen(navController: NavController, viewModel: MainViewModel) {
                     AddTaskScreenFunctions.addTask(
                         viewModel,
                         navController,
+                        mainScope,
                         context,
                         title,
                         task1,

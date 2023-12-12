@@ -3,10 +3,6 @@ package com.example.abschlussprojekt_husewok.ui.theme.layout.onboardingScreen
 import android.util.Log
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * A helper object containing functions related to the onboarding screen.

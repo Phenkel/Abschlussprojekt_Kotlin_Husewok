@@ -11,6 +11,8 @@ import com.example.abschlussprojekt_husewok.utils.MotionToasts
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+private const val s = "Please reload the page"
+
 /**
  * A helper object containing functions related to the home screen.
  */
@@ -100,47 +102,37 @@ object HomeScreenFunctions {
                 val unlockedHousework = houseworkList.any { !it.isLocked() }
                 val housework = viewModel.activeHousework.value
 
-                if (housework?.isLocked() == true) {
-                    // Active housework is locked
-                    if (unlockedHousework) {
-                        // There are unlocked housework items, navigate to a random game destination
-                        val randomGame = gameDestinations.random()
-                        navController.navigate(randomGame)
-                        viewModel.firstLoaded()
-                    } else {
-                        // No unlocked housework items, update active housework and show a toast message
-                        viewModel.updateActiveHousework(true)
+                when {
+                    housework?.isLocked() == true || housework?.title == "All done" -> {
+                        if (unlockedHousework) {
+                            // There are unlocked housework items, navigate to a random game destination
+                            val randomGame = gameDestinations.random()
+                            navController.navigate(randomGame)
+                            viewModel.firstLoaded()
+                        } else {
+                            // No unlocked housework items, update active housework and show a toast message
+                            viewModel.updateActiveHousework(true)
+                            showSuccessToast(
+                                "All Done", "There is no housework left", context, false, mainScope
+                            )
+                            viewModel.firstLoaded()
+                        }
+                    }
+                    housework != null -> {
+                        // Active housework is not null, show a toast message
                         showSuccessToast(
-                            "All Done", "There is no housework left", context, false, mainScope
+                            "Housework loaded", housework.title, context, false, mainScope
                         )
                         viewModel.firstLoaded()
                     }
-                } else if (housework?.title == "All done") {
-                    // Active housework is "All done"
-                    if (unlockedHousework) {
-                        // There are unlocked housework items, navigate to a random game destination
-                        val randomGame = gameDestinations.random()
-                        navController.navigate(randomGame)
-                        viewModel.firstLoaded()
-                    } else {
-                        // No unlocked housework items, show a toast message
-                        showSuccessToast(
-                            "All Done", "There is no housework left", context, false, mainScope
+                    else -> {
+                        // Active housework is null, show an error toast message and log the error
+                        showErrorToast(
+                            "Loading error", "Please reload the page", context, mainScope
                         )
                         viewModel.firstLoaded()
+                        Log.w(HOMEFUNCTIONS, "Failed to load housework - NULL", NullPointerException("Housework is null"))
                     }
-                } else if (housework != null) {
-                    // Active housework is not null, show a toast message
-                    showSuccessToast(
-                        "Housework loaded", housework.title, context, false, mainScope
-                    )
-                    viewModel.firstLoaded()
-                } else {
-                    // Active housework is null, show an error toast message and log the error
-                    showErrorToast(
-                        "Loading error", "Please reload the page", context, mainScope
-                    )
-                    Log.w(HOMEFUNCTIONS, "Failed to load housework - NULL")
                 }
             }.addOnFailureListener { exception ->
                 // Active housework retrieval failed, show an error toast message and log the error

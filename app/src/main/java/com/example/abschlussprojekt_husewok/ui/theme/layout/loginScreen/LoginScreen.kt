@@ -29,7 +29,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.launch
 
 /**
  * Composable function for the login screen.
@@ -112,6 +111,7 @@ fun LoginScreen(navController: NavController, viewModel: MainViewModel) {
                 LoginScreenFunctions.login(
                     viewModel,
                     context,
+                    mainScope,
                     navController,
                     email,
                     password
