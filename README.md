@@ -58,25 +58,3 @@ Make sure you have the necessary dependencies and Android SDK versions installed
 ## License
 
 This project is licensed under the Apache License, Version 2.0. For more information about the license, please refer to the [Apache License 2.0](http://www.apache.org/licenses/) website.
-
-### Permissions
-
-- You are granted a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable copyright license to reproduce, prepare derivative works of, publicly display, publicly perform, sublicense, and distribute the work and any derivative works in source or object form [[1]](https://www.apache.org/licenses/LICENSE-2.0).
-- You are granted a perpetual, worldwide, non-exclusive, no-charge, royalty-free, irrevocable (except as stated in the license) patent license to make, have made, use, offer to sell, sell, import, and otherwise transfer the work, where such license applies only to those patent claims licensable by the contributor that are necessarily infringed by their contribution(s) alone or by combination of their contribution(s) with the work to which such contribution(s) was submitted [[1]](https://www.apache.org/licenses/LICENSE-2.0).
-
-### Conditions
-
-- You must include a copy of the Apache License in any distribution of the work or derivative works [[1]](https://www.apache.org/licenses/LICENSE-2.0).
-- If you modify the work, you must clearly indicate the changes made and retain all copyright, patent, trademark, and attribution notices from the original work [[1]](https://www.apache.org/licenses/LICENSE-2.0).
-- If the work includes a "NOTICE" text file, you must include a readable copy of the attribution notices contained within the NOTICE file in your distribution [[1]](https://www.apache.org/licenses/LICENSE-2.0).
-
-### Disclaimer of Warranty and Limitation of Liability
-
-The Apache License 2.0 provides a disclaimer of warranty, stating that the work is provided on an "AS IS" basis without warranties or conditions of any kind [[1]](https://www.apache.org/licenses/LICENSE-2.0). It also includes a limitation of liability, stating that contributors shall not be liable for any damages arising from the use or inability to use the work [[1]](https://www.apache.org/licenses/LICENSE-2.0).
-
-For the full text of the Apache License, please see the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0) website.
-
-## Sources
-
-1. Apache License, Version 2.0. Available at: [http://www.apache.org/licenses/](http://www.apache.org/licenses/)
-2. Open Source Licenses 101: Apache License 2.0 - FOSSA. Available at: [https://fossa.com/blog/open-source-licenses-101-apache-license-2-0/](https://fossa.com/blog/open-source-licenses-101-apache-license-2-0/)
