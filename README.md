@@ -8,6 +8,7 @@ Husewok is a Kotlin app project developed for the final examination in the Andro
 - Gamification: After completing a housework task, the user is prompted to play a game. Winning the game rewards the user with a preferred task, while losing results in receiving a disliked task.
 - Task Management: Users can edit, add, and delete housework tasks according to their preferences.
 - Firebase Integration: The app utilizes Firebase as the backend for data storage and management.
+- Feedback: Users can provide feedback, request new features, and report bugs to improve the app's functionality and user experience.
 
 ## Future Plans
 For future updates of the app, I plan to implement the following features:
