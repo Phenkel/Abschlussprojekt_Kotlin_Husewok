@@ -176,7 +176,7 @@ private suspend fun simulateLoadingAndLoadData(
         delay(10)
         if (i == 50) {
             internetScope.launch {
-                OnboardingScreenFunctions.loadData(viewModel, navController)
+                OnboardingScreenFunctions.loadData(viewModel, navController, mainScope)
             }
         }
     }

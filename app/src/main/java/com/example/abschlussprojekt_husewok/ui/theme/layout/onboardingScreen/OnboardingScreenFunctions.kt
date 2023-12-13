@@ -3,6 +3,8 @@ package com.example.abschlussprojekt_husewok.ui.theme.layout.onboardingScreen
 import android.util.Log
 import androidx.navigation.NavController
 import com.example.abschlussprojekt_husewok.ui.viewModel.MainViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
 /**
  * A helper object containing functions related to the onboarding screen.
@@ -17,13 +19,15 @@ object OnboardingScreenFunctions {
      * @param viewModel The instance of the MainViewModel.
      * @param navController The NavController used for navigation.
      */
-    fun loadData(viewModel: MainViewModel, navController: NavController) {
+    fun loadData(viewModel: MainViewModel, navController: NavController, mainScope: CoroutineScope) {
         // Update the housework list
         viewModel.updateHouseworkList().addOnSuccessListener {
             // Fetch the active housework
             viewModel.getActiveHousework().addOnSuccessListener {
-                // Navigate to the home screen
-                navController.navigate("home")
+                mainScope.launch {
+                    // Navigate to the home screen
+                    navController.navigate("home")
+                }
             }.addOnFailureListener { exception ->
                 // Log the failure to fetch the active housework
                 Log.w(ONBOARDINGFUNCTIONS, "Failed to get active housework", exception)

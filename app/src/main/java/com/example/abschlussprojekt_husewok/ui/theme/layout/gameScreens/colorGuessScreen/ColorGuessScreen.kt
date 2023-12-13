@@ -95,7 +95,7 @@ fun ColorGuessScreen(navController: NavController, viewModel: MainViewModel) {
                                 ColorGuessScreenFunctions.getNewHousework(
                                     viewModel,
                                     navController,
-                                    internetScope,
+                                    mainScope,
                                     context,
                                     chosenColor == primary
                                 )
