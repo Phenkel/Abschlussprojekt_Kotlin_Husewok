@@ -36,8 +36,8 @@ In addition, the following libraries were used for JSON parsing and network comm
 ## APIs Used
 The app utilizes the following APIs:
 
-- Official Joke API: This API provides a collection of jokes that can be used in the app to add humor and entertainment.
-- Bored API: This API offers a variety of activities to help users find something interesting to do when they are bored.
+- [Official Joke API:](https://github.com/15Dkatz/official_joke_api) This API provides a collection of jokes that can be used in the app to add humor and entertainment.
+- [Bored API:](https://www.boredapi.com/) This API offers a variety of activities to help users find something interesting to do when they are bored.
 
 ## Technologies Used
 The app is developed using the following technologies:
