@@ -45,6 +45,7 @@ The app is developed using the following technologies:
 - Jetpack Compose: Jetpack Compose is a modern UI toolkit for building native Android apps. It allows for declarative UI development, making it easier to create dynamic and interactive user interfaces.
 - MVVM (Model-View-ViewModel) Architecture: The app follows the MVVM architectural pattern, which separates the presentation logic from the business logic and data handling. This helps in maintaining a clean and modular codebase.
 - Repository Pattern: The app utilizes the repository pattern to abstract the data sources and provide a clean interface for data access. This helps in decoupling the data layer from the rest of the app and improves testability and maintainability.
+- Firebase: The app integrates with Firebase as the backend for data storage and management. Firebase provides a suite of tools and services for building and scaling mobile and web apps, including features like real-time database, authentication, and cloud messaging.
 
 ## Installation
 To install and run the Husewok app, follow these steps:
