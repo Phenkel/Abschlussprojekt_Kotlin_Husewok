@@ -47,6 +47,7 @@ The app is developed using the following technologies:
 - MVVM (Model-View-ViewModel) Architecture: The app follows the MVVM architectural pattern, which separates the presentation logic from the business logic and data handling. This helps in maintaining a clean and modular codebase.
 - Repository Pattern: The app utilizes the repository pattern to abstract the data sources and provide a clean interface for data access. This helps in decoupling the data layer from the rest of the app and improves testability and maintainability.
 - Firebase: The app integrates with Firebase as the backend for data storage and management. Firebase provides a suite of tools and services for building and scaling mobile and web apps, including features like real-time database, authentication, and cloud messaging.
+- Retrofit and Moshi: The app utilizes Retrofit, a type-safe HTTP client for Android, and Moshi, a JSON parsing library, to make API calls and handle JSON data. Retrofit simplifies the process of making network requests, while Moshi allows for easy serialization and deserialization of JSON data.
 
 ## Installation
 To install and run the Husewok app, follow these steps:
