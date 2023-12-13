@@ -18,20 +18,20 @@ For future updates of the app, I plan to implement the following features:
 ## Libraries Used
 The following third-party libraries were used in the development of the app:
 
-- com.wajahatkarim:flippable:1.0.6
-- com.github.omkar-tenkale:ExplodingComposable:1.0.1
-- com.github.JaberAhamed:CardScratch:1.0
-- com.github.esatgozcu:Compose-Rolling-Number:1.0.5
-- com.exyte:animated-navigation-bar:1.0.0
-- com.github.popovanton0:heart-switch:1.4.0
-- com.github.SimformSolutionsPvtLtd:SSJetpackComposeSwipeableView:1.0.1
-- com.github.Spikeysanju:MotionToast:1.4
+- [com.wajahatkarim:flippable:1.0.6](https://github.com/wajahatkarim3/Flippable)
+- [com.github.omkar-tenkale:ExplodingComposable:1.0.1](https://github.com/omkar-tenkale/ExplodingComposable)
+- [com.github.JaberAhamed:CardScratch:1.0](https://github.com/JaberAhamed/CardScratch)
+- [com.github.esatgozcu:Compose-Rolling-Number:1.0.5](https://github.com/esatgozcu/Compose-Rolling-Number)
+- [com.exyte:animated-navigation-bar:1.0.0](https://github.com/exyte/AndroidAnimatedNavigationBar)
+- [com.github.popovanton0:heart-switch:1.4.0](https://github.com/popovanton0/heart-switch)
+- [com.github.SimformSolutionsPvtLtd:SSJetpackComposeSwipeableView:1.0.1](https://github.com/SimformSolutionsPvtLtd/SSJetpackComposeSwipeableView)
+- [com.github.Spikeysanju:MotionToast:1.4](https://github.com/Spikeysanju/MotionToast)
 
 In addition, the following libraries were used for JSON parsing and network communication:
 
-- com.squareup.moshi:moshi-kotlin:1.15.0
-- com.squareup.retrofit2:retrofit:2.9.0
-- com.squareup.retrofit2:converter-moshi:2.9.0
+- [com.squareup.moshi:moshi-kotlin:1.15.0](https://github.com/square/moshi)
+- [com.squareup.retrofit2:retrofit:2.9.0](https://github.com/square/retrofit)
+- [com.squareup.retrofit2:converter-moshi:2.9.0](https://github.com/square/retrofit)
 
 ## APIs Used
 The app utilizes the following APIs:
